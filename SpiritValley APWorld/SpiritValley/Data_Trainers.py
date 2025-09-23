@@ -1,6 +1,6 @@
 import random
 
-from worlds.spirit_valley.Data_Spirits import spirit_list
+from .Data_Spirits import spirit_list
 
 
 class Trainer:

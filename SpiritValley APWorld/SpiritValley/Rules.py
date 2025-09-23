@@ -1,8 +1,7 @@
-from BaseClasses import CollectionState, ItemClassification, LocationProgressType
+from BaseClasses import CollectionState, LocationProgressType
 from worlds.generic.Rules import set_rule
-from worlds.spirit_valley import spirit_list, grass_location_list, water_location_list, SpiritValleyLocation
-from worlds.spirit_valley.Data_Spirits import obtainable_spirit_list
-from worlds.spirit_valley.Items import affection_shop_items, spirit_crystal_shop_items, spiritItem
+from .Data_Spirits import obtainable_spirit_list
+from .Items import affection_shop_items, spirit_crystal_shop_items
 
 
 def set_rules(multiworld, player, options, data):
