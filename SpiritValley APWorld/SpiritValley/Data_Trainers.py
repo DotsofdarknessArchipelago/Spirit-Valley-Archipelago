@@ -6,19 +6,23 @@ from worlds.spirit_valley.Data_Spirits import spirit_list
 class Trainer:
     name:str
     party:[[str,int, bool]]
-    id:str
+    guid:str
 
-    def __init__(self, name, party, id):
+    def __init__(self, name, party, guid):
         self.name=name
         self.party=party
-        self.id=id
+        self.guid=guid
 
     def __str__(self):
-        s= f"""{{NAME:'{self.name}', PARTY:{{"""
+        s= f'{{"NAME":"{self.name}", "PARTY":['
         for i in range(len(self.party)):
-            #s = s+ f"""{{spirit:'{self.party[i][0]}', Lv:{self.party[i][1]}}},"""
-            s = s + f"""'{self.party[i][0]}':{self.party[i][1]},"""
-        return s+ f"""}}, GUID:'{self.id}'}}"""
+            if i != 0:
+                s=s+','
+            if(len(self.party[i]) ==2):
+                s = s + f'{{"spirit":"{self.party[i][0]}","lv":{self.party[i][1]},"shiny":0}}'
+            else:
+                s = s + f'{{"spirit":"{self.party[i][0]}","lv":{self.party[i][1]},"shiny":{self.party[i][2]}}}'
+        return s+ f'], "GUID":"{self.guid}"}}'
 
 Default_Trainers = [
     #"Oakwood Village"
@@ -155,8 +159,8 @@ Default_Trainers = [
     Trainer("2nd Crimson Cloak", [["Polaria", 35]], "72d37c80-d416-48b0-8e1f-ab6c9f49e40c"),
     Trainer("3rd Crimson Cloak", [["Mamaoak", 32], ["Jawsy", 34]], "149cf1b9-7344-4037-88b8-42fe6f471e64"),
     #"Trail 21"
-    Trainer("1st Crimson Cloak", [["Juggsie", 36]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),
-    Trainer("2nd Crimson Cloak", [["Unihorn", 34], ["Octomommy", 30]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),
+    Trainer("1st Crimson Cloak", [["Juggsie", 36]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),#BUGGED TRAINER
+    Trainer("2nd Crimson Cloak", [["Unihorn", 34], ["Octomommy", 30]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),#BUGGED TRAINER
     Trainer("Kinley", [["Queenbee", 32], ["Snowbae", 30], ["Pinchie", 35], ["Boobarella", 34]], "0ea61b92-8dcd-4adf-a070-4bc5870b2698"),
     #"Spirit Passage"
     Trainer("1st crismon cloak", [["Chocostar", 35], ["Harpie", 32]], "9eeac2b8-20b3-4d35-a7b9-bb01169dc72d"),
@@ -182,8 +186,8 @@ def rand_trainer(rand) -> list[str]:
             for m in mon:
                 mlv = t.party[0][1]-3
                 if mlv <=0: mlv = 1
-                party.append([m, random.choice(range(mlv,t.party[0][1]+2))])
-            trainret.append(Trainer(t.name, party, t.id))
+                party.append([m, random.choice(range(mlv,t.party[0][1]+2)), random.choice([0, 1])])
+            trainret.append(Trainer(t.name, party, t.guid))
     else:
         trainret = Default_Trainers.copy()
     return [f"{t}" for t in trainret]

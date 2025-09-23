@@ -21,7 +21,10 @@ public class Plugin : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
-    public const string PluginVersion = "1.0.0";
+    public const int PluginVersionMajor = 0;
+    public const int PluginVersionMinor = 1;
+    public const int PluginVersionBuild = 0;
+    public const string PluginVersion = "0.1.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -130,13 +133,13 @@ public class Plugin : BaseUnityPlugin
         // show the Archipelago Version and whether we're connected or not
         if (ArchipelagoClient.Authenticated)
         {
-            if (true)//(PluginVersion == (string)ArchipelagoClient.ServerData.slotData["world_version"])
+            if ((PluginVersionMajor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_major"]))&& (PluginVersionMinor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_minor"]))&& (PluginVersionBuild == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_build"])))
             {
                 GUI.Label(new Rect(16, 16, 300, 20), "Client/World V(" + PluginVersion + ") : Status: Connected");
             }
             else
             {
-                GUI.Label(new Rect(16, 16, 300, 20), "Client V(" + PluginVersion + "), World V(" + ArchipelagoClient.ServerData.slotData["world_version"] + "): Status: Connected");
+                GUI.Label(new Rect(16, 16, 300, 20), $"Client V({PluginVersion}), World V({ArchipelagoClient.ServerData.slotData["world_version_major"]}.{ArchipelagoClient.ServerData.slotData["world_version_minor"]}.{ArchipelagoClient.ServerData.slotData["world_version_build"]}): Status: Connected");
             }
         }
         else
@@ -164,7 +167,7 @@ public class Plugin : BaseUnityPlugin
                 state = "NEW GAME";
                 button = "START GAME";
             }
-            if (ArchipelagoClient.session.Locations.AllLocationsChecked.Count() != 0)
+            if (ArchipelagoClient.session.Locations.AllLocationsChecked.Count() > 0)
             {
                 loc = ArchipelagoClient.session.Locations.AllLocationsChecked.Count() / ArchipelagoClient.totalloc * 100;
             }
@@ -172,7 +175,7 @@ public class Plugin : BaseUnityPlugin
             {
                 loc = 0;
             }
-            if (ArchipelagoClient.archlist.list.Count() != 0)
+            if (ArchipelagoClient.archlist.list.Count() > 0)
             {
                 item = ArchipelagoClient.archlist.list.Count() / ArchipelagoClient.totalitem * 100;
             }

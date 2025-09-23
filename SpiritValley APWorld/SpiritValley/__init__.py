@@ -12,12 +12,13 @@ from worlds.spirit_valley.Locations import SpiritValleyLocation, location_list, 
 from worlds.spirit_valley.Options import SpiritValleyOptions
 from worlds.spirit_valley.Regions import Generate_Map
 from worlds.spirit_valley.Rules import set_rules
-from worlds.stardew_valley.stardew_rule import true_
 
 
 class SpiritValley(World):
     game = "Spirit Valley"
-    worldversion = "1.0.0"
+    worldversion_major = 0
+    worldversion_minor = 1
+    worldversion_build = 0
 
     item_name_to_id = items_list
     location_name_to_id = location_list
@@ -51,9 +52,11 @@ class SpiritValley(World):
 
         self.data["ENEMIES"] = rand_trainer(self.options.Randomise_Enemies.value)
 
+        self.data["MAIN_QUEST_TOTAL_DOMINATION"] = random.choice(self.data["Grass_spawn"]["Cave of Torment"])
+
         self.data["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"] = random.choice(self.data["Grass_spawn"]["Trail 01"])
         self.data["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"] = random.choice(self.data["Grass_spawn"]["Milly's Farm"])
-        self.data["SIDE_QUEST_DEADLY_WATERS_SPIRIT"] = random.choice(self.data["Grass_spawn"]["Trail 11"])
+        self.data["SIDE_QUEST_DEADLY_WATERS_SPIRIT"] = random.choice(self.data["Water_spawn"]["Trail 11"])
         self.data["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"] = random.choice(self.data["Grass_spawn"]["Trail 12"])
         self.data["SIDE_QUEST_ARCTIC_MENACE_SPIRIT"] = random.choice(self.data["Grass_spawn"]["Trail 15"])
         self.data["SIDE_QUEST_CENTIBOOB_1_SPIRIT"] = random.choice(self.data["Grass_spawn"]["Trail 22"])
@@ -62,7 +65,7 @@ class SpiritValley(World):
 
         if self.options.Spirit_Locations.value:
             self.numlocations += len(spirit_locations)
-        if self.options.Spirit_Locations.value:
+        if self.options.Spirit_Affection.value:
             self.numlocations += len(spirit_affection_locations)
         if self.options.Rare_Locations.value and self.options.Spirit_Locations.value:
             self.numlocations += len(Rare_spirit_locations)
@@ -145,7 +148,9 @@ class SpiritValley(World):
             "Minigame_Cheat":self.options.Minigame_Cheat.value,
             "Catch_Cheat":self.options.Guaranteed_Catch.value,
 
-            "world_version": self.worldversion,
+            "world_version_major": self.worldversion_major,
+            "world_version_minor": self.worldversion_minor,
+            "world_version_build": self.worldversion_build,
             "total_locations": self.numlocations,
             "total_items": self.numitems,
         }

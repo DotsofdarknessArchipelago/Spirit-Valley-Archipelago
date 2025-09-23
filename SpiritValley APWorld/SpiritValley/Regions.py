@@ -1,4 +1,5 @@
 from BaseClasses import Region, ItemClassification
+from worlds.generic.Rules import set_rule
 from worlds.spirit_valley import spirit_locations, SpiritValleyLocation, spirit_affection_locations, Rare_spirit_locations, spiritItem
 
 
@@ -12,7 +13,8 @@ def Generate_Map(multiworld, player, options, loc, data):
     if options.Spirit_Locations.value:
         region_spirit = Region("Spirits", player, multiworld)
         region_spirit.add_locations(spirit_locations, SpiritValleyLocation)
-        region_spirit.add_locations(spirit_affection_locations, SpiritValleyLocation)
+        if options.Spirit_Affection.value:
+            region_spirit.add_locations(spirit_affection_locations, SpiritValleyLocation)
         if options.Rare_Locations.value:
             region_spirit.add_locations(Rare_spirit_locations, SpiritValleyLocation)
         hub_region.connect(region_spirit, "Menu-Spirit")
@@ -575,6 +577,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 10 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 10"]:
         region_trail10.add_locations({f"Trail 10 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 10 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 10 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_crash_site.connect(region_trail10, "Crash_Site-Trail_10")
@@ -635,6 +638,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 11 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 11"]:
         region_trail11.add_locations({f"Trail 11 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 11 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 11 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_coconut_village.connect(region_trail11, "Coconut_Village-Trail_11")
@@ -660,6 +664,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 12 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 12"]:
         region_trail12.add_locations({f"Trail 12 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 12 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 12 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail11.connect(region_trail12, "Trail_11-Trail_12")
@@ -709,6 +714,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 13 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 13"]:
         region_trail13.add_locations({f"Trail 13 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 13 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 13 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail10.connect(region_trail13, "Trail_10-Trail_13")
@@ -737,6 +743,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 14 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 14"]:
         region_trail14.add_locations({f"Trail 14 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 14 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 14 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail13.connect(region_trail14, "Trail_13-Trail_14")
@@ -791,6 +798,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Cold Harbour {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Cold Harbour"]:
         region_cold_harbour.add_locations({f"Cold Harbour {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Cold Harbour {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Cold Harbour {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_coconut_village.connect(region_cold_harbour, "Coconut_Village-Cold_Harbour")
@@ -867,6 +875,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 16 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 16"]:
         region_trail16.add_locations({f"Trail 16 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 16 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 16 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail15.connect(region_trail16, "Trail_15-Trail-16")
@@ -905,6 +914,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Abandoned Mine {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Abandoned Mine"]:
         region_abandoned_mine.add_locations({f"Abandoned Mine {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Abandoned Mine {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Abandoned Mine {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail16.connect(region_abandoned_mine, "Trail_16-Abandoned_Mine")
@@ -933,6 +943,7 @@ def Generate_Map(multiworld, player, options, loc, data):
         multiworld.get_location(f"Trail 17 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 17"]:
         region_trail17.add_locations({f"Trail 17 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 17 {s} Water", player), lambda state: state.has("Fishing Rod", player))
         multiworld.get_location(f"Trail 17 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_frostville.connect(region_trail17, "Frostville-Trail_17")
@@ -961,11 +972,12 @@ def Generate_Map(multiworld, player, options, loc, data):
         region_warp.connect(region_trail18, "Warp-Trail_18", lambda state: state.has("Warp Obtainable", player) and state.has("Warp Cords(Trail 18)", player))
 
     for s in data["Grass_spawn"]["Trail 18"]:
-        region_trail18.add_locations({f"Trail 18 Grass - {s}": None}, SpiritValleyLocation)
-        multiworld.get_location(f"Trail 18 Grass - {s}", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
+        region_trail18.add_locations({f"Trail 18 {s} Grass": None}, SpiritValleyLocation)
+        multiworld.get_location(f"Trail 18 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 18"]:
-        region_trail18.add_locations({f"Trail 18 Water - {s}": None}, SpiritValleyLocation)
-        multiworld.get_location(f"Trail 18 Water - {s}", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
+        region_trail18.add_locations({f"Trail 18 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 18 {s} Water", player), lambda state: state.has("Fishing Rod", player))
+        multiworld.get_location(f"Trail 18 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail17.connect(region_trail18, "Trail_17-Trail_18")
     multiworld.regions.append(region_trail18)
@@ -1067,11 +1079,12 @@ def Generate_Map(multiworld, player, options, loc, data):
     }, SpiritValleyLocation)
 
     for s in data["Grass_spawn"]["Trail 21"]:
-        region_trail21.add_locations({f"Trail 21 Grass - {s}": None}, SpiritValleyLocation)
-        multiworld.get_location(f"Trail 21 Grass - {s}", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
+        region_trail21.add_locations({f"Trail 21 {s} Grass": None}, SpiritValleyLocation)
+        multiworld.get_location(f"Trail 21 {s} Grass", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
     for s in data["Water_spawn"]["Trail 21"]:
-        region_trail21.add_locations({f"Trail 21 Water - {s}": None}, SpiritValleyLocation)
-        multiworld.get_location(f"Trail 21 Water - {s}", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
+        region_trail21.add_locations({f"Trail 21 {s} Water": None}, SpiritValleyLocation)
+        set_rule(multiworld.get_location(f"Trail 21 {s} Water", player), lambda state: state.has("Fishing Rod", player))
+        multiworld.get_location(f"Trail 21 {s} Water", player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, player))
 
     region_trail20.connect(region_trail21, "Trail_20-Trail_21")
     multiworld.regions.append(region_trail21)

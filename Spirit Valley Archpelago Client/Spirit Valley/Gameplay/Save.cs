@@ -37,7 +37,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
             if (ArchipelagoClient.archlist.seed != ArchipelagoClient.session.RoomState.Seed) { ArchipelagoClient.archlist.seed = ArchipelagoClient.session.RoomState.Seed; }
             string text2 = JsonConvert.SerializeObject(ArchipelagoClient.archlist);
-            ArchipelagoConsole.LogDebug($"ARCHDATA: {text2}");
+            //ArchipelagoConsole.LogDebug($"ARCHDATA: {text2}");
             ArchipelagoClient.session.DataStorage[Scope.Slot, "archdata"] = JsonConvert.SerializeObject(ArchipelagoClient.archlist);
 
             bool setup = ArchipelagoClient.session.DataStorage[Scope.Slot, "slotsetup"];

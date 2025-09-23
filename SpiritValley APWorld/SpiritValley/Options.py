@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Range, Toggle, PerGameCommonOptions
+from Options import Range, Toggle, PerGameCommonOptions, Visibility
 
 
 class Randomise_Spawns(Toggle):
@@ -34,7 +34,7 @@ class Randomise_Enemies(Toggle):
 class Randomise_Spirit_Moves(Toggle):
     """randomise moves learned by spirits"""
     display_name = "Randomise Spirit Moves"
-    default = True
+    default = False
 
 class Randomise_Spirit_Moves_Amount(Range):
     """number of move to randomise on to spirits"""
@@ -46,30 +46,35 @@ class Randomise_Spirit_Moves_Amount(Range):
 class Randomise_Spirit_Evo(Toggle):
     """randomise Evolution for spirits"""
     display_name = "Randomise Spirit Evo"
-    default = True
+    default = False
 
 class Randomise_Spirit_Type(Toggle):
     """randomise Type for spirits"""
     display_name = "Randomise Spirit Type"
-    default = True
+    default = False
 
 class Randomise_Spirit_Stats(Toggle):
     """randomise stats for spirits"""
     display_name = "Randomise Spirit Stats"
-    default = True
+    default = False
 
 
 
 class Randomise_Type_Effective(Toggle):
     """randomise Type effectiveness"""
     display_name = "Randomise Type Effectiveness"
-    default = True
+    default = False
 
 
 class Spirit_Locations(Toggle):
-    """have catch/obtaining/affection lv for spirits as locations"""
+    """have catch/obtaining spirits as locations"""
     display_name = "Spirits locations"
     default = True
+
+class Spirit_Affection(Toggle):
+    """have affection lv for spirits as locations requires spirit locations to be true"""
+    display_name = "Spirits Affection"
+    default = False
 
 class Rare_Locations(Toggle):
     """have catch/obtaining rare spirits as locations requires spirit locations to be true"""
@@ -94,12 +99,13 @@ class Spirit_Affection_progression(Toggle):
 
 
 class randomise_warps(Toggle):
-    """add warp locations/items to the rando pool NOTE:CURRENTLY DOES NOTHING"""
+    """add warp locations/items to the rando pool NOTE:CURRENTLY NOT FULLY IMPLEMENTED"""
     display_name = "warp rando"
     default = False
+    visibility = Visibility.none
 
 class Minigame_Cheat(Toggle):
-    """set to enable cheat so minigame cant miss"""
+    """set to enable cheat so sex minigame cant miss"""
     display_name = "minigame cheat"
     default = False
 
@@ -129,6 +135,7 @@ class SpiritValleyOptions(PerGameCommonOptions):
     Randomise_Type_Effective: Randomise_Type_Effective
 
     Spirit_Locations: Spirit_Locations
+    Spirit_Affection: Spirit_Affection
     Rare_Locations: Rare_Locations
     Spirit_Obtain_progression:Spirit_Obtain_progression
     Rare_Spirit_Obtain_progression:Rare_Spirit_Obtain_progression

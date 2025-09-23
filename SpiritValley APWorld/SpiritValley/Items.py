@@ -157,9 +157,11 @@ items_archipelago = {
     "Elusive Scent Available in Shop": items_archipelago_id_start + 20,
     "Potent Scent Available in Shop": items_archipelago_id_start + 21,
     "Spirit Repellent Available in Shop": items_archipelago_id_start + 22,
+    "Xp Booster Available in Shop": items_archipelago_id_start + 23,
+    "Cleansing Tonic Available in Shop": items_archipelago_id_start + 24,
 }
 
-items_warp_id_start = items_archipelago_id_start+22
+items_warp_id_start = items_archipelago_id_start+24
 items_warp = {
     "Warp Cords(Oakwood Village)": items_warp_id_start + 1,
     "Warp Cords(Greensvale)": items_warp_id_start + 2,
