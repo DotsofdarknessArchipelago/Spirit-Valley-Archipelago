@@ -1,7 +1,7 @@
 from BaseClasses import CollectionState, LocationProgressType
 from worlds.generic.Rules import set_rule
-from .Data_Spirits import obtainable_spirit_list
-from .Items import affection_shop_items, spirit_crystal_shop_items
+from worlds.spiritvalley.Data_Spirits import obtainable_spirit_list
+from worlds.spiritvalley.Items import affection_shop_items, spirit_crystal_shop_items
 
 
 def set_rules(multiworld, player, options, data):

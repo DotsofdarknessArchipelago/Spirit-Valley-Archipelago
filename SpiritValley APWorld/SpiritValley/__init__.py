@@ -4,14 +4,14 @@ from typing import Mapping, Any
 from BaseClasses import Region, ItemClassification, Item
 from Utils import visualize_regions
 from worlds.AutoWorld import World
-from .Data_Maps import water_location_list, grass_location_list, default_grass_locations, default_water_locations
-from .Data_Spirits import spirit_list, types, attacking_moves, all_moves, rand_grass_spawn, rand_water_spawn, rand_spirit_list, rand_type_chart, default_type_effective
-from .Data_Trainers import Trainer, rand_trainer, Default_Trainers
-from .Items import items_list, spiritItem, items_key_item, useful_items_list, items_potion, items_consumable, items_crystal, items_equipment, items_coins, items_consumable_id_start, items_crystal_id_start, items_equipment_id_start, items_key_item_id_start, items_potion_id_start, items_coins_id_start, items_archipelago, items_warp, items_archipelago_id_start, items_warp_id_start
-from .Locations import SpiritValleyLocation, location_list, Rare_spirit_locations, spirit_id_start, spirit_affection_id_start, Rare_spirit_id_start, main_quests_id_start, side_quests_id_start, battle_locations_id_start, chest_locations_id_start, spirit_locations, spirit_affection_locations, main_quests, side_quests, battle_locations, chest_locations, warp_locations, warp_locations_id_start
-from .Options import SpiritValleyOptions
-from .Regions import Generate_Map
-from .Rules import set_rules
+from worlds.spiritvalley.Data_Maps import water_location_list, grass_location_list, default_grass_locations, default_water_locations
+from worlds.spiritvalley.Data_Spirits import spirit_list, types, attacking_moves, all_moves, rand_grass_spawn, rand_water_spawn, rand_spirit_list, rand_type_chart, default_type_effective
+from worlds.spiritvalley.Data_Trainers import Trainer, rand_trainer, Default_Trainers
+from worlds.spiritvalley.Items import items_list, spiritItem, items_key_item, useful_items_list, items_potion, items_consumable, items_crystal, items_equipment, items_coins, items_consumable_id_start, items_crystal_id_start, items_equipment_id_start, items_key_item_id_start, items_potion_id_start, items_coins_id_start, items_archipelago, items_warp, items_archipelago_id_start, items_warp_id_start
+from worlds.spiritvalley.Locations import SpiritValleyLocation, location_list, Rare_spirit_locations, spirit_id_start, spirit_affection_id_start, Rare_spirit_id_start, main_quests_id_start, side_quests_id_start, battle_locations_id_start, chest_locations_id_start, spirit_locations, spirit_affection_locations, main_quests, side_quests, battle_locations, chest_locations, warp_locations, warp_locations_id_start
+from worlds.spiritvalley.Options import SpiritValleyOptions
+from worlds.spiritvalley.Regions import Generate_Map
+from worlds.spiritvalley.Rules import set_rules
 
 
 class SpiritValley(World):

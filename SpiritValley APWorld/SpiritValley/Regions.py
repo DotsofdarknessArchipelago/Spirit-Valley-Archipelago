@@ -1,6 +1,6 @@
 from BaseClasses import Region, ItemClassification
 from worlds.generic.Rules import set_rule
-from worlds.spirit_valley import spirit_locations, SpiritValleyLocation, spirit_affection_locations, Rare_spirit_locations, spiritItem
+from worlds.spiritvalley import spirit_locations, SpiritValleyLocation, spirit_affection_locations, Rare_spirit_locations, spiritItem
 
 
 def Generate_Map(multiworld, player, options, loc, data):
