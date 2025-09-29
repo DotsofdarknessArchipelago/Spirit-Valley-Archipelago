@@ -156,7 +156,6 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogDebug("ARCHDATA NOT FOUND CREATING NEW");
             }
 
-
         }
         else
         {
@@ -332,6 +331,20 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogMessage($"CENTIBOOB QUEST 1 SPIRIT: {ServerData.slotData["SIDE_QUEST_CENTIBOOB_1_SPIRIT"]}");
                 ArchipelagoConsole.LogMessage($"CENTIBOOB QUEST 2 SPIRIT: {ServerData.slotData["SIDE_QUEST_CENTIBOOB_2_SPIRIT"]}");
                 ArchipelagoConsole.LogMessage($"CENTIBOOB QUEST 3 SPIRIT: {ServerData.slotData["SIDE_QUEST_CENTIBOOB_3_SPIRIT"]}");
+                break;
+            case "$debugslotdata":
+                ArchipelagoConsole.LogMessage("OUTPUTING SLOT DATA TO LOG FILE");
+                ArchipelagoConsole.LogDebug("SLOTDATA GRASS:");
+                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["Grass_spawn"].ToString());
+                ArchipelagoConsole.LogDebug("SLOTDATA WATER:");
+                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["Water_spawn"].ToString());
+                ArchipelagoConsole.LogDebug("SLOTDATA SPIRITS:");
+                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["SPIRITS"].ToString());
+                ArchipelagoConsole.LogDebug("SLOTDATA TYPECHART:");
+                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["TYPES"].ToString());
+                ArchipelagoConsole.LogDebug("SLOTDATA TRAINERS:");
+                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["ENEMIES"].ToString());
+                ArchipelagoConsole.LogMessage("SLOT DATA OUTPUT COMPLETE");
                 break;
             case "$fixsave"://might work?
                 save.fixsave();

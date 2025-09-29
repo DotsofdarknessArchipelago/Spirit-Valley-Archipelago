@@ -14,6 +14,15 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
         {
             List<EvolutionPoint> list = new List<EvolutionPoint>();
             MonsterBaseStats monsterBaseStats = monster;
+
+
+            list.Add(new EvolutionPoint
+            {
+                fromMonster = monsterBaseStats,
+                levelBreakPoint = 1,
+                toMonster = monsterBaseStats
+            });
+
             if (monsterBaseStats.nextEvolutionBaseStats != null)
             {
                 list.Add(new EvolutionPoint
@@ -23,10 +32,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
                     toMonster = monsterBaseStats.nextEvolutionBaseStats
                 });
             }
-            else
-            {
-                list = null;
-            }
+
             __result = list;
             return false;
         }
