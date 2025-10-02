@@ -322,10 +322,15 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
         [HarmonyPatch(typeof(Captain), "Interact")]
         [HarmonyPrefix]
-        public static bool captainquests(Captain __instance)
+        public static bool captainquests(Captain __instance, ref string ___currentSceneName)
         {
             QuestState activeMainQuestState = HelperItems.save.GetActiveMainQuestState();
-            if (activeMainQuestState != null)
+
+            if (activeMainQuestState == null)
+            {
+                return true;
+            }
+            if (___currentSceneName == __instance.evergreenOutpostSceneName)
             {
                 if (activeMainQuestState.Quest.id == "main_quest_13_bridge_crossing")
                 {
@@ -336,18 +341,48 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                         return false;
                     }
                 }
-                else if (activeMainQuestState.Quest.id == "main_quest_28_how_the_dominoes_fall")
+                if (QuestManager.instance.GetIsActiveMainQuestLessThan("main_quest_13_bridge_crossing"))
                 {
-                    InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_YellowHarmonyCrystal"));
-                    if (i == null || i.count <= 0)
+                    InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_PowerCrystal"));
+                    if (i != null && i.count > 0)
                     {
-                        ArchipelagoConsole.LogMessage("\"Yellow Harmony Crystal\" Item required to continue questline");
-                        return false;
+                        ArchipelagoConsole.LogMessage("Advance Main Quest Line to Unlock Bridge");
+                        return true;
                     }
+                }
+            }
+            if (activeMainQuestState.Quest.id == "main_quest_28_how_the_dominoes_fall")
+            {
+                InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_YellowHarmonyCrystal"));
+                if (i == null || i.count <= 0)
+                {
+                    ArchipelagoConsole.LogMessage("\"Yellow Harmony Crystal\" Item required to continue questline");
+                    return false;
                 }
             }
             return true;
         }
+
+        // TODO IMPLEMENT THIS IN V0.2.0
+        //[HarmonyPatch(typeof(Becky), "Interact")]
+        //[HarmonyPrefix]
+        //public static bool Beckyquests(SergeantCassie __instance)
+        //{
+        //    QuestState activeMainQuestState = HelperItems.save.GetActiveMainQuestState();
+        //    if (activeMainQuestState != null)
+        //    {
+        //        if (activeMainQuestState.Quest.id == "main_quest_11_becky_can_fix_it")
+        //        {
+        //            InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_CrackedPowerCrystal"));
+        //            if (i == null || i.count <= 0)
+        //            {
+        //                ArchipelagoConsole.LogMessage("\"Cracked Power Crystal\" Item required to continue questline");
+        //                return false;
+        //            }
+        //        }
+        //    }
+        //    return true;
+        //}
 
         [HarmonyPatch(typeof(SergeantCassie), "Interact")]
         [HarmonyPrefix]
@@ -359,7 +394,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                 if (activeMainQuestState.Quest.id == "main_quest_5_super_secret_orders")
                 {
                     InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_SuperSecretOrders"));
-                    if (i == null || i.count<=0)
+                    if (i == null || i.count <= 0)
                     {
                         ArchipelagoConsole.LogMessage("\"Super Secret Orders\" Item required to continue questline");
                         return false;
@@ -496,21 +531,20 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
     }
 }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

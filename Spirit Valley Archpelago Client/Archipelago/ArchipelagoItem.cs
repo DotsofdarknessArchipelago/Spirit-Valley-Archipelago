@@ -54,34 +54,32 @@ namespace SpiritValleyArchipelagoClient.Archipelago
             ArchipelagoItem item = new ArchipelagoItem(netitem);
             list.Add(item);
         }
-
-        public bool merge(List<ArchipelagoItem> oldlist)
+        public void add(ArchipelagoItem netitem)
         {
-            for (int i = 0; i < oldlist.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                if (list[i].Id != oldlist[i].Id && list[i].PlayerName != oldlist[i].PlayerName && list[i].LocationId != oldlist[i].LocationId)
+                if (list[i].Id == netitem.Id && list[i].PlayerName == netitem.PlayerName && list[i].LocationId == netitem.LocationId)
                 {
-                    return true;
+                    list[i].processed = netitem.processed;
+                    list[i].putinshop = netitem.putinshop;
+                    return;
                 }
-                if (i>= list.Count) 
-                { 
-                    ArchipelagoItem tmp = new ArchipelagoItem();
-                    tmp.Id = oldlist[i].Id;
-                    tmp.ItemName = oldlist[i].ItemName;
-                    tmp.PlayerName = oldlist[i].PlayerName;
-                    tmp.LocationId = oldlist[i].LocationId;
-                    tmp.processed = oldlist[i].processed;
-                    tmp.putinshop = oldlist[i].putinshop;
-                    list.Add(tmp);
-                }
-                list[i].Id = oldlist[i].Id;
-                list[i].ItemName = oldlist[i].ItemName;
-                list[i].PlayerName = oldlist[i].PlayerName;
-                list[i].LocationId = oldlist[i].LocationId;
-                list[i].processed = oldlist[i].processed;
-                list[i].putinshop = oldlist[i].putinshop;
             }
-            return false;
+            list.Add(netitem);
+        }
+
+        public void merge(List<ArchipelagoItem> oldlist)
+        {
+            foreach (ArchipelagoItem item in oldlist)
+            {
+                if (item.LocationId <= 0) { continue; }
+                add(item);
+            }
+
+            foreach (ArchipelagoItem i in list)
+            {
+                if (i.LocationId <= 0) { i.processed = true; }
+            }
         }
 
         public bool hasitem(int flag)

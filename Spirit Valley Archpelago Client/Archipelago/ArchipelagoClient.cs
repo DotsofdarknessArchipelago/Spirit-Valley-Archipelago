@@ -147,8 +147,9 @@ public class ArchipelagoClient
             if (!alist2.seed.IsNullOrWhiteSpace())
             {
                 ArchipelagoConsole.LogDebug("ARCHDATA FOUND ON SERVER");
-                archlist = alist2;
+                archlist.merge(alist2.list);
                 archlist.seed = session.RoomState.Seed;
+
             }
             else
             {
@@ -268,6 +269,22 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogMessage("RESETING SENT ITEM LIST ALL ITEMS WILL BE REPROCESSED");
                 session.DataStorage[Scope.Slot, "archdata"] = "";
                 resetlist();
+                break;
+
+
+            case "$resync":
+                ArchipelagoConsole.LogMessage("Resyncing Client");
+                session.Socket.SendPacket(new SyncPacket());
+                break;
+
+            case "$resync.items":
+                ArchipelagoConsole.LogMessage("Resyncing Items Recieved");
+                foreach (ItemInfo item in session.Items.AllItemsReceived)
+                {
+                    ArchipelagoConsole.LogMessage($"RESYNCING ITEM ({item.ItemDisplayName}) FROM ({item.Player.Name} : {item.LocationDisplayName})");
+                    archlist.add(item);
+                }
+                ArchipelagoConsole.LogMessage("Resyncing Items Recieved DONE");
                 break;
 
             case "$deletesave":
