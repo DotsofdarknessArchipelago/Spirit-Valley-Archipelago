@@ -22,16 +22,16 @@ public class Plugin : BaseUnityPlugin
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 0;
-    public const int PluginVersionMinor = 1;
-    public const int PluginVersionBuild = 2;
-    public const string PluginVersion = "0.1.2";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionMinor = 2;
+    public const int PluginVersionBuild = 0;
+    public const string PluginVersion = "0.2.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
     public static ManualLogSource BepinLogger;
     public static ArchipelagoClient ArchipelagoClient;
     public static bool start = false;
-    public static bool fixerror = false;
+    public static bool versioncheck = true;
 
     public ArchipelagoData data = ArchipelagoClient.ServerData;
 
@@ -68,7 +68,7 @@ public class Plugin : BaseUnityPlugin
         }
         if (Input.GetKeyDown(KeyCode.F7))
         {
-            Cheats.wallhaks();
+            //Cheats.wallhaks();
         }
         if (Input.GetKeyDown(KeyCode.F9))
         {
@@ -87,6 +87,15 @@ public class Plugin : BaseUnityPlugin
             else
             {
                 start= false;
+            }
+            if (versioncheck)
+            {
+                versioncheck = false;
+                if (GameObject.Find("TitleScreenMenu/Footer/VersionText").GetComponent<TextMeshProUGUI>().text != "V1.4.1")
+                {
+                    ArchipelagoConsole.LogMessage("WARNING EXPECTED GAME CLIENT VERSION MISSMATCH");
+                    ArchipelagoConsole.LogError($"EXPECTED \"V1.4.1\" GOT \"{GameObject.Find("TitleScreenMenu/Footer/VersionText").GetComponent<TextMeshProUGUI>().text}\"");
+                }
             }
         }
         else
@@ -240,10 +249,15 @@ public class Plugin : BaseUnityPlugin
             systemData.InitNew();
             systemData.data.migrationIndex = MigrationManager.instance.GetCurrentMigrationIndex();
             systemData.data.heroName = ArchipelagoClient.ServerData.SlotName;
-            systemData.data.skinTonePresetIndex = 0;
-            systemData.data.hairStylePresetIndex = 0;
-            systemData.data.hairColorPresetIndex = 0;
-            systemData.data.costumePresetIndex = 0;
+
+            systemData.data.heroCharacterSettingsIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Gender"]);
+
+            systemData.data.skinTonePresetIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Skin"]);
+            systemData.data.hairStylePresetIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Hairstyle"]);
+            systemData.data.hairColorPresetIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Haircolor"]);
+            systemData.data.costumePresetIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Outfit"]);
+
+            systemData.data.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Crystal_SpiritCrystal"), 5, true);
 
             systemData.SaveAsync(SaveType.Auto).GetAwaiter().OnCompleted(delegate { loadgame(true); });
         }

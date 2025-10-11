@@ -17,46 +17,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         public static bool startfight(ref LootConfiguration lootConf, FishingSpot __instance)
         {
             ArchipelagoConsole.LogMessage($"STARTING FISHING FIGHT MAP:{MapManager.instance.mapLocationID}");
-            MonsterBaseStats[] area = null;
-            switch (MapManager.instance.mapLocationID)
-            {
-                case MapLocationID.Trail10:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 10");
-                    break;
-                case MapLocationID.Trail11:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 11");
-                    break;
-                case MapLocationID.Trail12:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 12");
-                    break;
-                case MapLocationID.Trail13:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 13");
-                    break;
-                case MapLocationID.Trail14:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 14");
-                    break;
-                case MapLocationID.ColdHarbor:
-                    area = ArchipelagoClient.ServerData.waterspawn("Cold Harbour");
-                    break;
-                case MapLocationID.Trail16:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 16");
-                    break;
-                case MapLocationID.AbandonedMine:
-                    area = ArchipelagoClient.ServerData.waterspawn("Abandoned Mine");
-                    break;
-                case MapLocationID.Trail17:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 17");
-                    break;
-                case MapLocationID.Trail18:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 18");
-                    break;
-                case MapLocationID.Trail21:
-                    area = ArchipelagoClient.ServerData.waterspawn("Trail 21");
-                    break;
-                default:
-                    ArchipelagoConsole.LogMessage("ERROR FISHING SPOT NOT CONFIGURED PROPERLY FOR SPIRITS");
-                    break;
-            }
+            MonsterBaseStats[] area = ArchipelagoClient.ServerData.waterspawn(SceneManager.GetActiveScene().name);
 
             int num = lootConf.monsterRareChance;
             if (HelperItems.save.GetIsItemActiveEffectActive(ItemActiveEffect.IncreaseRareEncounterChance))

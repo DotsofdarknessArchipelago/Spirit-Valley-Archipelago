@@ -1,6 +1,44 @@
 from dataclasses import dataclass
 
-from Options import Range, Toggle, PerGameCommonOptions, Visibility
+from Options import Range, Toggle, PerGameCommonOptions, Visibility, Choice
+
+
+class Char_Gender(Choice):
+    """Sets Character Gender in Game NOTE: you can change this by interacting the wardrobe in the house in oakwood village"""
+    display_name = "Char Gender"
+    option_male = 0
+    option_female = 1
+    default = 0
+
+class Char_Skin(Range):
+    """Sets Character Skin color in Game NOTE: you can change this by interacting the wardrobe in the house in oakwood village"""
+    display_name = "Char Skin"
+    range_start = 0
+    range_end = 2
+    default = 0
+class Char_Hairstyle(Range):
+    """Sets Character Hairstyle in Game NOTE: you can change this by interacting the wardrobe in the house in oakwood village"""
+    display_name = "Char Hairstyle"
+    range_start = 0
+    range_end = 3
+    default = 0
+class Char_Haircolor(Range):
+    """Sets Character Hair Color in Game NOTE: you can change this by interacting the wardrobe in the house in oakwood village
+    NOTE 2: Male Chars only have 3 hair colors so if option 3 is selected it will be changed to option 2"""
+    display_name = "Char Hair Color"
+    range_start = 0
+    range_end = 3
+    default = 0
+class Char_Outfit(Range):
+    """Sets Character Outfit in Game NOTE: you can change this by interacting the wardrobe in the house in oakwood village"""
+    display_name = "Char Outfit"
+    range_start = 0
+    range_end = 3
+    default = 0
+
+
+
+
 
 
 class Randomise_Spawns(Toggle):
@@ -98,11 +136,17 @@ class Spirit_Affection_progression(Toggle):
 
 
 
+class randomise_map(Toggle):
+    """randomise map"""
+    display_name = "map rando"
+    default = False
+
 class randomise_warps(Toggle):
-    """add warp locations/items to the rando pool NOTE:CURRENTLY NOT FULLY IMPLEMENTED"""
+    """add warp locations/items to the rando pool"""
     display_name = "warp rando"
     default = False
-    visibility = Visibility.none
+
+
 
 class Minigame_Cheat(Toggle):
     """set to enable cheat so sex minigame cant miss"""
@@ -114,12 +158,29 @@ class Guaranteed_Catch(Toggle):
     display_name = "minigame cheat"
     default = False
 
+class Xp_Modifer(Range):
+    """Modifier to XP gained.
+    0 -> no XP gained
+    50 -> 1/2 XP gained
+    100 -> XP not effected
+    200 -> 2x XP gained"""
+    display_name = "XP Modifier"
+    range_start = 0
+    range_end = 10000
+    default = 100
+
 
 
 
 
 @dataclass
 class SpiritValleyOptions(PerGameCommonOptions):
+    Char_Gender:Char_Gender
+    Char_Skin:Char_Skin
+    Char_Hairstyle:Char_Hairstyle
+    Char_Haircolor:Char_Haircolor
+    Char_Outfit:Char_Outfit
+
     Randomise_Spawns: Randomise_Spawns
     Grass_slots: Grass_slots
     Water_slots: Water_slots
@@ -141,6 +202,9 @@ class SpiritValleyOptions(PerGameCommonOptions):
     Rare_Spirit_Obtain_progression:Rare_Spirit_Obtain_progression
     Spirit_Affection_progression:Spirit_Affection_progression
 
+    randomise_map:randomise_map
     randomise_warps:randomise_warps
+
     Minigame_Cheat:Minigame_Cheat
     Guaranteed_Catch:Guaranteed_Catch
+    Xp_Modifer:Xp_Modifer

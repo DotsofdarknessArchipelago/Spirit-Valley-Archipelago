@@ -18,7 +18,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         [HarmonyPostfix]
         public static void test(MerchantNPCMapItem __instance)
         {
-            ArchipelagoConsole.LogMessage("RESETING ITEM LIST");
+            ArchipelagoConsole.LogDebug("RESETING ITEM LIST");
             List<ItemBundle> inv  = new List<ItemBundle>();
             int start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_archipelago_id_start"]);
 

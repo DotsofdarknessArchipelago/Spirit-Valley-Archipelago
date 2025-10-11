@@ -21,9 +21,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             OverworldMonster s2 = GameObject.Find("ClinicMap/Sequences/ClinicFirstVisitSequence/Boobae_Overworld").GetComponent<OverworldMonster>();
             OverworldMonster s3 = GameObject.Find("ClinicMap/Sequences/ClinicFirstVisitSequence/Octopussy_Overworld").GetComponent<OverworldMonster>();
 
-            s1.monsterBlueprint.monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.grassdata["Trail 01"][0]);
-            s2.monsterBlueprint.monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.grassdata["Trail 01"][1]);
-            s3.monsterBlueprint.monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.grassdata["Trail 01"][2]);
+            s1.monsterBlueprint.monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.grassdata["Trail1"][0]);
+            s2.monsterBlueprint.monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.grassdata["Trail1"][1]);
+            s3.monsterBlueprint.monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.grassdata["Trail1"][2]);
 
         }
     }

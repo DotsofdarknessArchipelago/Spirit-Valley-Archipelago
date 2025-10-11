@@ -369,8 +369,8 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                 case "ff372848-9064-45a9-9e2c-dd98e3fd1313"://Trail 21: Defeat 1st Crimson Cloak
                     ArchipelagoConsole.LogDebug("Trail 21: Defeat 1st Crimson Cloak");
                     ArchipelagoClient.sendloc(battleidstart + 96);
-                    //break; BUGGED TRAINER 
-                //case "ff372848-9064-45a9-9e2c-dd98e3fd1313"://Trail 21: Defeat 2nd Crimson Cloak
+                    break;  
+                case "24e2596a-4820-46e2-a06a-59a5333d1e4b"://Trail 21: Defeat 2nd Crimson Cloak
                     ArchipelagoConsole.LogDebug("Trail 21: Defeat 2nd Crimson Cloak");
                     ArchipelagoClient.sendloc(battleidstart + 97);
                     break;

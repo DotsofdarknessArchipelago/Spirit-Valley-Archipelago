@@ -52,6 +52,13 @@ public static class ArchipelagoConsole
         Plugin.BepinLogger.LogMessage(message);
     }
 
+    public static void LogError(string message)
+    {
+        if (message.IsNullOrWhiteSpace()) return;
+        LogMessage(message);
+        if (Hidden) { toggleConsole(); }
+    }
+
     public static void OnGUI()
     {
         if (logLines.Count == 0) return;

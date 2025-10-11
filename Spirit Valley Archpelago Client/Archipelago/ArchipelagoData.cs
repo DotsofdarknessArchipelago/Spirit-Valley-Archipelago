@@ -29,6 +29,8 @@ public class ArchipelagoData
     public Dictionary<string, string[]> grassdata = new Dictionary<string, string[]>();
     public Dictionary<string, Dictionary<string, int>> typedata = new Dictionary<string, Dictionary<string, int>>();
 
+    public Dictionary<string, string> mapdata = new Dictionary<string, string>();
+
     public bool NeedSlotData => slotData == null;
 
     public ArchipelagoData()
@@ -79,7 +81,7 @@ public class ArchipelagoData
 
     public MonsterBaseStats[] waterspawn(string area)
     {
-        string[] water_location_list = ["Trail 10", "Trail 11", "Trail 12", "Trail 13", "Trail 14", "Cold Harbour", "Trail 16", "Abandoned Mine", "Trail 17", "Trail 18", "Trail 21"];
+        string[] water_location_list = ["Trail10", "Trail11", "Trail12", "Trail13", "Trail14", "ColdHarbor", "Trail16", "AbandonedMine", "Trail17", "Trail18", "Trail21"];
         if (!water_location_list.Contains(area)) { return null; }
         string[] data = ArchipelagoClient.ServerData.waterdata[area];
         List<MonsterBaseStats> mons = new List<MonsterBaseStats>();
@@ -90,11 +92,11 @@ public class ArchipelagoData
         return mons.ToArray();
     }
 
-    public MonsterBaseStats[] mapspawn(string area)
+    public MonsterBaseStats[] mapspawn(MapLocationID id)
     {
-        MonsterBaseStats[] waterdata = waterspawn(area);
-        if (waterdata == null && area != "Trail 22") { return grassspawn(area); }
-        MonsterBaseStats[] grassdata = grassspawn(area);
+        MonsterBaseStats[] waterdata = waterspawn(HelperSpirits.mapidTostring(id));
+        if (waterdata == null && id != MapLocationID.Trail22) { return grassspawn(HelperSpirits.mapidTostring(id)); }
+        MonsterBaseStats[] grassdata = grassspawn(HelperSpirits.mapidTostring(id));
         List<MonsterBaseStats> mapdata = new List<MonsterBaseStats>();
 
         foreach (var g in grassdata)
@@ -118,9 +120,9 @@ public class ArchipelagoData
             }
         }
 
-        if (area == "Trail 16")
+        if (id == MapLocationID.Trail16)
         {
-            MonsterBaseStats[] cavedata = grassspawn("Trail 16 Cave");
+            MonsterBaseStats[] cavedata = grassspawn("Trail16_Cave");
             foreach (var w in cavedata)
             {
                 bool add = true;
@@ -138,9 +140,9 @@ public class ArchipelagoData
                 }
             }
         }
-        else if (area == "Trail 22")
+        else if (id == MapLocationID.Trail22)
         {
-            MonsterBaseStats[] cavedata = grassspawn("Trail 22 Cave");
+            MonsterBaseStats[] cavedata = grassspawn("Trail22_Cave");
             foreach (var w in cavedata)
             {
                 bool add = true;

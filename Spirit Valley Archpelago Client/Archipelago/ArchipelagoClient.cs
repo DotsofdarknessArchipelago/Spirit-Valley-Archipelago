@@ -32,6 +32,10 @@ public class ArchipelagoClient
     public static int totalloc = 0;
     public static int totalitem = 0;
 
+    public static int servermajor = 0;
+    public static int serverminor = 2;
+    public static int serverbuild = 0;
+
 
     public static ArchipelageItemList archlist = new ArchipelageItemList();
 
@@ -126,6 +130,15 @@ public class ArchipelagoClient
             ServerData.waterdata = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(ArchipelagoClient.ServerData.slotData["Water_spawn"].ToString());
             ServerData.typedata = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, int>>>(ArchipelagoClient.ServerData.slotData["TYPES"].ToString());
 
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["randomise_map"]) == 1)
+            {
+                List<List<string>> tempdata = JsonConvert.DeserializeObject<List<List<string>>>(ArchipelagoClient.ServerData.slotData["RANDO"].ToString());
+                foreach (var item in tempdata)
+                {
+                    ServerData.mapdata.Add(item[0], item[1]);
+                }
+            }
+
 
             List<string> s2 = JsonConvert.DeserializeObject<List<string>>(ArchipelagoClient.ServerData.slotData["SPIRITS"].ToString());
             foreach (string item in s2)
@@ -157,6 +170,12 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogDebug("ARCHDATA NOT FOUND CREATING NEW");
             }
 
+            if (servermajor != Convert.ToInt32(ServerData.slotData["world_version_major"]) || serverminor != Convert.ToInt32(ServerData.slotData["world_version_minor"]) || serverbuild != Convert.ToInt32(ServerData.slotData["world_version_build"]))
+            {
+                ArchipelagoConsole.LogMessage("WARNING EXPECTED APWORLD VERSION MISSMATCH");
+                ArchipelagoConsole.LogError($"EXPECTED V{servermajor}:{serverminor}:{serverbuild} GOT V{ServerData.slotData["world_version_major"]}:{ServerData.slotData["world_version_minor"]}:{ServerData.slotData["world_version_build"]}");
+            }
+
         }
         else
         {
@@ -170,7 +189,6 @@ public class ArchipelagoClient
             Disconnect();
         }
 
-        ArchipelagoConsole.LogMessage(outText);
         attemptingConnection = false;
     }
 
@@ -321,23 +339,6 @@ public class ArchipelagoClient
                     });
                 }
                 break;
-            case "$warpall":
-                HelperItems.save.GetWayStoneState("OakwoodVillage").isActive = true;
-                HelperItems.save.GetWayStoneState("Greensvale").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail4").isActive = true;
-                HelperItems.save.GetWayStoneState("DairyFarm").isActive = true;
-                HelperItems.save.GetWayStoneState("TumbleweedTown").isActive = true;
-                HelperItems.save.GetWayStoneState("CrashSite").isActive = true;
-                HelperItems.save.GetWayStoneState("CoconutVillage").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail14").isActive = true;
-                HelperItems.save.GetWayStoneState("ColdHarbor").isActive = true;
-                HelperItems.save.GetWayStoneState("Frostville1").isActive = true;
-                HelperItems.save.GetWayStoneState("AbandonedMine").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail18").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail19").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail22").isActive = true;
-                HelperItems.save.isFastTravelUnlocked = true;
-                break;
             case "$debugdump":
                 ArchipelagoConsole.LogMessage($"TOTAL DOMINATION QUEST SPIRIT: {ServerData.slotData["MAIN_QUEST_TOTAL_DOMINATION"]}");
                 ArchipelagoConsole.LogMessage($"PERKY PETUNIA QUEST SPIRIT: {ServerData.slotData["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"]}");
@@ -363,8 +364,11 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["ENEMIES"].ToString());
                 ArchipelagoConsole.LogMessage("SLOT DATA OUTPUT COMPLETE");
                 break;
+            case "$debugdata":
+                DataRipping.outputalldata();
+                break;
             case "$fixsave"://might work?
-                save.fixsave();
+                //save.fixsave();
                 break;
 
 

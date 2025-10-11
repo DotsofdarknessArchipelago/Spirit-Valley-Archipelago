@@ -159,8 +159,8 @@ Default_Trainers = [
     Trainer("2nd Crimson Cloak", [["Polaria", 35]], "72d37c80-d416-48b0-8e1f-ab6c9f49e40c"),
     Trainer("3rd Crimson Cloak", [["Mamaoak", 32], ["Jawsy", 34]], "149cf1b9-7344-4037-88b8-42fe6f471e64"),
     #"Trail 21"
-    Trainer("1st Crimson Cloak", [["Juggsie", 36]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),#BUGGED TRAINER
-    Trainer("2nd Crimson Cloak", [["Unihorn", 34], ["Octomommy", 30]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),#BUGGED TRAINER
+    Trainer("1st Crimson Cloak", [["Juggsie", 36]], "ff372848-9064-45a9-9e2c-dd98e3fd1313"),
+    Trainer("2nd Crimson Cloak", [["Unihorn", 34], ["Octomommy", 30]], "24e2596a-4820-46e2-a06a-59a5333d1e4b"),
     Trainer("Kinley", [["Queenbee", 32], ["Snowbae", 30], ["Pinchie", 35], ["Boobarella", 34]], "0ea61b92-8dcd-4adf-a070-4bc5870b2698"),
     #"Spirit Passage"
     Trainer("1st crismon cloak", [["Chocostar", 35], ["Harpie", 32]], "9eeac2b8-20b3-4d35-a7b9-bb01169dc72d"),

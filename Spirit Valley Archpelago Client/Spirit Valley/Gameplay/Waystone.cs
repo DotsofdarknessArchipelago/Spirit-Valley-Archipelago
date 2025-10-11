@@ -1,8 +1,12 @@
 ﻿using HarmonyLib;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using SpiritValleyArchipelagoClient.Archipelago;
+using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +20,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         [HarmonyPostfix]
         public static void test(WayStoneMapItem __instance, ref WayStoneState ___state, ref bool ___isInteractAllowed)
         {
+            HelperItems.save.isFastTravelUnlocked = true;
             ___isInteractAllowed = true;
             if (__instance.GetIsActive())
             {
@@ -141,7 +146,6 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
             if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
             {
-                ArchipelagoConsole.LogDebug($"RANDOMISE WARPS ON SKIPPING ORIGNAL METHOD");
                 return true;
             }
             int itemstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_warp_id_start"]);
@@ -195,6 +199,284 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     break;
             }
             return false;
+        }
+
+
+        [HarmonyPatch(typeof(GameState), "GetWayStoneState")]
+        [HarmonyPostfix]
+        public static void waystonemod(string sceneName, ref WayStoneState __result)
+        {
+            if (Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
+            {
+                int itemstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_warp_id_start"]);
+                ArchipelagoConsole.LogDebug($"RANDOMISE WARPS ON SKIPPING ORIGNAL METHOD3");
+                switch (sceneName)
+                {
+                    case "OakwoodVillage":
+                        if(ArchipelagoClient.archlist.hasitem(itemstart + 1))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                            break;
+                    case "Greensvale":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 2))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "Trail4":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 3))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "DairyFarm":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 4))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "TumbleweedTown":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 5))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "CrashSite":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 6))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "CoconutVillage":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 7))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "Trail14":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 8))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "ColdHarbor":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 9))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "Frostville1":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 10))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "AbandonedMine":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 11))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "Trail18":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 12))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "Trail19":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 13))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    case "Trail22":
+                        if (ArchipelagoClient.archlist.hasitem(itemstart + 14))
+                        {
+                            __result.isActive = true;
+                        }
+                        else
+                        {
+                            __result.isActive = false;
+                        }
+                        break;
+                    default:
+                        ArchipelagoConsole.LogMessage($"SCENE NAME NOT KNOWN: {sceneName}");
+                        break;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(ColdHarborSequence), "PlayCoroutine")]
+        [HarmonyILManipulator]
+        public static void coldharbormod(ILContext ctx, MethodBase orig)
+        {
+            for (int i = 20; i < ctx.Instrs.Count; i++)
+            {
+                if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
+                    ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
+                    ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
+                    ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
+                    ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
+                    ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_8 &&
+                    ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
+                    ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
+                    ctx.Instrs[i-3].OpCode == OpCodes.Br &&
+                    ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
+                    ctx.Instrs[i].OpCode == OpCodes.Stfld
+                    )
+                {
+                    ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i].OpCode = OpCodes.Nop;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(CrashSiteSequence), "PlayCoroutine")]
+        [HarmonyILManipulator]
+        public static void crashsitemod(ILContext ctx, MethodBase orig)
+        {
+            for (int i = 20; i < ctx.Instrs.Count; i++)
+            {
+                if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
+                    ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
+                    ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
+                    ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
+                    ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
+                    ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_7 &&
+                    ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
+                    ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
+                    ctx.Instrs[i-3].OpCode == OpCodes.Br &&
+                    ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
+                    ctx.Instrs[i].OpCode == OpCodes.Stfld
+                    )
+                {
+                    ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i].OpCode = OpCodes.Nop;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Trail19Sequence), "PlayCoroutine")]
+        [HarmonyILManipulator]
+        public static void trail19mod(ILContext ctx, MethodBase orig)
+        {
+            for (int i = 20; i < ctx.Instrs.Count; i++)
+            {
+                if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
+                    ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
+                    ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
+                    ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
+                    ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
+                    ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_4 &&
+                    ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
+                    ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
+                    ctx.Instrs[i-3].OpCode == OpCodes.Br &&
+                    ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
+                    ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
+                    ctx.Instrs[i].OpCode == OpCodes.Stfld
+                    )
+                {
+                    ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
+                    ctx.Instrs[i].OpCode = OpCodes.Nop;
+                }
+            }
         }
     }
 }
