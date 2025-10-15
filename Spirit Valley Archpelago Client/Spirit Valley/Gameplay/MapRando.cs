@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using SpiritValleyArchipelagoClient.Archipelago;
 using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
@@ -16,47 +17,66 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
             string mapid = SceneManager.GetActiveScene().name;
 
+            string scene = null;
+            string id = null;
+
             //ArchipelagoConsole.LogMessage($"MAPID: {mapid}");
             foreach (TransitionArea a in __instance.transitionObjects.GetComponentsInChildren<TransitionArea>())
             {
                 string newdata = "";
                 if (ArchipelagoClient.ServerData.mapdata.TryGetValue($"{mapid} {a.id}", out newdata))
                 {
-                    //ArchipelagoConsole.LogMessage($"OLD TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
-                    a.nextSceneName = newdata.Split(' ')[0];
-                    a.nextTransitionAreaID = newdata.Split(' ')[1];
-                    //ArchipelagoConsole.LogMessage($"NEW TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
+                    scene = newdata.Split(' ')[0];
+                    id = newdata.Split(' ')[1];
                 }
                 else
                 {
                     if (mapid == "EvergreenOutpost" && a.id == "Right")
                     {
                         newdata = ArchipelagoClient.ServerData.mapdata[$"EvergreenOutpost_East Right"];
-                        //ArchipelagoConsole.LogMessage($"OLD TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
-                        a.nextSceneName = newdata.Split(' ')[0];
-                        a.nextTransitionAreaID = newdata.Split(' ')[1];
-                        //ArchipelagoConsole.LogMessage($"NEW TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
+                        scene = newdata.Split(' ')[0];
+                        id = newdata.Split(' ')[1];
                     }
                     else if (mapid == "Trail16" && a.id == "Cave")
                     {
                         newdata = ArchipelagoClient.ServerData.mapdata[$"Trail16_Top Cave"];
-                        //ArchipelagoConsole.LogMessage($"OLD TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
-                        a.nextSceneName = newdata.Split(' ')[0];
-                        a.nextTransitionAreaID = newdata.Split(' ')[1];
-                        //ArchipelagoConsole.LogMessage($"NEW TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
+                        scene = newdata.Split(' ')[0];
+                        id = newdata.Split(' ')[1];
+                    }
+                    else if (mapid == "Trail16" && a.id == "Right2")
+                    {
+                        newdata = ArchipelagoClient.ServerData.mapdata[$"Trail16_Top Right2"];
+                        scene = newdata.Split(' ')[0];
+                        id = newdata.Split(' ')[1];
                     }
                     else if (mapid == "Trail20" && a.id == "Right")
                     {
                         newdata = ArchipelagoClient.ServerData.mapdata[$"Trail20_Right Right"];
-                        //ArchipelagoConsole.LogMessage($"OLD TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
-                        a.nextSceneName = newdata.Split(' ')[0];
-                        a.nextTransitionAreaID = newdata.Split(' ')[1];
-                        //ArchipelagoConsole.LogMessage($"NEW TRANSITIONAREA: ID={a.id}, NEXTAREA={a.nextSceneName}, NEXTID={a.nextTransitionAreaID}");
+                        scene = newdata.Split(' ')[0];
+                        id = newdata.Split(' ')[1];
                     }
                     else
                     {
-                        ArchipelagoConsole.LogDebug($"{mapid} {a.id}: NOT IN DICT");
+                        if ((mapid == "OakwoodVillage" && (a.id == "ClinicOut"|| a.id == "HqOut"))||(mapid == "OakwoodVillage_Clinic" || (mapid == "OakwoodVillage_Hq")))
+                        {
+                        }
+                        else
+                        {
+                            ArchipelagoConsole.LogError($"TRANSITION ({mapid} {a.id}) NOT IN DICT PLZ SEND TO DEV FOR FIXING");
+                        }
                     }
+                }
+
+                if (scene!= null && id != null)
+                {
+                    if (scene == "EvergreenOutpost_East") { scene = "EvergreenOutpost"; }
+                    if (scene == "Trail16_Top") { scene = "Trail16"; }
+                    if (scene == "Trail20_Right") { scene = "Trail20"; }
+
+                    ArchipelagoConsole.LogDebug($"SETTING TRANSITION: {mapid} {a.id} -> {scene} {id}");
+
+                    a.nextSceneName = scene;
+                    a.nextTransitionAreaID = id;
                 }
             }
         }
