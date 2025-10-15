@@ -364,8 +364,30 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["ENEMIES"].ToString());
                 ArchipelagoConsole.LogMessage("SLOT DATA OUTPUT COMPLETE");
                 break;
-            case "$debugdata":
+            case "$debugclientdata":
                 DataRipping.outputalldata();
+                break;
+            case "$debugdata":
+                ArchipelagoConsole.LogMessage("OUTPUTING SERVER DATA");
+                foreach (var i in ServerData.slotData)
+                {
+                    ArchipelagoConsole.LogMessage($"key:{i.Key} || Value:");
+                    ArchipelagoConsole.LogMessage(ServerData.slotData[i.Key].ToString());
+                }
+                ArchipelagoConsole.LogMessage("OUTPUTING SERVER DATA COMPLETE");
+                break;
+            case "$debugrando":
+                ArchipelagoConsole.LogMessage("OUTPUTING RANDO DATA");
+                if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["randomise_map"]) == 0)
+                {
+                    ArchipelagoConsole.LogMessage("MAP RANDO NOT ENABLED");
+                    break; 
+                }
+                foreach (var i in ServerData.mapdata)
+                {
+                    ArchipelagoConsole.LogMessage($"{i.Key} -> {i.Value}");
+                }
+                ArchipelagoConsole.LogMessage("OUTPUTING RANDO DATA COMPLETE");
                 break;
             case "$fixsave"://might work?
                 //save.fixsave();
