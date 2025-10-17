@@ -57,7 +57,13 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     }
                     else
                     {
-                        if ((mapid == "OakwoodVillage" && (a.id == "ClinicOut"|| a.id == "HqOut"))||(mapid == "OakwoodVillage_Clinic" || (mapid == "OakwoodVillage_Hq")))
+                        if ((mapid == "OakwoodVillage" && (a.id == "ClinicOut" || a.id == "HqOut")) ||
+                            mapid == "OakwoodVillage_Clinic" ||
+                            mapid == "OakwoodVillage_Hq" ||
+                            (mapid == "Trail4" && a.id == "TempleBackDoor") ||
+                            (mapid == "Trail9" && a.id == "TempleBackdoor") ||
+                            (mapid == "Trail14" && a.id == "CaveOut") ||
+                            (mapid == "Trail18" && a.id == "TempleOut"))
                         {
                         }
                         else
@@ -67,7 +73,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     }
                 }
 
-                if (scene!= null && id != null)
+                if (scene != null && id != null)
                 {
                     if (scene == "EvergreenOutpost_East") { scene = "EvergreenOutpost"; }
                     if (scene == "Trail16_Top") { scene = "Trail16"; }

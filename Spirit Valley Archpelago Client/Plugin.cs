@@ -23,8 +23,8 @@ public class Plugin : BaseUnityPlugin
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 0;
     public const int PluginVersionMinor = 2;
-    public const int PluginVersionBuild = 2;
-    public const string PluginVersion = "0.2.2";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionBuild = 3;
+    public const string PluginVersion = "0.2.3";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
