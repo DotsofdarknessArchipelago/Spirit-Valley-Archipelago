@@ -1,6 +1,3 @@
-import random
-
-
 class SpiritData:
     moves: {str: int}  # move name: lv obtained
     evolution: {str: int}  # evolution name: lv evolved
@@ -121,61 +118,130 @@ spirit_data = {
 attacking_moves = ["BitchSlap", "PowerPunch", "NippleClamp", "ToeStrike", "DonkeyPunch", "Bite", "Fisting", "PoisonBite", "Lacerate", "BearHug", "BoobPounding", "ExtremeFisting", "CleansingSlap", "Sting", "BeeSwarm", "LethalSting", "EyePoke", "LeafBlast", "Swoop", "Rimjob", "Slam", "BreastMassage", "BoobSlam", "Smother", "Scratch", "Pounce", "PawStrike", "ThornStrike", "Strangle", "BlowBubbles", "Starfall", "NastyBubbles", "SlimeRain", "Snowballing", "YellowSnow", "AntlerAssault", "GoldenShower", "AcidSquirt", "SlimeSquirt", "SlimeTentacle", "Suck", "NaughtyTentacles", "CockFlurry", "AirStrike", "Lash", "DoggyStyle", "PawStorm", "CockBlast", "Chomp", "TailSwipe", "WaterSpray", "JellyfishSwarm", "TentacleDrain", "TentacleTrash", "ClawFlurry", "HailStorm", "Squirt", "Scissoring", ]
 non_attack_moves = ["MostMuscular", "WarCry", "Domination", "BindingWeb", "Meditate", "Curse", "Hypnosis", "LitanyOfCurses", "SexyPose", "Growl", "SharpenClaws", "Buzz", "HappyThoughts", "BlowKiss", "PoisonBlitz", "Seduce", "Photosynthesis", "TeamChant", "PoisonSquirt", "FlowerPower", "SeedOfLife", "NaturesMight", "Stretch", "Yoga", "GoldenRain", "BoobJiggle", "FreshMilk", "MilkStorm", "Flirt", "MassSeduction", "CurePoison", "SwiftPaws", "ScentSpray", "CoatOfSpikes", "KillerInstinct", "Lactate", "Twerk", "MiracleCure", "FishyBusiness", "PoisonSlime", "SlimeArmor", "Lubrication", "HardenScales", "SerpentsTongue", "PoisonSpit", "CumRain", "Shrooms", "RootBondage", "VaginalFungus", "Howl", "SirenSong", "StingingTentacles", "Titillate", "Purr", "CleansingWaters", "Crabs", "Slither", "FrostArmor", ]
 all_moves = [*non_attack_moves, *attacking_moves]
+move_data = {
+    # ATTACKING MOVES
+    "BitchSlap": {"Power": 40, "Accuracy": 95, "Stamina": 7, "Type": None, "Priority": 1},
+    "PowerPunch": {"Power": 60, "Accuracy": 95, "Stamina": 9, "Type": None, "Priority": 2},
+    "NippleClamp": {"Power": 45, "Accuracy": 100, "Stamina": 8, "Type": "Lust", "Priority": 1},
+    "ToeStrike": {"Power": 60, "Accuracy": 100, "Stamina": 9, "Type": "Lust", "Priority": 1},
+    "DonkeyPunch": {"Power": 55, "Accuracy": 100, "Stamina": 9, "Type": None, "Priority": 2},
+    "Bite": {"Power": 30, "Accuracy": 95, "Stamina": 6, "Type": None, "Priority": 2},
+    "Fisting": {"Power": 40, "Accuracy": 95, "Stamina": 8, "Type": None, "Priority": 1},
+    "PoisonBite": {"Power": 50, "Accuracy": 100, "Stamina": 8, "Type": "Scalie", "Priority": 2},
+    "Lacerate": {"Power": 55, "Accuracy": 95, "Stamina": 9, "Type": None, "Priority": 2},
+    "BearHug": {"Power": 50, "Accuracy": 95, "Stamina": 9, "Type": None, "Priority": 3},
+    "BoobPounding": {"Power": 50, "Accuracy": 95, "Stamina": 9, "Type": None, "Priority": 3},
+    "ExtremeFisting": {"Power": 50, "Accuracy": 95, "Stamina": 10, "Type": None, "Priority": 2},
+    "CleansingSlap": {"Power": 35, "Accuracy": 95, "Stamina": 7, "Type": None, "Priority": 2},
+    "Sting": {"Power": 45, "Accuracy": 95, "Stamina": 7, "Type": "Avian", "Priority": 1},
+    "BeeSwarm": {"Power": 35, "Accuracy": 95, "Stamina": 8, "Type": "Avian", "Priority": 1},
+    "LethalSting": {"Power": 55, "Accuracy": 100, "Stamina": 10, "Type": "Avian", "Priority": 1},
+    "EyePoke": {"Power": 45, "Accuracy": 100, "Stamina": 8, "Type": None, "Priority": 2},
+    "LeafBlast": {"Power": 45, "Accuracy": 100, "Stamina": 6, "Type": "Plant", "Priority": 2},
+    "Swoop": {"Power": 40, "Accuracy": 95, "Stamina": 7, "Type": "Avian", "Priority": 2},
+    "Rimjob": {"Power": 35, "Accuracy": 100, "Stamina": 7, "Type": "Lust", "Priority": 1},
+    "Slam": {"Power": 40, "Accuracy": 95, "Stamina": 6, "Type": None, "Priority": 3},
+    "BreastMassage": {"Power": 25, "Accuracy": 100, "Stamina": 9, "Type": "Oppai", "Priority": 2},
+    "BoobSlam": {"Power": 55, "Accuracy": 95, "Stamina": 10, "Type": "Oppai", "Priority": 3},
+    "Smother": {"Power": 35, "Accuracy": 90, "Stamina": 7, "Type": "Oppai", "Priority": 2},
+    "Scratch": {"Power": 30, "Accuracy": 95, "Stamina": 5, "Type": None, "Priority": 2},
+    "Pounce": {"Power": 40, "Accuracy": 95, "Stamina": 6, "Type": "Furry", "Priority": 2},
+    "PawStrike": {"Power": 50, "Accuracy": 100, "Stamina": 8, "Type": "Furry", "Priority": 1},
+    "ThornStrike": {"Power": 40, "Accuracy": 95, "Stamina": 7, "Type": "Plant", "Priority": 1},
+    "Strangle": {"Power": 50, "Accuracy": 100, "Stamina": 8, "Type": "Plant", "Priority": 2},
+    "BlowBubbles": {"Power": 40, "Accuracy": 95, "Stamina": 7, "Type": "Aquatic", "Priority": 2},
+    "Starfall": {"Power": 45, "Accuracy": 100, "Stamina": 8, "Type": None, "Priority": 1},
+    "NastyBubbles": {"Power": 30, "Accuracy": 100, "Stamina": 10, "Type": "Aquatic", "Priority": 2},
+    "SlimeRain": {"Power": 50, "Accuracy": 95, "Stamina": 7, "Type": "Slime", "Priority": 2},
+    "Snowballing": {"Power": 50, "Accuracy": 95, "Stamina": 5, "Type": None, "Priority": 2},
+    "YellowSnow": {"Power": 40, "Accuracy": 95, "Stamina": 9, "Type": None, "Priority": 2},
+    "AntlerAssault": {"Power": 55, "Accuracy": 100, "Stamina": 7, "Type": "Furry", "Priority": 2},
+    "GoldenShower": {"Power": 30, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 2},
+    "AcidSquirt": {"Power": 50, "Accuracy": 95, "Stamina": 9, "Type": None, "Priority": 2},
+    "SlimeSquirt": {"Power": 35, "Accuracy": 100, "Stamina": 6, "Type": "Slime", "Priority": 1},
+    "SlimeTentacle": {"Power": 40, "Accuracy": 95, "Stamina": 8, "Type": "Slime", "Priority": 2},
+    "Suck": {"Power": 40, "Accuracy": 95, "Stamina": 9, "Type": "Lust", "Priority": 2},
+    "NaughtyTentacles": {"Power": 40, "Accuracy": 100, "Stamina": 5, "Type": "Demon", "Priority": 2},
+    "CockFlurry": {"Power": 35, "Accuracy": 95, "Stamina": 5, "Type": None, "Priority": 2},
+    "AirStrike": {"Power": 60, "Accuracy": 95, "Stamina": 9, "Type": "Avian", "Priority": 2},
+    "Lash": {"Power": 30, "Accuracy": 95, "Stamina": 5, "Type": None, "Priority": 2},
+    "DoggyStyle": {"Power": 45, "Accuracy": 90, "Stamina": 7, "Type": "Furry", "Priority": 1},
+    "PawStorm": {"Power": 65, "Accuracy": 100, "Stamina": 10, "Type": "Furry", "Priority": 1},
+    "CockBlast": {"Power": 40, "Accuracy": 95, "Stamina": 7, "Type": "Lust", "Priority": 1},
+    "Chomp": {"Power": 50, "Accuracy": 95, "Stamina": 7, "Type": "Aquatic", "Priority": 2},
+    "TailSwipe": {"Power": 30, "Accuracy": 95, "Stamina": 4, "Type": "Furry", "Priority": 1},
+    "WaterSpray": {"Power": 35, "Accuracy": 95, "Stamina": 5, "Type": "Aquatic", "Priority": 2},
+    "JellyfishSwarm": {"Power": 40, "Accuracy": 100, "Stamina": 6, "Type": "Aquatic", "Priority": 2},
+    "TentacleDrain": {"Power": 50, "Accuracy": 100, "Stamina": 10, "Type": "Demon", "Priority": 2},
+    "TentacleTrash": {"Power": 45, "Accuracy": 95, "Stamina": 7, "Type": "Demon", "Priority": 2},
+    "ClawFlurry": {"Power": 55, "Accuracy": 100, "Stamina": 8, "Type": "Aquatic", "Priority": 1},
+    "HailStorm": {"Power": 60, "Accuracy": 100, "Stamina": 9, "Type": "Slime", "Priority": 1},
+    "Squirt": {"Power": 40, "Accuracy": 95, "Stamina": 8, "Type": "Lust", "Priority": 2},
+    "Scissoring": {"Power": 60, "Accuracy": 95, "Stamina": 8, "Type": "Lust", "Priority": 2},
+    # NON ATTACKING MOVES,
+    "MostMuscular": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "WarCry": {"Power": 0, "Accuracy": 100, "Stamina": 8, "Type": None, "Priority": 2},
+    "Domination": {"Power": 0, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 2},
+    "BindingWeb": {"Power": 0, "Accuracy": 95, "Stamina": 4, "Type": None, "Priority": 2},
+    "Meditate": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "Curse": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "Hypnosis": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "LitanyOfCurses": {"Power": 0, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 2},
+    "SexyPose": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 2},
+    "Growl": {"Power": 0, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 1},
+    "SharpenClaws": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": "Furry", "Priority": 2},
+    "Buzz": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "HappyThoughts": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "BlowKiss": {"Power": 0, "Accuracy": 95, "Stamina": 4, "Type": None, "Priority": 2},
+    "PoisonBlitz": {"Power": 0, "Accuracy": 100, "Stamina": 7, "Type": None, "Priority": 2},
+    "Seduce": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "Photosynthesis": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 1},
+    "TeamChant": {"Power": 0, "Accuracy": 100, "Stamina": 7, "Type": None, "Priority": 2},
+    "PoisonSquirt": {"Power": 0, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 2},
+    "FlowerPower": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "SeedOfLife": {"Power": 0, "Accuracy": 100, "Stamina": 10, "Type": None, "Priority": 2},
+    "NaturesMight": {"Power": 0, "Accuracy": 100, "Stamina": 10, "Type": None, "Priority": 2},
+    "Stretch": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "Yoga": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 2},
+    "GoldenRain": {"Power": 0, "Accuracy": 100, "Stamina": 12, "Type": None, "Priority": 2},
+    "BoobJiggle": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "FreshMilk": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": "Oppai", "Priority": 2},
+    "MilkStorm": {"Power": 0, "Accuracy": 100, "Stamina": 14, "Type": None, "Priority": 3},
+    "Flirt": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "MassSeduction": {"Power": 0, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 2},
+    "CurePoison": {"Power": 0, "Accuracy": 100, "Stamina": 3, "Type": None, "Priority": 1},
+    "SwiftPaws": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 1},
+    "ScentSpray": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "CoatOfSpikes": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 2},
+    "KillerInstinct": {"Power": 0, "Accuracy": 100, "Stamina": 3, "Type": None, "Priority": 1},
+    "Lactate": {"Power": 0, "Accuracy": 95, "Stamina": 4, "Type": "Oppai", "Priority": 2},
+    "Twerk": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 2},
+    "MiracleCure": {"Power": 0, "Accuracy": 100, "Stamina": 6, "Type": None, "Priority": 2},
+    "FishyBusiness": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": "Aquatic", "Priority": 2},
+    "PoisonSlime": {"Power": 0, "Accuracy": 100, "Stamina": 8, "Type": None, "Priority": 2},
+    "SlimeArmor": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 1},
+    "Lubrication": {"Power": 0, "Accuracy": 95, "Stamina": 4, "Type": None, "Priority": 2},
+    "HardenScales": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 1},
+    "SerpentsTongue": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 2},
+    "PoisonSpit": {"Power": 0, "Accuracy": 95, "Stamina": 6, "Type": "Scalie", "Priority": 2},
+    "CumRain": {"Power": 0, "Accuracy": 100, "Stamina": 7, "Type": None, "Priority": 2},
+    "Shrooms": {"Power": 0, "Accuracy": 100, "Stamina": 8, "Type": None, "Priority": 2},
+    "RootBondage": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 2},
+    "VaginalFungus": {"Power": 0, "Accuracy": 100, "Stamina": 9, "Type": None, "Priority": 2},
+    "Howl": {"Power": 0, "Accuracy": 100, "Stamina": 7, "Type": None, "Priority": 2},
+    "SirenSong": {"Power": 0, "Accuracy": 100, "Stamina": 5, "Type": None, "Priority": 2},
+    "StingingTentacles": {"Power": 0, "Accuracy": 100, "Stamina": 7, "Type": None, "Priority": 2},
+    "Titillate": {"Power": 0, "Accuracy": 95, "Stamina": 4, "Type": None, "Priority": 2},
+    "Purr": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 1},
+    "CleansingWaters": {"Power": 0, "Accuracy": 100, "Stamina": 10, "Type": None, "Priority": 1},
+    "Crabs": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": "Aquatic", "Priority": 2},
+    "Slither": {"Power": 0, "Accuracy": 100, "Stamina": 4, "Type": None, "Priority": 1},
+    "FrostArmor": {"Power": 0, "Accuracy": 100, "Stamina": 8, "Type": None, "Priority": 2},
+}
 
-grass_loc = [
-    "Trail1",
-    "EvergreenOutpost",
-    "Trail2",
-    "MillysFarm",
-    "Trail3",
-    "EvergreenCaverns",
-    "Trail4",
-    "Trail5",
-    "SandyTunnels",
-    "Trail6",
-    "DairyFarm",
-    "Trail7",
-    "Trail8",
-    "DustyGrotto",
-    "OldMastersHut",
-    "CaveOfTorment",
-    "Trail9",
-    "CrashSite",
-    "Trail10",
-    "Trail11",
-    "Trail12",
-    "FishingHut",
-    "Trail13",
-    "Trail14",
-    "IslandCave",
-    "ColdHarbor",
-    "Trail15",
-    "Trail16",
-    "Trail16_Cave",
-    "AbandonedMine",
-    "Trail17",
-    "Trail18",
-    "Trail19",
-    "Trail20",
-    "Trail21",
-    "SpiritPassage",
-    "Trail22",
-    "Trail22_Cave",
-]
+grass_loc = ["Trail1", "EvergreenOutpost", "Trail2", "MillysFarm", "Trail3", "EvergreenCaverns", "Trail4", "Trail5", "SandyTunnels", "Trail6", "DairyFarm", "Trail7", "Trail8", "DustyGrotto", "OldMastersHut", "CaveOfTorment", "Trail9", "CrashSite", "Trail10", "Trail11", "Trail12", "FishingHut", "Trail13", "Trail14", "IslandCave", "ColdHarbor", "Trail15", "Trail16", "Trail16_Cave", "AbandonedMine", "Trail17", "Trail18", "Trail19", "Trail20", "Trail21", "SpiritPassage", "Trail22", "Trail22_Cave", ]
 
-water_loc = [
-    "Trail10",
-    "Trail11",
-    "Trail12",
-    "Trail13",
-    "Trail14",
-    "ColdHarbor",
-    "Trail16",
-    "AbandonedMine",
-    "Trail17",
-    "Trail18",
-    "Trail21",
-]
+water_loc = ["Trail10", "Trail11", "Trail12", "Trail13", "Trail14", "ColdHarbor", "Trail16", "AbandonedMine", "Trail17", "Trail18", "Trail21", ]
 
 default_grass_loc = {
     "Trail1": ["Petunia", "Beebee", "Slimee"],
@@ -232,117 +298,8 @@ default_water_loc = {
     "Trail21": ["Jellybish", "Lizzie"],
 }
 
-"""grass_location_list = [
-"Trail 01",
-"Evergreen Outpost",
-"Trail 02",
-"Milly's Farm",
-"Trail 03",
-"Evergreen Caverns",
-"Trail 04",
-"Trail 05",
-"Sandy Tunnels",
-"Trail 06",
-"Dairy Farm",
-"Trail 07",
-"Trail 08",
-"Dusty Grotto",
-"Old Masters Hut",
-"Cave of Torment",
-"Trail 09",
-"Crash Site",
-"Trail 10",
-"Trail 11",
-"Trail 12",
-"Fishing Hut",
-"Trail 13",
-"Trail 14",
-"Cold Harbour",
-"Trail 15",
-"Trail 16",
-"Trail 16 Cave", #TODO make cave work
-"Abandoned Mine",
-"Trail 17",
-"Trail 18",
-"Trail 19",
-"Trail 20",
-"Trail 21",
-"Spirit Passage",
-"Trail 22",
-"Trail 22 Cave", #TODO make cave work
-]
 
-water_location_list = [
-"Trail 10",
-"Trail 11",
-"Trail 12",
-"Trail 13",
-"Trail 14",
-"Cold Harbour",
-"Trail 16",
-"Abandoned Mine",
-"Trail 17",
-"Trail 18",
-"Trail 21",
-]
-
-default_grass_locations = {
-"Trail 01": ["Petunia", "Beebee","Slimee"],
-"Evergreen Outpost": ["Petunia", "Beebee", "Slimee", "Bunni", "Wolfy", ],
-"Trail 02": ["Petunia", "Beebee", "Slimee", "Wolfy", "Bunni", "Ursie", "Gloria"],
-"Milly's Farm": ["Serpentia"],
-"Trail 03": ["Beebee", "Gloria", "Ursie", "Wolfy", "Belle", "Oakie", "trissy", ],
-"Evergreen Caverns": ["Slimee", "Serpentia", "Spinnie", "Octopussy"],
-"Trail 04": ["Ursie", "Gloria", "Belle", "Oakie", "Trissy", "Serpentia", "Chubbie", "Pusseen"],
-"Trail 05": ["Oakie", "Trissy", "Chubbie", "Pusseen", "Boobae", "Tinky"],
-"Sandy Tunnels": ["Spinnie", "Octopussy", "Chubbie", "Rawry", "Serpentax"],
-"Trail 06": ["Serpentax", "Boobae", "Rawry", "Birdy", "Cactee", "Twerky"],
-"Dairy Farm": ["Serpentax", "Birdy", "Cactee", "Twerky", "Bovina", "lacteena", "Flora"],
-"Trail 07": ["Bovina", "Lacteena", "Flora", "Birdy", "Hornie", "Buzzeena", "Bellend"],
-"Trail 08": ["Cactee", "Birdy", "Buzzeena", "Bellend", "Flora", "Gloreen", "Triboobe", "Kittypus"],
-"Dusty Grotto": ["Serpentax", "Twerky", "Hornie", "Dripsy", "Octocunt", "Bearboo"],
-"Old Masters Hut": ["Dripsy", "Cactee", "Triboobe", "Lacteena", "Harlie", "Growleen"],
-"Cave of Torment": ["Hornie", "Octocunt", "Domina", "Dracoomer"],
-"Trail 09": ["Lacteena", "Growleen", "Harlie", "Dracoomer", "Triboobe", "Thiccsie", "Megaboob"],
-"Crash Site": ["Thiccsie", "Megaboob", "Kittypus", "Sexybun", "Mamaoak"],
-"Trail 10": ["Megaboob", "Growleen", "Sexybun", "Mamaoak", "Pinchie"],
-"Trail 11": ["Octocunt", "Pinchie", "Sexybun", "Mamaoak", "Udderella"],
-"Trail 12": ["Octocunt", "Pinchie", "Dracoomer", "Udderella", "Faerie"],
-"Fishing Hut": ["Pinchie", "Thiccsie", "Faerie", "Twerqueen"],
-"Trail 13": ["Twerqueen", "Faerie", "Sexybun", "Amazona"],
-"Trail 14": ["Faerie", "Amazona", "Mamaoak", "Harpie"],
-"Cold Harbour": ["Harpie", "Pinchie", "Gangfang", "Octomommy", "Snowbae"],
-"Trail 15": ["Archna", "Gangfang", "Octomommy", "Snowbae", "Polaria", "Deardeer"],
-"Trail 16": ["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"],
-#"Trail 16 Cave": ["Valkyrie_Normal"], TODO add cave
-"Abandoned Mine": ["Gangfang", "Polaria", "Slithereen", "Deardeer", "Slushie"],
-"Trail 17": ["Slithereen", "Deardeer", "Slushie", "Queenbee", "Boobarella"],
-"Trail 18": ["Slushie", "Slithereen", "Queenbee", "Boobarella", "Panthera"],
-"Trail 19": ["Queenbee","Deardeer","Panthera","Unihorn","Fungie"],
-"Trail 20": ["Queenbee","Unihorn","Fungie","Juggsie","Serphina"],
-"Trail 21": ["Queenbee","Fungie","Juggsie","Serphina"],
-"Spirit Passage": ["Slithereen","Octomommy","Fungie","Dominatrix"],
-"Trail 22": ["Unihorn","Juggsie","Seraphina","Dominatrix"],
-#"Trail 22 Cave": ["Centiboob_Normal"], TODO add cave
-}
-
-default_water_locations = {
-"Trail 10":["Marinel", "Pinchie"],
-"Trail 11":["Sharky", "Marinel"],
-"Trail 12":["Marinel", "Pinchie", "Chocostar", "Octocunt"],
-"Trail 13":["Jellygal", "Sharky", "Chocostar"],
-"Trail 14":["Marinel", "Jellygal", "Sharky"],
-"Cold Harbour":["Chocostar", "Pinchie"],
-"Trail 16":["Jawsy"],
-"Abandoned Mine":["Jawsy", "Jellybish"],
-"Trail 17":["Jellybish", "Jawsy"],
-"Trail 18":["Jellybish", "Jawsy"],
-"Trail 21":["Jellybish","Lizzie"],
-}
-"""
-
-
-def rand_spirit_list(moves, nummoves, evo, stype, base) -> list[str]:
+def rand_spirit_list(moves, nummoves, evo, stype, base, random) -> list[str]:
     outlist = {}
     for s in obtainable_spirit_list:
         if moves:
@@ -390,7 +347,7 @@ def rand_spirit_list(moves, nummoves, evo, stype, base) -> list[str]:
     return [f"{{name:'{s}',{outlist[s]}}}" for s in outlist]
 
 
-def rand_type_chart() -> dict[str, dict[str, int]]:
+def rand_type_chart(random) -> dict[str, dict[str, int]]:
     chart = {}
 
     for t in types:
@@ -402,7 +359,7 @@ def rand_type_chart() -> dict[str, dict[str, int]]:
     return chart
 
 
-def rand_grass_spawn(slots) -> dict[str, list[str]]:
+def rand_grass_spawn(slots, random) -> dict[str, list[str]]:
     grassout = {}
     for g in grass_loc:
         grassout[g] = []
@@ -421,10 +378,28 @@ def rand_grass_spawn(slots) -> dict[str, list[str]]:
     return grassout
 
 
-def rand_water_spawn(slots) -> dict[str, list[str]]:
+def rand_water_spawn(slots, random) -> dict[str, list[str]]:
     waterout = {}
 
     for w in water_loc:
         waterout[w] = random.sample(obtainable_spirit_list, slots)
 
     return waterout
+
+def rand_move_data(random) -> dict[str, dict]:
+    output = move_data.copy()
+    for move in all_moves:
+        if move in attacking_moves:
+            pow = random.choice(range(70))
+        else:
+            if random.choice([0,1,1,1,1,1,1,1]) == 0:
+                pow = random.choice(range(70))
+            else:
+                pow = 0
+
+        acc = min(random.choice(range(79,131)),100)
+        sta = random.choice(range(2,16))
+        typ = random.choice([*types, None])
+        pri = random.choice([1,2,3])
+        output[move] = {"Power": pow, "Accuracy": acc, "Stamina": sta, "Type": typ, "Priority": pri}
+    return output

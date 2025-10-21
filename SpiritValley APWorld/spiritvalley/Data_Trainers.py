@@ -1,5 +1,3 @@
-import random
-
 from worlds.spiritvalley.Data_Spirits import spirit_list
 
 
@@ -177,7 +175,7 @@ Default_Trainers = [
 
 ]
 
-def rand_trainer(rand) -> list[str]:
+def rand_trainer(rand,random) -> list[str]:
     trainret = []
     if rand:
         for t in Default_Trainers:

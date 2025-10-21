@@ -33,7 +33,7 @@ public class ArchipelagoClient
     public static int totalitem = 0;
 
     public static int servermajor = 0;
-    public static int serverminor = 2;
+    public static int serverminor = 3;
     public static int serverbuild = 0;
 
 
@@ -116,6 +116,8 @@ public class ArchipelagoClient
             ServerData.SetupSession(success.SlotData, session.RoomState.Seed);
             Authenticated = true;
 
+            HelperSpirits.genskilllist();
+
             DeathLinkHandler = new(session.CreateDeathLinkService(), ServerData.SlotName);
             session.Locations.CompleteLocationChecksAsync(ServerData.CheckedLocations.ToArray());
             outText = $"Successfully connected to {ServerData.Uri} as {ServerData.SlotName}!";
@@ -139,12 +141,20 @@ public class ArchipelagoClient
                 }
             }
 
+            ServerData.overidetypes();
+
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Randomise_Move_Data"]) == 1)
+            {
+                HelperSpirits.modskilllist(ArchipelagoClient.ServerData.slotData["MOVES"].ToString());
+            }
 
             List<string> s2 = JsonConvert.DeserializeObject<List<string>>(ArchipelagoClient.ServerData.slotData["SPIRITS"].ToString());
             foreach (string item in s2)
             {
                 ServerData.spiritdata.Add(JsonConvert.DeserializeObject<Spirit>(item));
             }
+
+            ServerData.overidebasestats();
 
             List<string> t2 = JsonConvert.DeserializeObject<List<string>>(ArchipelagoClient.ServerData.slotData["ENEMIES"].ToString());
             foreach (var item in t2)
@@ -207,7 +217,7 @@ public class ArchipelagoClient
     {
         if (message.StartsWith("$"))
         {
-            processcode(message);
+            Codes.processcode(message);
         }
         else
         {
@@ -279,262 +289,5 @@ public class ArchipelagoClient
         ArchipelagoConsole.LogMessage("ITEM RESET COMPLETE, RESET " + i.ToString() + " ITEMS");
     }
 
-    public static void processcode(string code)
-    {
-        switch (code)
-        {
-            case "$resetitems":
-                ArchipelagoConsole.LogMessage("RESETING SENT ITEM LIST ALL ITEMS WILL BE REPROCESSED");
-                session.DataStorage[Scope.Slot, "archdata"] = "";
-                resetlist();
-                break;
-
-
-            case "$resync":
-                ArchipelagoConsole.LogMessage("Resyncing Client");
-                session.Socket.SendPacket(new SyncPacket());
-                break;
-
-            case "$resync.items":
-                ArchipelagoConsole.LogMessage("Resyncing Items Recieved");
-                foreach (ItemInfo item in session.Items.AllItemsReceived)
-                {
-                    ArchipelagoConsole.LogMessage($"RESYNCING ITEM ({item.ItemDisplayName}) FROM ({item.Player.Name} : {item.LocationDisplayName})");
-                    archlist.add(item);
-                }
-                ArchipelagoConsole.LogMessage("Resyncing Items Recieved DONE");
-                break;
-
-            case "$deletesave":
-                ArchipelagoConsole.LogMessage("resetting save/archdata");
-                session.DataStorage[Scope.Slot, "save"] = "";
-                session.DataStorage[Scope.Slot, "archdata"] = "";
-                session.DataStorage[Scope.Slot, "slotsetup"] = false;
-                resetlist();
-                break;
-            case "$debugsave":
-                //string playerfile = Crypt.Decrypt(ArchipelagoClient.session.DataStorage[Scope.Slot, "save"]);
-                //
-                //ArchipelagoConsole.LogMessage($"------------PLAYER FILE START -----------");
-                //ArchipelagoConsole.LogMessage($"{playerfile}");
-                //ArchipelagoConsole.LogMessage($"------------PLAYER FILE END -----------");
-                break;
-            case "$debugarchdata":
-                string adata = ArchipelagoClient.session.DataStorage[Scope.Slot, "archdata"];
-
-                ArchipelagoConsole.LogMessage($"------------ARCHDATA START -----------");
-                ArchipelagoConsole.LogMessage($"{adata}");
-                ArchipelagoConsole.LogMessage($"------------ARCHDATA END -----------");
-                break;
-
-
-            case "$warp":
-                if (HelperItems.save.currentSceneName != "OakwoodVillage")
-                {
-                    HelperItems.save.transitionSceneName = "OakwoodVillage";
-                    HelperItems.save.transitionAreaID = "waystone";
-                    SceneTransitionManager.instance.screenFade.FadeOut(0.5f, delegate
-                    {
-                        SceneManager.LoadScene("OakwoodVillage", LoadSceneMode.Single);
-                    });
-                }
-                break;
-            case "$debugdump":
-                ArchipelagoConsole.LogMessage($"TOTAL DOMINATION QUEST SPIRIT: {ServerData.slotData["MAIN_QUEST_TOTAL_DOMINATION"]}");
-                ArchipelagoConsole.LogMessage($"PERKY PETUNIA QUEST SPIRIT: {ServerData.slotData["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"SLITHERING MENANCE QUEST SPIRIT: {ServerData.slotData["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"DEADLY WATERS QUEST SPIRIT: {ServerData.slotData["SIDE_QUEST_DEADLY_WATERS_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"STARRY EYED SURPRISE QUEST SPIRIT: {ServerData.slotData["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"ARCTIC MENACE QUEST SPIRIT: {ServerData.slotData["SIDE_QUEST_ARCTIC_MENACE_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"CENTIBOOB QUEST 1 SPIRIT: {ServerData.slotData["SIDE_QUEST_CENTIBOOB_1_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"CENTIBOOB QUEST 2 SPIRIT: {ServerData.slotData["SIDE_QUEST_CENTIBOOB_2_SPIRIT"]}");
-                ArchipelagoConsole.LogMessage($"CENTIBOOB QUEST 3 SPIRIT: {ServerData.slotData["SIDE_QUEST_CENTIBOOB_3_SPIRIT"]}");
-                break;
-            case "$debugslotdata":
-                ArchipelagoConsole.LogMessage("OUTPUTING SLOT DATA TO LOG FILE");
-                ArchipelagoConsole.LogDebug("SLOTDATA GRASS:");
-                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["Grass_spawn"].ToString());
-                ArchipelagoConsole.LogDebug("SLOTDATA WATER:");
-                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["Water_spawn"].ToString());
-                ArchipelagoConsole.LogDebug("SLOTDATA SPIRITS:");
-                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["SPIRITS"].ToString());
-                ArchipelagoConsole.LogDebug("SLOTDATA TYPECHART:");
-                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["TYPES"].ToString());
-                ArchipelagoConsole.LogDebug("SLOTDATA TRAINERS:");
-                ArchipelagoConsole.LogDebug(ArchipelagoClient.ServerData.slotData["ENEMIES"].ToString());
-                ArchipelagoConsole.LogMessage("SLOT DATA OUTPUT COMPLETE");
-                break;
-            case "$debugclientdata":
-                DataRipping.outputalldata();
-                break;
-            case "$debugdata":
-                ArchipelagoConsole.LogMessage("OUTPUTING SERVER DATA");
-                foreach (var i in ServerData.slotData)
-                {
-                    ArchipelagoConsole.LogMessage($"key:{i.Key} || Value:");
-                    ArchipelagoConsole.LogMessage(ServerData.slotData[i.Key].ToString());
-                }
-                ArchipelagoConsole.LogMessage("OUTPUTING SERVER DATA COMPLETE");
-                break;
-            case "$debugrando":
-                ArchipelagoConsole.LogMessage("OUTPUTING RANDO DATA");
-                if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["randomise_map"]) == 0)
-                {
-                    ArchipelagoConsole.LogMessage("MAP RANDO NOT ENABLED");
-                    break; 
-                }
-                foreach (var i in ServerData.mapdata)
-                {
-                    ArchipelagoConsole.LogMessage($"{i.Key} -> {i.Value}");
-                }
-                ArchipelagoConsole.LogMessage("OUTPUTING RANDO DATA COMPLETE");
-                break;
-            case "$fixsave"://might work?
-                //save.fixsave();
-                break;
-
-
-
-            //CHEATS
-            case "$cheat.reset":
-                ArchipelagoConsole.LogMessage("resetting save flag");
-                session.DataStorage[Scope.Slot, "slotsetup"] = false;
-                break;
-            case "$cheat.quest":
-                ArchipelagoConsole.LogMessage("advanceing main quest");
-                Plugin.ArchipelagoClient.SendMessage($"Activated quest dev cheat to advance main quest");
-                string quest = QuestManager.instance.mainQuest[QuestManager.instance.GetIndexForMainQuestByID(HelperItems.save.GetActiveMainQuestState().id) + 1].id;
-                HelperItems.save.AdvanceMainQuest(quest);
-                break;
-            case "$cheat.crystals":
-                ArchipelagoConsole.LogMessage("Adding 10 Spirit Crystal+2 to Inventory");
-                Plugin.ArchipelagoClient.SendMessage($"Activated crystal dev cheat for extra spirit crystals");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Crystal_SpiritCrystal+2"), 10, true);
-                break;
-            case "$cheat.potion":
-                ArchipelagoConsole.LogMessage("Adding 10 Greater Rejuvenation Potion and Golden Seed of Life to Inventory");
-                Plugin.ArchipelagoClient.SendMessage($"Activated potion dev cheat for extra potions/revives");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Potion_GreaterRejuvenationPotion"), 10, true);
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Consumable_CleansingTonic"), 10, true);
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Consumable_GoldenSeedOfLife"), 10, true);
-                break;
-            case "$cheat.sex":
-                ArchipelagoConsole.LogMessage("Adding 10 ChocolateCake to Inventory");
-                Plugin.ArchipelagoClient.SendMessage($"Activated affection dev cheat giving extra affection items");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Consumable_ChocolateCake"), 10, true);
-                break;
-            case "$cheat.warp":
-                Plugin.ArchipelagoClient.SendMessage($"Activated warp dev cheat unlocking all warp locations");
-                ArchipelagoConsole.LogMessage("MAKING ALL WARPS ACCESSIABLE");
-                HelperItems.save.isFastTravelUnlocked = true;
-                HelperItems.save.GetWayStoneState("OakwoodVillage").isActive = true;
-                HelperItems.save.GetWayStoneState("Greensvale").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail4").isActive = true;
-                HelperItems.save.GetWayStoneState("DairyFarm").isActive = true;
-                HelperItems.save.GetWayStoneState("TumbleweedTown").isActive = true;
-                HelperItems.save.GetWayStoneState("CrashSite").isActive = true;
-                HelperItems.save.GetWayStoneState("CoconutVillage").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail14").isActive = true;
-                HelperItems.save.GetWayStoneState("ColdHarbor").isActive = true;
-                HelperItems.save.GetWayStoneState("Frostville1").isActive = true;
-                HelperItems.save.GetWayStoneState("AbandonedMine").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail18").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail19").isActive = true;
-                HelperItems.save.GetWayStoneState("Trail22").isActive = true;
-                break;
-            case "$cheat.1"://Ancient Temple Key
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Ancient Temple Key");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_AncientTempleKey"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Ancient Temple Key to Inventory");
-                break;
-            case "$cheat.2"://Cock Shaped Key
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Cock Shaped Key");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_CockShapedKey"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Cock Shaped Key to Inventory");
-                break;
-            case "$cheat.3"://Cracked Power Crystal
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Cracked Power Crystal");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_CrackedPowerCrystal"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Cracked Power Crystal to Inventory");
-                break;
-            case "$cheat.4"://Dynamite
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Dynamite");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_Dynamite"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Dynamite to Inventory");
-                break;
-            case "$cheat.5"://Fancy Suit
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Fancy Suit");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_FancySuit"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Fancy Suit to Inventory");
-                break;
-            case "$cheat.6"://Fishing Rod
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Fishing Rod");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_FishingRod"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Fishing Rod to Inventory");
-                break;
-            case "$cheat.7"://Power Crystal
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Power Crystal");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_PowerCrystal"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Power Crystal to Inventory");
-                break;
-            case "$cheat.8"://Raw Crystal Chunk
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Raw Crystal Chunk");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_RawCrystalChunk"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Raw Crystal Chunk to Inventory");
-                break;
-            case "$cheat.9"://Red Harmony Crystal
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Red Harmony Crystal");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_RedHarmonyCrystal"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Red Harmony Crystal to Inventory");
-                break;
-            case "$cheat.10"://Spirit Handler License
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Spirit Handler License");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_SpiritHandlerLicense"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Spirit Handler License to Inventory");
-                break;
-            case "$cheat.11"://Stone Key
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Stone Key");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_StoneKey"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Stone Key to Inventory");
-                break;
-            case "$cheat.12"://Super Secret Orders
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Super Secret Orders");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_SuperSecretOrders"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Super Secret Orders to Inventory");
-                break;
-            case "$cheat.13"://Testosterone Pills
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Testosterone Pills");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_TestosteronePills"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Testosterone Pills to Inventory");
-                break;
-            case "$cheat.14"://Video Cassette
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Video Cassette");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_VideoCasette"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Video Cassette to Inventory");
-                break;
-            case "$cheat.15"://Wedding Ring
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Wedding Ring");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_WeddingRing"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Wedding Ring to Inventory");
-                break;
-            case "$cheat.16"://Yellow Harmony Crystal
-                Plugin.ArchipelagoClient.SendMessage($"Activated keyitem dev cheat giving keyitem: Yellow Harmony Crystal");
-                HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("KeyItem_YellowHarmonyCrystal"), 1, true);
-                ArchipelagoConsole.LogMessage("Added Yellow Harmony Crystal to Inventory");
-                break;
-
-
-            default:
-                if (code.StartsWith("$cheat."))
-                {
-                    ArchipelagoConsole.LogMessage("UNKNOWN CLIENT CHEAT COMMAND: " + code);
-                }
-                else
-                {
-                    ArchipelagoConsole.LogMessage("UNKNOWN CLIENT COMMAND: " + code);
-                }
-                    break;
-        }
-    }
-
+    
 }

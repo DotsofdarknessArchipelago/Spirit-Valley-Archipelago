@@ -131,6 +131,9 @@ def base_rules(multiworld, player, options, data):
 
     # BOLDER CHEST RULES
     set_rule(multiworld.get_location("Evergreen Outpost: Chest Behind Pushable Bolder", player), lambda state: state.has("Testosterone Pills", player))
+    set_rule(multiworld.get_location("Greensvale: Chest Behind Pushable Bolder In the North", player), lambda state: state.has("Testosterone Pills", player))
+    set_rule(multiworld.get_location("Evergreen Caverns: Chest 1 Behind Rawry", player), lambda state: state.has("Testosterone Pills", player))
+    set_rule(multiworld.get_location("Evergreen Caverns: Chest 2 Behind Rawry", player), lambda state: state.has("Testosterone Pills", player))
     set_rule(multiworld.get_location("Milly's Farm: Chest Behind Pushable Bolder", player), lambda state: state.has("Testosterone Pills", player))
     set_rule(multiworld.get_location("Sandy Tunnels: Chest North of Chad", player), lambda state: state.has("Testosterone Pills", player))
     set_rule(multiworld.get_location("Old Masters Hut: Chest in Basement", player), lambda state: state.has("Testosterone Pills", player))

@@ -71,8 +71,8 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
         {
             MonsterManager man = MonsterManager.instance;
             //MonsterSkill[] skillout = new MonsterSkill[0];
-            List<string> skillout = new List<string>();
-            List<string> pskillout = new List<string>();
+            List<MonsterSkill> Askillout = new List<MonsterSkill>();
+            List<MonsterSkill> Nskillout = new List<MonsterSkill>();
             foreach (MonsterBaseStats mon in man.monstersBaseStats)
             {
                 foreach (SkillConfiguration s in mon.skills)
@@ -80,31 +80,44 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     //ArchipelagoConsole.LogMessage($"SKILL:{s.skill.skillName.GetLocalizedString()}, POWER:{s.skill.power}");
                     if (s.skill.power == 0)
                     {
-                        if (!pskillout.Contains(s.skill.name))
+                        if (!Nskillout.Contains(s.skill))
                         {
-                            pskillout.Add(s.skill.name);
+                            Nskillout.Add(s.skill);
                         }
                     }
                     else
                     {
-                        if (!skillout.Contains(s.skill.name))
+                        if (!Askillout.Contains(s.skill))
                         {
-                            skillout.Add(s.skill.name);
+                            Askillout.Add(s.skill);
                         }
                     }
                 }
             }
 
             ArchipelagoConsole.LogMessage("ATTACKING MOVES");
-            foreach (String s in skillout)
+            foreach (MonsterSkill s in Askillout)
             {
-                ArchipelagoConsole.LogMessage(s);
+                if (s.elementalStat == null)
+                {
+                    ArchipelagoConsole.LogMessage($"\"{s.name}\":{{\"Power\":{s.power},\"Accuracy\":{s.accuracy},\"Stamina\":{s.staminaCost},\"Type\":None,\"Priority\":{s.priority}}}");
+                }
+                else
+                {
+                    ArchipelagoConsole.LogMessage($"\"{s.name}\":{{\"Power\":{s.power},\"Accuracy\":{s.accuracy},\"Stamina\":{s.staminaCost},\"Type\":\"{s.elementalStat.name}\",\"Priority\":{s.priority}}}");
+                }
             }
-            ArchipelagoConsole.LogMessage("");
             ArchipelagoConsole.LogMessage("NON ATTACKING MOVES");
-            foreach (String s in pskillout)
+            foreach (MonsterSkill s in Nskillout)
             {
-                ArchipelagoConsole.LogMessage(s);
+                if (s.elementalStat == null)
+                {
+                    ArchipelagoConsole.LogMessage($"\"{s.name}\":{{\"Power\":{s.power},\"Accuracy\":{s.accuracy},\"Stamina\":{s.staminaCost},\"Type\":None,\"Priority\":{s.priority}}}");
+                }
+                else
+                {
+                    ArchipelagoConsole.LogMessage($"\"{s.name}\":{{\"Power\":{s.power},\"Accuracy\":{s.accuracy},\"Stamina\":{s.staminaCost},\"Type\":\"{s.elementalStat.name}\",\"Priority\":{s.priority}}}");
+                }
             }
         }
     }

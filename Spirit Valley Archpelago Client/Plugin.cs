@@ -22,9 +22,9 @@ public class Plugin : BaseUnityPlugin
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 0;
-    public const int PluginVersionMinor = 2;
-    public const int PluginVersionBuild = 3;
-    public const string PluginVersion = "0.2.3";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionMinor = 3;
+    public const int PluginVersionBuild = 0;
+    public const string PluginVersion = "0.3.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -43,6 +43,7 @@ public class Plugin : BaseUnityPlugin
     public static GUIStyle mtext;
 
     public Dictionary<string, MonsterSkill> skilllist => HelperSpirits.skilllist;
+    public static Dictionary<string, object> skilllisttest = new Dictionary<string, object>();
     public static ArchipelageItemList test = null;
 
 
@@ -224,10 +225,7 @@ public class Plugin : BaseUnityPlugin
     public void startarch()
     {
         
-        HelperSpirits.genskilllist();
         bool setup = ArchipelagoClient.session.DataStorage[Scope.Slot, "slotsetup"];
-        ArchipelagoClient.ServerData.overidetypes();
-        ArchipelagoClient.ServerData.overidebasestats();
         ArchipelagoConsole.LogDebug($"SETUP VALUE: {setup}");
         setup = setup && (File.Exists(Application.persistentDataPath + "/archipelago/archipelago.json") || File.Exists(Application.persistentDataPath + "/archipelago/archipelago_auto.json"));
         if (setup)

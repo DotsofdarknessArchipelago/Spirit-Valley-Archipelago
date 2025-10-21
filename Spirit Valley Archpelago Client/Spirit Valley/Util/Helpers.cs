@@ -90,6 +90,57 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
             }
         }
 
+        public static void modskilllist(string data)
+        {
+            Dictionary<string, object> test = JsonConvert.DeserializeObject<Dictionary<string, object>>(data);
+            foreach (var item in test)
+            {
+                JObject d = JObject.Parse(item.Value.ToString());
+                skilllist[item.Key].power = (int)d["Power"];
+                skilllist[item.Key].accuracy = (int)d["Accuracy"];
+                skilllist[item.Key].staminaCost = (int)d["Stamina"];
+                skilllist[item.Key].priority = (int)d["Priority"];
+
+                var type = (string)d["Type"];
+                switch (type)
+                {
+                    case "Furry":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Furry);
+                        break;
+                    case "Lust":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Lust);
+                        break;
+                    case "Plant":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Plant);
+                        break;
+                    case "Demon":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Demon);
+                        break;
+                    case "Scalie":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Scalie);
+                        break;
+                    case "Slime":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Slime);
+                        break;
+                    case "Oppai":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Oppai);
+                        break;
+                    case "Avian":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Avian);
+                        break;
+                    case "Aquatic":
+                        skilllist[item.Key].elementalStat = MonsterManager.instance.GetElementalStatByType(ElementalType.Aquatic);
+                        break;
+                    case null:
+                        skilllist[item.Key].elementalStat = null;
+                        break;
+                    default:
+                        skilllist[item.Key].elementalStat = null; 
+                        break;
+                }
+            }
+        }
+
         public static string mapidTostring(MapLocationID id)
         {
             switch (id)
@@ -168,6 +219,93 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     break;
             }
             return "";
+
+        }
+
+        public static MapLocationID mapstringToid(string map)
+        {
+            switch (map)
+            {
+                case "Trail1":
+                    return MapLocationID.Trail1;
+                case "EvergreenOutpost":
+                    return MapLocationID.EvergreenOutpost;
+                case "EvergreenOutpost_East":
+                    return MapLocationID.EvergreenOutpost;
+                case "Trail2":
+                    return MapLocationID.Trail2;
+                case "MillysFarm":
+                    return MapLocationID.MillysFarm;
+                case "Trail3":
+                    return MapLocationID.Trail3;
+                case "EvergreenCaverns":
+                    return MapLocationID.EvergreenCaverns;
+                case "Trail4":
+                    return MapLocationID.Trail4;
+                case "Trail5":
+                    return MapLocationID.Trail5;
+                case "SandyTunnels":
+                    return MapLocationID.SandyTunnels;
+                case "Trail6":
+                    return MapLocationID.Trail6;
+                case "DairyFarm":
+                    return MapLocationID.DairyFarm;
+                case "Trail7":
+                    return MapLocationID.Trail7;
+                case "Trail8":
+                    return MapLocationID.Trail8;
+                case "DustyGrotto":
+                    return MapLocationID.DustyGrotto;
+                case "OldMastersHut":
+                    return MapLocationID.OldMastersHut;
+                case "CaveOfTorment":
+                    return MapLocationID.CaveOfTorment;
+                case "Trail9":
+                    return MapLocationID.Trail9;
+                case "CrashSite":
+                    return MapLocationID.CrashSite;
+                case "Trail10":
+                    return MapLocationID.Trail10;
+                case "Trail11":
+                    return MapLocationID.Trail11;
+                case "Trail12":
+                    return MapLocationID.Trail12;
+                case "FishingHut":
+                    return MapLocationID.FishingHut;
+                case "Trail13":
+                    return MapLocationID.Trail13;
+                case "Trail14":
+                    return MapLocationID.Trail14;
+                case "ColdHarbor":
+                    return MapLocationID.ColdHarbor;
+                case "Trail15":
+                    return MapLocationID.Trail15;
+                case "Trail16":
+                    return MapLocationID.Trail16;
+                case "Trail16_Top":
+                    return MapLocationID.Trail16;
+                case "AbandonedMine":
+                    return MapLocationID.AbandonedMine;
+                case "Trail17":
+                    return MapLocationID.Trail17;
+                case "Trail18":
+                    return MapLocationID.Trail18;
+                case "Trail19":
+                    return MapLocationID.Trail19;
+                case "Trail20":
+                    return MapLocationID.Trail20;
+                case "Trail20_Right":
+                    return MapLocationID.Trail20;
+                case "Trail21":
+                    return MapLocationID.Trail21;
+                case "SpiritPassage":
+                    return MapLocationID.SpiritPassage;
+                case "Trail22":
+                    return MapLocationID.Trail22;
+                default:
+                    break;
+            }
+            return MapLocationID.Undefined;
 
         }
 

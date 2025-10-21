@@ -97,6 +97,11 @@ class Randomise_Spirit_Stats(Toggle):
     default = False
 
 
+class Randomise_Move_Data(Toggle):
+    """randomise Move Data"""
+    display_name = "Randomise Move Data"
+    default = False
+
 
 class Randomise_Type_Effective(Toggle):
     """randomise Type effectiveness"""
@@ -144,7 +149,7 @@ class randomise_map(Toggle):
 class randomise_warps(Toggle):
     """add warp locations/items to the rando pool"""
     display_name = "warp rando"
-    default = False
+    default = True
 
 
 
@@ -192,6 +197,8 @@ class SpiritValleyOptions(PerGameCommonOptions):
     Randomise_Spirit_Evo: Randomise_Spirit_Evo
     Randomise_Spirit_Type: Randomise_Spirit_Type
     Randomise_Spirit_Stats: Randomise_Spirit_Stats
+
+    Randomise_Move_Data:Randomise_Move_Data
 
     Randomise_Type_Effective: Randomise_Type_Effective
 

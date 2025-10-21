@@ -4,34 +4,34 @@ class Map_Region:
     warpable: bool
 
     grass: bool
-    grass_slots: [str]  # TODO FIX PROPERLY
-    grass_lv_range: [int]
+    #grass_slots: [str]  # TODO FIX PROPERLY
+    #grass_lv_range: [int]
 
     water: bool
-    water_slots: [str]  # TODO FIX PROPERLY
-    water_lv_range: [int]
+    #water_slots: [str]  # TODO FIX PROPERLY
+    #water_lv_range: [int]
 
     chest_locations: [str]
     trainer_locations: [str]
     quest_locations: [str]
 
-    entry: [str]
-    exits: [str]
+    #entry: [str]
+    exits: {str,int}
 
-    def __init__(self, map_id, warpable, grass, grass_slots, grass_lv_range, water, water_slots, water_lv_range, chest_locations, trainer_locations, quest_locations, entry, exit):
+    def __init__(self, map_id, warpable, grass, water, chest_locations, trainer_locations, quest_locations, exits):
         self.map_id = map_id
         self.warpable = warpable
         self.grass = grass
-        self.grass_slots = grass_slots
-        self.grass_lv_range = grass_lv_range
+        #self.grass_slots = grass_slots
+        #self.grass_lv_range = grass_lv_range
         self.water = water
-        self.water_slots = water_slots
-        self.water_lv_range = water_lv_range
+        #self.water_slots = water_slots
+        #self.water_lv_range = water_lv_range
         self.chest_locations = chest_locations
         self.trainer_locations = trainer_locations
         self.quest_locations = quest_locations
-        self.entry = entry
-        self.exits = exit
+        #self.entry = entry
+        self.exits = exits
 
 
 class transititon:
@@ -52,10 +52,9 @@ class transititon:
 
 
 regions = [
-    Map_Region("OakwoodVillage",
-               True,
-               False, None, None,
-               False, None, None,
+    Map_Region("OakwoodVillage",True,
+               False, #None, None,
+               False, #None, None,
                None,
                [
                    "Oakwood Village: Defeat Robbie"  # NPC SCRIPTED   61822611-267a-4366-b99c-fadc5a23ad01 [{"Wolfy":3}]
@@ -65,25 +64,42 @@ regions = [
                    "Complete Main Quest: Captain Maria",
                    "Complete Main Quest: First Mission: Success!",
                ],
-               ["Top",  "FarmHouseOut"],#"ClinicOut",HqOut
+               #["Top",  "FarmHouseOut"],#"ClinicOut",HqOut
                ["Top",  "FarmHouseOut"]),#"ClinicOut",HqOut
 
-    Map_Region("OakwoodVillage_Clinic", False, False, None, None, False, None, None, None, None,
+    Map_Region("OakwoodVillage_Clinic", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
                [
                    "Complete Main Quest: Doctor’s Appointment",
                    "Complete Main Quest: Consulting Dolly",
                ],
-               [],[]),#["Bottom"], ["Bottom"]),
+               #[],
+               []),#["Bottom"], ["Bottom"]),
 
-    Map_Region("OakwoodVillage_FarmHouse", False, False, None, None, False, None, None,
+    Map_Region("OakwoodVillage_FarmHouse", False,
+               False, #None, None,
+               False, #None, None,
                ["Oakwood Village House: Chest House"],  # b9f52b5c-fd8d-43b8-9f5c-85a5b3686a6a ["Chastity belt"]
-               None, None, ["Bottom"], ["Bottom"]),
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("OakwoodVillage_Hq", False, False, None, None, False, None, None, None, None, None, [],[]),#["Bottom"], ["Bottom"]),
+    Map_Region("OakwoodVillage_Hq", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #[],
+               []),#["Bottom"], ["Bottom"]),
 
     Map_Region("Trail1", False,
-               True, ["Petunia", "Beebee", "Slimee"], [3, 3],
-               False, None, None,
+               True, #["Petunia", "Beebee", "Slimee"], [3, 3],
+               False, #None, None,
                [
                    "Trail 01: Chest Near Piper",  # #33bdf3c7-7b56-4578-b038-3d9f10a7c978 ["2x spirit crystal","25 coins"]
                    "Trail 01: Chest North of Piper",  # 33a2ce7f-9568-4435-ac78-a4e3660948fe ["2x Spirit repelent"]
@@ -91,12 +107,12 @@ regions = [
                ],
                None,
                ["Complete Side Quest: Perky Petunia"],
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("EvergreenOutpost", False,
-               True, ["Petunia", "Beebee", "Slimee", "Bunni", "Wolfy"], [3, 4],
-               False, None, None,
+               True, #["Petunia", "Beebee", "Slimee", "Bunni", "Wolfy"], [3, 4],
+               False, #None, None,
                [
                    "Evergreen Outpost: Chest Near Medic",  # 7c0b0138-7aa6-49ea-a1eb-015e33731f51 ["Butt plug of wisdom"]
                    "Evergreen Outpost: Chest Above Grass Patch",  # 49a27369-563a-444d-9112-45ff04198979 ["vial of health", "2x antidote"]
@@ -111,14 +127,21 @@ regions = [
                    "Complete Main Quest: Super Secret Orders",
                    "Complete Main Quest: Bridge crossing",
                ],
-               ["Left", "Bottom"],
+               #["Left", "Bottom"],
                ["Left", "Bottom"]),
     # ADDED REGION DUE TO INACCESSIBILITY BEFORE QUEST IS COMPLETE
-    Map_Region("EvergreenOutpost_East", False, False, None, None, False, None, None, None, None, None, ["Right"], ["Right"]),
+    Map_Region("EvergreenOutpost_East", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Right"],
+               ["Right"]),
 
     Map_Region("Trail2", False,
-               True, ["Petunia", "Beebee", "Slimee", "Wolfy", "Bunni", "Ursie", "Gloria"], [3, 4],
-               False, None, None,
+               True, #["Petunia", "Beebee", "Slimee", "Wolfy", "Bunni", "Ursie", "Gloria"], [3, 4],
+               False, #None, None,
                [
                    "Trail 02: Chest Near Billy",  # e129287a-733f-4761-b12d-d4f6265d3e38 ["cupcake", "20x coins"]
                    "Trail 02: Chest in Hidden Path Next to Macy",  # d36a4079-4dc5-4cbf-92ec-fbb4e5e5a674 ["Ass lovers Extreme issue 12"]
@@ -134,12 +157,12 @@ regions = [
                [
                    "Complete Main Quest: Crimson Agent"
                ],
-               ["Left", "Right"],
+               #["Left", "Right"],
                ["Left", "Right"]),
 
     Map_Region("Greensvale", True,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Greensvale: Chest South of Waystone",  # e5139fe4-aae0-4c8c-9591-94cd9405a8cb ["2x vial of rejuvination"]
                    "Greensvale: Chest Next To XXX Shop",  # 23d8f4fb-7284-483c-a145-ed500c426339 ["lollypop", "15x coins"]
@@ -150,36 +173,60 @@ regions = [
                    "Complete Main Quest: Onward to Greensvale",
                    "Complete Main Quest: Harmonious Disturbance",
                ],
-               ["Right", "Top", "Bottom", "ClinicOut", "MerchantOut", "SexShopOut", "SmallHouseOut"],
+               #["Right", "Top", "Bottom", "ClinicOut", "MerchantOut", "SexShopOut", "SmallHouseOut"],
                ["Right", "Top", "Bottom", "ClinicOut", "MerchantOut", "SexShopOut", "SmallHouseOut"]),
 
-    Map_Region("Greensvale_Clinic", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("Greensvale_Clinic", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("Greensvale_Merchant", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("Greensvale_Merchant", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("Greensvale_SexShop", False, False, None, None, False, None, None, None, None,
+    Map_Region("Greensvale_SexShop", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
                [
                    "Complete Main Quest: Becky can fix it",
                    "Complete Main Quest: Hunt for the chunk",
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("Greensvale_SmallHouse", False, False, None, None, False, None, None,
+    Map_Region("Greensvale_SmallHouse", False,
+               False, #None, None,
+               False, #None, None,
                ["Greensvale House: Chest in House"],  # 64386704-ba0e-461c-ad5d-36327d902e9b ["spirit crystal", "25x coins"]
-               None, None, ["Bottom"], ["Bottom"]),
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
     Map_Region("MillysFarm", False,
-               True, ["Serpentia"], [5, 6],
-               False, None, None,
+               True, #["Serpentia"], [5, 6],
+               False, #None, None,
                ["Milly's Farm: Chest Behind Pushable Bolder"],  # e21093f1-32a4-4e08-ba6c-7090002ccdd9 ["seed of life"]
                None,
                ["Complete Side Quest: Slithering Menace"],
-               ["Top"],
+               #["Top"],
                ["Top"]),
 
     Map_Region("Trail3", False,
-               True, ["Beebee", "Gloria", "Ursie", "Wolfy", "Belle", "Oakie", "trissy"], [5, 7],
-               False, None, None,
+               True, #["Beebee", "Gloria", "Ursie", "Wolfy", "Belle", "Oakie", "trissy"], [5, 7],
+               False, #None, None,
                [
                    "Trail 03: Chest North of Miriam",  # 44683738-a42b-4c9c-b200-e4742152e790 ["2x vial of health", "cleansing tonic"]
                    "Trail 03: Chest South of Miriam",  # 4d2efd45-b043-46de-9a27-e75da0caec9f ["25x coin", "candy cane"]
@@ -191,12 +238,12 @@ regions = [
                    "Trail 03: Defeat Jenna",  # 6778b3a1-97d4-457d-adc1-c324dbad017e [{"Ursie":6}]
                ],
                ["Complete Side Quest: Pleasuring Pusseen"],
-               ["Bottom", "Cave"],
+               #["Bottom", "Cave"],
                ["Bottom", "Cave"]),
 
     Map_Region("EvergreenCaverns", False,
-               True, ["Slimee", "Serpentia", "Spinnie", "Octopussy"], [6, 9],
-               False, None, None,
+               True, #["Slimee", "Serpentia", "Spinnie", "Octopussy"], [6, 9],
+               False, #None, None,
                [
                    "Evergreen Caverns: Chest West of Stu",  # 0b29ff75-0e24-4378-9053-db03ca077e79 ["2x vial of stamina"]
                    "Evergreen Caverns: Chest South of Nicole",  # 9396ff11-ac75-4b7c-8999-286ff2c84f75 ["15x coin", "vial of health", "antidote"]
@@ -209,12 +256,12 @@ regions = [
                    "Evergreen Caverns: Defeat Rawry",  # 72e0b641-b787-46cb-8fe8-eb17f93073fa [{"Rawry":15}]
                ],
                None,
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("Trail4", True,
-               True, ["Ursie", "Gloria", "Belle", "Oakie", "Trissy", "Serpentia", "Chubbie", "Pusseen"], [7, 10],
-               False, None, None,
+               True, #["Ursie", "Gloria", "Belle", "Oakie", "Trissy", "Serpentia", "Chubbie", "Pusseen"], [7, 10],
+               False, #None, None,
                [
                    "Trail 04: Chest West of Evergreen Caverns Entrance",  # 0471dbe1-259d-4067-a0a3-ef54917278ad ["2x cupcake", "25x coin", "fallen star"]
                    "Trail 04: Chest West Side of Map",  # 32d13c92-6c2f-4386-8a6c-e3d6849fbcf8 ["small dildo"]
@@ -222,12 +269,12 @@ regions = [
                ],
                None,
                None,
-               ["Cave", "Temple"],#, "TempleBackDoor"
+               #["Cave", "Temple"],#, "TempleBackDoor"
                ["Cave", "Temple"]),#, "TempleBackDoor"
 
     Map_Region("AncientTemple1", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Ancient Temple 1: Chest Near 3rd Crimson Cloak",  # 84c4ca3f-c75c-404d-a348-fb7969103347 ["seed of life", "cleansing Tonic"]
                    "Ancient Temple 1: Chest in Path Loop",  # d62d3ed0-99f1-4c84-9c89-cdee2fbcda22 ["150x coin", "infinity charm"]
@@ -242,12 +289,12 @@ regions = [
                    "Ancient Temple 1: Defeat 6th Crimson Cloak",  # 7c73c737-4fd5-4266-92ea-caf02f8c9320 [{"Ursie":8}, {"Oakie":6}]
                ],
                None,
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("AncientTemple2", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Ancient Temple 2: Chest West Side of Room",  # 0b46cb8f-5eb2-4a50-8586-07f94fa07c80 ["Butt plug of power +1"]
                    "Ancient Temple 2: Chest East side of Room",  # c6b0df02-8d68-414d-9a25-8b9dd4c854f6 ["2x Spirit Crystal"]
@@ -257,12 +304,12 @@ regions = [
                    "Ancient Temple 2: Defeat Crimson Cloak",  # 122ab3e7-c278-402b-a741-c83633c93626 [{"Octopussy":8}, {"Serpentia":6}, {"Spinnie":7}]
                ],
                None,
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("AncientTemple3", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                None,
                [
                    "Ancient Temple 3: Defeat Valkrie",  # NPC SCRIPTED [{"Valkrie":11}]
@@ -270,12 +317,12 @@ regions = [
                [
                    "Complete Main Quest: Temple Investigation"
                ],
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("Trail5", False,
-               True, ["Oakie", "Trissy", "Chubbie", "Pusseen", "Boobae", "Tinky"], [10, 12],
-               False, None, None,
+               True, #["Oakie", "Trissy", "Chubbie", "Pusseen", "Boobae", "Tinky"], [10, 12],
+               False, #None, None,
                [
                    "Trail 05: Chest Near Evergreen Outpost Entrance",  # 4c8940eb-e49c-40dc-8a26-d4f60f4bc9c2 ["2x elusive sent"]
                    "Trail 05: Chest East of Mila",  # 816a4058-20a0-4996-9648-145ad9597850 ["2x strawberry cake", "35x coins"]
@@ -288,12 +335,12 @@ regions = [
                    "Trail 05: Defeat Lulu",  # 72a096dd-0fe8-4146-9bf0-c7d5e5234b98 [{"Boobae":10}, {"Beebee":7}]
                ],
                None,
-               ["Left", "TunnelsOut"],
+               #["Left", "TunnelsOut"],
                ["Left", "TunnelsOut"]),
 
     Map_Region("SandyTunnels", False,
-               True, ["Spinnie", "Octopussy", "Chubbie", "Rawry", "Serpentax"], [10, 13],
-               False, None, None,
+               True, #["Spinnie", "Octopussy", "Chubbie", "Rawry", "Serpentax"], [10, 13],
+               False, #None, None,
                [
                    "Sandy Tunnels: Chest South of Chad",  # ba7ef7c4-2cbe-48ef-b777-c9c279d3a8f3 ["2x healing potion", "50x coin", "fallen star"]
                    "Sandy Tunnels: Chest North of Chad",  # 323a990d-8933-4c80-839b-1c40a3eeaaf9 ["chastity belt of love"]
@@ -305,12 +352,12 @@ regions = [
                    "Sandy Tunnels: Defeat Destiny",  # 265abaf4-18eb-45fd-8aba-6bc4f8844f81 [{"Oakie":9}, {"Serpentina":7}]
                ],
                None,
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("Trail6", False,
-               True, ["Serpentax", "Boobae", "Rawry", "Birdy", "Cactee", "Twerky"], [11, 13],
-               False, None, None,
+               True, #["Serpentax", "Boobae", "Rawry", "Birdy", "Cactee", "Twerky"], [11, 13],
+               False, #None, None,
                [
                    "Trail 06: Chest West of Sandy Tunnels Entrance",  # 002d680f-44a9-4e90-8827-c57cc8f69e65 ["2x healing potion", "candy cane"]
                    "Trail 06: Chest East of Kelsie",  # be999696-f2d3-4379-adf3-7d16693a5e5f ["2x cupcake", "30x coin"]
@@ -322,12 +369,12 @@ regions = [
                    "Trail 06: Defeat Juliet",  # 4cc138d0-8b3d-4ea6-8dd4-e593ae0d9aef [{"Spinnie":10}, {"Tinky":7}]
                ],
                None,
-               ["TunnelsOut", "Right"],
+               #["TunnelsOut", "Right"],
                ["TunnelsOut", "Right"]),
 
     Map_Region("DairyFarm", True,
-               True, ["Serpentax", "Birdy", "Cactee", "Twerky", "Bovina", "lacteena", "Flora"], [11, 14],
-               False, None, None,
+               True, #["Serpentax", "Birdy", "Cactee", "Twerky", "Bovina", "lacteena", "Flora"], [11, 14],
+               False, #None, None,
                [
                    "Dairy Farm: Chest North of Waystone",  # 303be291-de84-4fae-b055-822959b7cc0a ["100x coin"]
                    "Dairy Farm: Chest South of Waystone",  # d27f5dea-d45b-4cb8-9df8-67538b55548d ["rejuvination potion", "infinity charm"]
@@ -336,12 +383,12 @@ regions = [
                ],
                None,
                ["Complete Side Quest: Cattle Thieves"],
-               ["Left", "Right"],
+               #["Left", "Right"],
                ["Left", "Right"]),
 
     Map_Region("Trail7", False,
-               True, ["Bovina", "Lacteena", "Flora", "Birdy", "Hornie", "Buzzeena", "Bellend"], [12, 14],
-               False, None, None,
+               True, #["Bovina", "Lacteena", "Flora", "Birdy", "Hornie", "Buzzeena", "Bellend"], [12, 14],
+               False, #None, None,
                [
                    "Trail 07: Chest Near Dairy Farm Entrance",  # 38122e15-ff3c-4777-be9f-53b2e7c8c73c ["2x spirit repelent"]
                    "Trail 07: Chest North of Bella",  # add11e84-b206-48ba-b2dd-2ff56262eabc ["rubber fist"]
@@ -355,12 +402,12 @@ regions = [
                    "Trail 07: Defeat Cassidy",  # 0f05b20d-99cf-4cee-852e-7e5edac5a456 [{"Twerky":11}, {"Buzzeena":13}, {"Tinky":10}, {"Octopussy":11}]
                ],
                None,
-               ["Left", "Right"],
+               #["Left", "Right"],
                ["Left", "Right"]),
 
     Map_Region("TumbleweedTown", True,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Tumbleweed Town: Chest South of Town",  # e4d4ae3a-d411-488f-819d-a9624148a5ed ["2x rejuvination potion", "fallen star"]
                    "Tumbleweed Town: Chest North-West of Town",  # b0973844-878a-47e9-8ab2-bea68625ace0 ["swift plug"]
@@ -381,30 +428,54 @@ regions = [
                    "Complete Main Quest: How the Dominoes fall",
                    "Complete Main Quest: Big balloon adventure",
                ],
-               ["Left", "Bottom", "Top", "ClinicOut", "KingsSaloonOut", "MerchantOut", "SmallHouseOut"],
+               #["Left", "Bottom", "Top", "ClinicOut", "KingsSaloonOut", "MerchantOut", "SmallHouseOut"],
                ["Left", "Bottom", "Top", "ClinicOut", "KingsSaloonOut", "MerchantOut", "SmallHouseOut"]),
 
-    Map_Region("TumbleweedTown_Clinic", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("TumbleweedTown_Clinic", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("TumbleweedTown_KingsSaloon1", False, False, None, None, False, None, None, None, None,
+    Map_Region("TumbleweedTown_KingsSaloon1", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
                [
                    "Complete Main Quest: An audience with the King",
                    "Complete Main Quest: Return of the champion",
                    "Complete Main Quest: Breeding season",
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("TumbleweedTown_Merchant", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("TumbleweedTown_Merchant", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("TumbleweedTown_SmallHouse1", False, False, None, None, False, None, None,
+    Map_Region("TumbleweedTown_SmallHouse1", False,
+               False, #None, None,
+               False, #None, None,
                [
                    "Tumbleweed Town House: Chest in House",  # 71627b20-173d-4c34-8242-82806333e7b5 ["2x strawberry cake", "30x coin"]
                ],
-               None, None, ["Bottom"], ["Bottom"]),
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
     Map_Region("Trail8", False,
-               True, ["Cactee", "Birdy", "Buzzeena", "Bellend", "Flora", "Gloreen", "Triboobe", "Kittypus"], [13, 15],
-               False, None, None,
+               True, #["Cactee", "Birdy", "Buzzeena", "Bellend", "Flora", "Gloreen", "Triboobe", "Kittypus"], [13, 15],
+               False, #None, None,
                [
                    "Trail 08: Chest West of Tumbleweed Town Entrance",  # 24c5ce52-ec0f-492f-9447-401df4f6c100 ["healing potion", "25x coin"]
                    "Trail 08: Chest South of Marisa",  # baea8603-5e88-4935-95a9-ef10c47e8bad ["butt plug of life +1"]
@@ -416,12 +487,12 @@ regions = [
                    "Trail 08: Defeat Alanna",  # 163d96da-8b46-4b1e-baf6-e46708072abe [{"Buzzeena":14}, {"Serpentax":13}, {"Flora":13}]
                ],
                None,
-               ["Top", "Tunnel"],
+               #["Top", "Tunnel"],
                ["Top", "Tunnel"]),
 
     Map_Region("DustyGrotto", False,
-               True, ["Serpentax", "Twerky", "Hornie", "Dripsy", "Octocunt", "Bearboo"], [13, 16],
-               False, None, None,
+               True, #["Serpentax", "Twerky", "Hornie", "Dripsy", "Octocunt", "Bearboo"], [13, 16],
+               False, #None, None,
                [
                    "Dusty Grotto: Chest Near Crystal",  # 25d61715-32da-4887-a04d-381b74e7fd70 ["seed of life", "100x coin", "infinity charm"]
                    "Dusty Grotto: Chest West of Skye",  # b859600e-fad1-486c-9879-5d0782077bc3 ["2x spirit crystal+1", "candy cane"]
@@ -432,24 +503,24 @@ regions = [
                    "Dusty Grotto: Defeat Skye",  # 176d7645-f963-47ca-9af5-344d1c2e8dc0 [{"Lacteena":13}, {"Serpentax":14}, {"Rawry":13}]
                ],
                None,
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("OldMastersHut", False,
-               True, ["Dripsy", "Cactee", "Triboobe", "Lacteena", "Harlie", "Growleen"], [15, 17],
-               False, None, None,
+               True, #["Dripsy", "Cactee", "Triboobe", "Lacteena", "Harlie", "Growleen"], [15, 17],
+               False, #None, None,
                [
                    "Old Masters Hut: Chest North of House",  # 33323326-8c5c-448e-acac-2f50cba62286 ["stamina potion", "50x coin"]
                    "Old Masters Hut: Chest Next to House",  # 7410e48c-cf0e-42da-9760-e0d756ec5856 ["2x rejuvination potion", "3x spirit crystal+1"]
                ],
                None,
                None,
-               ["HutOut", "Tunnel", "Cave"],
+               #["HutOut", "Tunnel", "Cave"],
                ["HutOut", "Tunnel", "Cave"]),
 
     Map_Region("OldMastersHut_Upstairs", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Old Masters Hut: Chest in House",  # bbef9238-1d46-4d89-8f42-3f086d169e35 ["2x spirit crystal+1"]
                ],
@@ -459,23 +530,23 @@ regions = [
                    "Complete Main Quest: Box pusher",
                    "Complete Main Quest: Total domination",
                ],
-               ["Bottom", "Basement"],
+               #["Bottom", "Basement"],
                ["Bottom", "Basement"]),
 
     Map_Region("OldMastersHut_Basement", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Old Masters Hut: Chest in Basement",  # 0feafe23-7fc6-4175-b8b1-90d2323095ce ["video cassette"]
                ],
                None,
                None,
-               ["Bottom"],
+               #["Bottom"],
                ["Bottom"]),
 
     Map_Region("CaveOfTorment", False,
-               True, ["Hornie", "Octocunt", "Domina", "Dracoomer"], [15, 17],
-               False, None, None,
+               True, #["Hornie", "Octocunt", "Domina", "Dracoomer"], [15, 17],
+               False, #None, None,
                [
                    "Cave of Torment: Chest East Side of Cave",  # 52ca3362-6a85-4eba-9a4e-64d29dca413e ["150x coin", "infinity charm"]
                    "Cave of Torment: Chest North Side of Cave",  # f6f9100f-d007-4407-8273-bb8ac9fc98a7 ["golden seed of life"]
@@ -483,12 +554,12 @@ regions = [
                ],
                None,
                None,
-               ["Bottom"],
+               #["Bottom"],
                ["Bottom"]),
 
     Map_Region("Trail9", False,
-               True, ["Lacteena", "Growleen", "Harlie", "Dracoomer", "Triboobe", "Thiccsie", "Megaboob"], [16, 18],
-               False, None, None,
+               True, #["Lacteena", "Growleen", "Harlie", "Dracoomer", "Triboobe", "Thiccsie", "Megaboob"], [16, 18],
+               False, #None, None,
                [
                    "Trail 09: Chest near Clementine",  # 369c6ee5-6b6a-4433-ae92-e5f4b9e911e1 ["2x chocolate cake"]
                    "Trail 09: Chest North of Mike",  # 1457c1a2-8177-4571-b438-f53cb9c6cd34 ["2x spirit crystal +1"]
@@ -500,12 +571,12 @@ regions = [
                    "Trail 09: Defeat Bonnie",  # b4d3fec1-9f7f-4b2e-a3de-cf25bc3fe399 [{"Octocunt":17}, {"Buxzzeena":16}, {"Growleen":16}]
                ],
                None,
-               ["Bottom", "Temple"],#, "TempleBackdoor"
+               #["Bottom", "Temple"],#, "TempleBackdoor"
                ["Bottom", "Temple"]),#, "TempleBackdoor"
 
     Map_Region("DesertTemple1", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Stone Temple 1: Chest Near Trail 09 Entrence",  # 515e573f-cf67-473f-a241-7177098013c1 ["2x cupcake", "seed of life", "50x coin"]
                    "Stone Temple 1: Chest Near 6th Crimson Cloak",  # 1f27c663-1dce-47e0-821c-8fd1aae55a46 ["turtle chell collar", "fallen star"]
@@ -520,23 +591,23 @@ regions = [
                    "Stone Temple 1: Defeat 6th Crimson Cloak",  # a0268c7e-1417-41cb-aa2a-109240ff2eac [{"Megaboob":18}]
                ],
                None,
-               ["Bottom", "Top"],
+               #["Bottom", "Top"],
                ["Bottom", "Top"]),
 
     Map_Region("DesertTemple2", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                None,
                [
                    "Stone Temple 2: Defeat Domino"  # [{"Octocunt":18}, {"Serpentax":19}, {"Harlie":18}, {"Hornie":17}, {"Bearboo":17}]
                ],
                ["Complete Main Quest: Quest for the crystal"],
-               ["Bottom", "Top"],
+               #["Bottom", "Top"],
                ["Bottom", "Top"]),
 
     Map_Region("CrashSite", True,
-               True, ["Thiccsie", "Megaboob", "Kittypus", "Sexybun", "Mamaoak"], [19, 20],
-               False, None, None,
+               True, #["Thiccsie", "Megaboob", "Kittypus", "Sexybun", "Mamaoak"], [19, 20],
+               False, #None, None,
                [
                    "Crash Site: Chest East of Athena",  # 20af0b9d-a48e-4dff-995e-53758e7d61f3 ["150x coins", "2x healing potion"]
                    "Crash Site: Chest West of Janet",  # c6f2ad98-a787-4805-9c9b-fca34bd7dee3 ["2x spirit crystal +1"]
@@ -547,12 +618,12 @@ regions = [
                    "Crash Site: Defeat Janet",  # ef863488-65f8-4827-9e80-0e1c6a42b681 [{"Mamaoak":21}, {"Bearboo":16}]
                ],
                None,
-               ["Bottom"],
+               #["Bottom"],
                ["Bottom"]),
 
     Map_Region("Trail10", False,
-               True, ["Megaboob", "Growleen", "Sexybun", "Mamaoak", "Pinchie"], [19, 21],
-               True, ["Marinel", "Pinchie"], [19, 20],
+               True, #["Megaboob", "Growleen", "Sexybun", "Mamaoak", "Pinchie"], [19, 21],
+               True, #["Marinel", "Pinchie"], [19, 20],
                [
                    "Trail 10: Chest West of Crash Site Entrance",  # cbbdd4da-69d4-41c2-9165-ea07e647a369 ["100x coins", "infinity charm"]
                    "Trail 10: Chest Near Eve",  # 545492fc-2eea-4a81-b1db-12825748f4a0 ["2x stamina potion"]
@@ -563,12 +634,12 @@ regions = [
                    "Trail 10: Defeat Eve",  # 6ee5a399-6614-482d-8e07-00abcf34d10e [{"Domina":17}, {"Sexybun":21}]
                ],
                None,
-               ["Top", "Left"],
+               #["Top", "Left"],
                ["Top", "Left"]),
 
     Map_Region("CoconutVillage", True,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Coconut Village: Chest North-East in Village",  # 9b0fd14d-0aec-4790-900f-553f98af0eb1 ["Butt Plug of Power +1"]
                    "Coconut Village: Chest East of Village",  # 56fa7c21-327e-4f5f-8fe2-1b1d35da3dc9 ["50x coin", "red latex mask"]
@@ -576,14 +647,30 @@ regions = [
                None,
                [
                ],
-               ["Right", "Left", "ClinicOut", "MerchantOut", "TempleOut", "House1Out", "House2Out"],
+               #["Right", "Left", "ClinicOut", "MerchantOut", "TempleOut", "House1Out", "House2Out"],
                ["Right", "Left", "ClinicOut", "MerchantOut", "TempleOut", "House1Out", "House2Out"]),
 
-    Map_Region("CoconutVillage_Clinic", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("CoconutVillage_Clinic", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("CoconutVillage_Merchant", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("CoconutVillage_Merchant", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("CoconutVillage_Temple", False, False, None, None, False, None, None,
+    Map_Region("CoconutVillage_Temple", False,
+               False, #None, None,
+               False, #None, None,
                [
                    "Coconut Village: Chest in Temple",  # e68357b4-2017-4962-9935-febbb8afa19e ["2x greater healing potion"]
                    "Coconut Village: Chest In Temple After Locked Door",  # 11a5f5c0-f303-469e-96f0-d0df45d2e631 ["red harmony crystal"]
@@ -596,23 +683,34 @@ regions = [
                    "Complete Main Quest: Glimmering Prize",
                    "Complete Main Quest: Arctic Adventure",
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("CoconutVillage_House1", False, False, None, None, False, None, None,
+    Map_Region("CoconutVillage_House1", False,
+               False, #None, None,
+               False, #None, None,
                [
                    "Coconut Village House: Chest in House",  # 8a4cdd76-b0a6-4256-a9d4-5797167f7ae5 ["Seed of Life", "50x coins"]
                ],
-               None, None, ["Bottom"], ["Bottom"]),
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("CoconutVillage_House2", False, False, None, None, False, None, None, None, None,
+    Map_Region("CoconutVillage_House2", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
                [
                    "Complete Side Quest: Professional Pleasurer"
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
     Map_Region("Trail11", False,
-               True, ["Octocunt", "Pinchie", "Sexybun", "Mamaoak", "Udderella"], [21, 22],
-               True, ["Sharky", "Marinel"], [21, 22],
+               True, #["Octocunt", "Pinchie", "Sexybun", "Mamaoak", "Udderella"], [21, 22],
+               True, #["Sharky", "Marinel"], [21, 22],
                [
                    "Trail 11: Chest Near Alice",  # 7e5e1b32-a395-449e-8524-85100357f829 ["Strawberry cake"]
                    "Trail 11: Chest Near Pier",  # fc2ae356-2928-4f20-b00a-882f8498ebfc ["2x spirit crystal +1"]
@@ -628,12 +726,12 @@ regions = [
                    "Complete Side Quest: Fishmaster’s Challenge",
                    "Complete Side Quest: Deadly Waters"
                ],
-               ["Right", "Bottom", "pier"],
+               #["Right", "Bottom", "pier"],
                ["Right", "Bottom", "pier"]),
 
     Map_Region("Trail12", False,
-               True, ["Octocunt", "Pinchie", "Dracoomer", "Udderella", "Faerie"], [21, 23],
-               True, ["Marinel", "Pinchie", "Chocostar", "Octocunt"], [21, 23],
+               True, #["Octocunt", "Pinchie", "Dracoomer", "Udderella", "Faerie"], [21, 23],
+               True, #["Marinel", "Pinchie", "Chocostar", "Octocunt"], [21, 23],
                [
                    "Trail 12: Chest North of Sophie",  # e2598159-fb05-4e8f-88a4-cbb55d12546f ["2x cleansing tonic", "50x coins"]
                    "Trail 12: Chest North of Ciara",  # df5ab9f9-17b1-4629-a683-8e1c6ff122e4 ["evolution charm", "50x coins"]
@@ -643,12 +741,12 @@ regions = [
                    "Trail 12: Defeat Ciara",  # 961a23f5-023b-4d31-ab65-b8d227a52ded [{"Grewleen":17}, {"Dracoomer":17}, {"Sharky":20}]
                ],
                ["Complete Side Quest: Starry Eyed Surprise"],
-               ["Bottom", "Top"],
+               #["Bottom", "Top"],
                ["Bottom", "Top"]),
 
     Map_Region("FishingHut", False,
-               True, ["Pinchie", "Thiccsie", "Faerie", "Twerqueen"], [21, 23],
-               False, None, None,
+               True, #["Pinchie", "Thiccsie", "Faerie", "Twerqueen"], [21, 23],
+               False, #None, None,
                [
                    "Fishing Hut: Chest North-West on the Beach",  # ed0b2740-17bd-49bb-b431-8ee30ffee485 ["dragon dildo +1"]
                    "Fishing Hut: Chest Next to House",  # 570c6d8b-0f44-4611-8c16-676ea4f2dcf7 ["100x coins", "2x stamina potion"]
@@ -662,12 +760,12 @@ regions = [
                    "Complete Side Quest: Fishy Duel",
                    "Complete Side Quest: The Art of Fishing"
                ],
-               ["Top"],
+               #["Top"],
                ["Top"]),
 
     Map_Region("Trail13", False,
-               True, ["Twerqueen", "Faerie", "Sexybun", "Amazona"], [22, 24],
-               True, ["Jellygal", "Sharky", "Chocostar"], [22, 24],
+               True, #["Twerqueen", "Faerie", "Sexybun", "Amazona"], [22, 24],
+               True, #["Jellygal", "Sharky", "Chocostar"], [22, 24],
                [
                    "Trail 13: Chest South-West of 1st Cultist",  # 2432ca26-daf4-4f91-b0f5-65094ef2f236 ["butt plug of life +1", "infinity charm"]
                    "Trail 13: Chest North of 1st Cultist",  # e349a432-ea25-48fa-b78a-4f7e24a1a21e ["150x coins", "antidote", "fallen star"]
@@ -677,12 +775,12 @@ regions = [
                    "Trail 13: Defeat 2nd Cultist",  # b4a8bd50-ab01-4e3c-8aba-0469ada1c52f [{"Triboobe":21}, {"Dripsy":23}]
                ],
                ["Complete Main Quest: Coconut Conundrum"],
-               ["Left", "pier"],
+               #["Left", "pier"],
                ["Left", "pier"]),
 
     Map_Region("Trail14", True,
-               True, ["Faerie", "Amazona", "Mamaoak", "Harpie"], [23, 25],
-               True, ["Marinel", "Jellygal", "Sharky"], [23, 25],
+               True, #["Faerie", "Amazona", "Mamaoak", "Harpie"], [23, 25],
+               True, #["Marinel", "Jellygal", "Sharky"], [23, 25],
                [
                    "Trail 14: Chest North-West of 1st Cultist",  # 5fb24dfe-bb8f-4e3d-b5d2-f18331df4040 ["Spiked Collar +1"]
                    "Trail 14: Chest East of 1st Cultist",  # 4e89c1b8-d75b-4dd1-b333-c091f0683bd8 ["chocolate cake", "2x candy cane"]
@@ -693,12 +791,12 @@ regions = [
                    "Trail 14: Defeat 2nd Cultist",  # 9b009cf3-5fad-4076-88d2-3e43e004efec [{"Buzzeena":18}, {"Sexybun":22}, {"Twerqueen":24}, {"Chocostar":20}]
                ],
                None,
-               ["Right", "CaveIn"],#, "CaveOut"
+               #["Right", "CaveIn"],#, "CaveOut"
                ["Right", "CaveIn"]),#, "CaveOut"
 
     Map_Region("IslandCave", False,
-               True, ["Amazona", "Harpie", "Twerqueen", "Arachna", "Succubae"], [23, 25],
-               False, None, None,
+               True, #["Amazona", "Harpie", "Twerqueen", "Arachna", "Succubae"], [23, 25],
+               False, #None, None,
                [
                    "Island Cave 1: Chest North-West After 1st Cultist",  # be99f6ef-4289-45b9-b8ca-c6432f64c982 ["Golden Chastity belt"]
                    "Island Cave 1: Chest East After 2st Cultist",  # 1ffad415-a599-4752-a847-c093e51cbcbe ["2x greater healing potion"]
@@ -712,23 +810,23 @@ regions = [
                    "Island Cave 1: Defeat 4th Cultist",  # 5f53e18a-e6b1-473a-8252-f0d68286ca57 [{"Succubae":25}, {"Udderella":22}]
                ],
                None,
-               ["Bottom", "Top"],
+               #["Bottom", "Top"],
                ["Bottom", "Top"]),
 
     Map_Region("IslandCave2", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                None,
                [
                    "Island Cave 2: Defeat Centiboob",  # NPC SCRIPTED [{"Centiboob":26}]
                ],
                ["Complete Main Quest: Lusty Cultists"],
-               ["Bottom", "Top"],
+               #["Bottom", "Top"],
                ["Bottom", "Top"]),
 
     Map_Region("ColdHarbor", True,
-               True, ["Harpie", "Pinchie", "Gangfang", "Octomommy", "Snowbae"], [25, 27],
-               True, ["Chocostar", "Pinchie"], [25, 27],
+               True, #["Harpie", "Pinchie", "Gangfang", "Octomommy", "Snowbae"], [25, 27],
+               True, #["Chocostar", "Pinchie"], [25, 27],
                [
                    "Cold Harbour: Chest North-East of Waystone",  # 4f0e46a1-ad29-4472-a6a9-24120c07535c ["2x spirit crystal +2", "greater rejuvenation potion"]
                    "Cold Harbour: Chest East of Iris",  # 4b5bceb4-7cff-4419-8116-cf5dd4e6dcb8 ["200x coins", "2x XP Boosters"]
@@ -738,12 +836,12 @@ regions = [
                    "Cold Harbour: Defeat Iris",  # c34254a6-6f54-4643-8319-75636a798542 [{"Amazona":22}, {"Polaria":26}, {"Snowbae":23}]
                ],
                ["Complete Main Quest: The Frigid Maiden"],
-               ["Top"],
+               #["Top"],
                ["Top"]),
 
     Map_Region("Frostville1", True,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Frostville: Chest North of Waystone",  # dd42f2b7-841c-4726-a597-a8e197e384f4 ["2x greater healing potions"]
                    "Frostville: Chest South of Waystone",  # d4f07026-13b3-4b49-ae53-57764bed39a6 ["3x spirit crystal +2", "fallen star"]
@@ -756,14 +854,31 @@ regions = [
                    "Complete Main Quest: Paisley Bones",
                    "Complete Main Quest: Here Comes the Boom",
                ],
-               ["Bottom", "Top", "Left", "ClinicOut", "MerchantOut", "Church", "House1"],
+               #["Bottom", "Top", "Left", "ClinicOut", "MerchantOut", "Church", "House1"],
                ["Bottom", "Top", "Left", "ClinicOut", "MerchantOut", "Church", "House1"]),
 
-    Map_Region("Frostville1_Clinic", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("Frostville1_Clinic", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("Frostville1_Merchant", False, False, None, None, False, None, None, None, None, None, ["Bottom"], ["Bottom"]),
+    Map_Region("Frostville1_Merchant", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("Frostville1_Church", False, False, None, None, False, None, None, None,
+    Map_Region("Frostville1_Church", False,
+               False, #None, None,
+               False, #None, None,
+               None,
                [
                    "Frostville: Defeat Mother Evilyn",  # aa1ce20e-a988-48c9-8a4b-e246fb163402 [{"Hornie":29}, {"Arachna":32}, {"Octomommy":31}]
                ],
@@ -771,17 +886,23 @@ regions = [
                    "Complete Main Quest: Stealing From a Dead Man",
                    "Complete Main Quest: The Lewd Exorcist",
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
-    Map_Region("Frostville1_House1", False, False, None, None, False, None, None, None, None,
+    Map_Region("Frostville1_House1", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
                [
                    "Complete Main Quest: The Proposal",
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
     Map_Region("Trail15", False,
-               True, ["Archna", "Gangfang", "Octomommy", "Snowbae", "Polaria", "Deardeer"], [26, 27],
-               False, None, None,
+               True, #["Archna", "Gangfang", "Octomommy", "Snowbae", "Polaria", "Deardeer"], [26, 27],
+               False, #None, None,
                [
                    "Trail 15: Chest South of Frostville Entrence",  # 18ec8ed3-304e-47a1-8311-b53e9e76ceee ["chocolate cake", "150x coins"]
                    "Trail 15: Chest West of Mia",  # c8875e05-570c-4b7c-a3a6-3939a80e373d ["2x greater rejuvenation potion", "2x cleansing tonic"]
@@ -792,12 +913,12 @@ regions = [
                    "Trail 15: Defeat Olga",  # 9f573d72-be6e-48dc-9ffd-50044176a86c [{"Pinchie":24}, {"Polaria":27}, {"Harpie":26}]
                ],
                ["Complete Side Quest: Arctic Menace"],
-               ["Right", "Left", "Left2"],
+               #["Right", "Left", "Left2"],
                ["Right", "Left", "Left2"]),
 
     Map_Region("Trail16", False,
-               True, ["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"], [27, 28],
-               True, ["Jawsy"], [27, 28],
+               True, #["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"], [27, 28],
+               True, #["Jawsy"], [27, 28],
                [
                    "Trail 16: Chest North of Karin",  # f55efa41-a0da-4307-aa3b-584c1238ddaf ["2x spirit crystal +2"]
                    "Trail 16: Chest North-West of Karin",  # 97595abc-e511-4733-827e-e6180c716210 ["2x greater stamina potion"]
@@ -808,26 +929,32 @@ regions = [
                    "Trail 16: Defeat Dahlia",  # 1e4eb581-53ee-4f87-b021-ff0ebc931798 [{"Snowbae":25}, {"Chocostar":23}, {"Polaria":28}]
                ],
                None,
-               ["Right", "Left"],
+               #["Right", "Left"],
                ["Right", "Left"]),
 
     Map_Region("Trail16_Top", False,
-               True, ["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"], [27, 28],  # SAME AS trail16
-               False, None, None,
+               True, #["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"], [27, 28],  # SAME AS trail16
+               False, #None, None,
                [
                    "Trail 16 Top: Chest South of Cave Entrence",  # 60a5df17-adb0-46ba-ae67-e4df1e45718f ["fallen star", "Golden Seed of life"]
                ],
-               None, None, ["Right2", "Cave"], ["Right2", "Cave"]),
+               None,
+               None,
+               #["Right2", "Cave"],
+               ["Right2", "Cave"]),
 
     Map_Region("Trail16_Cave", False,
-               True, ["Valkyrie_Normal"], [29, 32],  # REQUIRES FISHY SCENT
-               False, None, None, None, None, None,
-               ["Bottom"],
+               True, #["Valkyrie_Normal"], [29, 32],  # REQUIRES FISHY SCENT
+               False, #None, None,
+               None,
+               None,
+               None,
+               #["Bottom"],
                ["Bottom"]),
 
     Map_Region("AbandonedMine", True,
-               True, ["Gangfang", "Polaria", "Slithereen", "Deardeer", "Slushie"], [28, 30],
-               True, ["Jawsy", "Jellybish"], [28, 30],
+               True, #["Gangfang", "Polaria", "Slithereen", "Deardeer", "Slushie"], [28, 30],
+               True, #["Jawsy", "Jellybish"], [28, 30],
                [
                    "Abandoned Mine: Chest North of Trail 16 Entrence",  # 46cf0856-3d1c-440b-a065-b357d399964b ["Swift Plug +1", "2x XP boosters"]
                    "Abandoned Mine: Chest South-West of House",  # 575941ce-96f2-477f-b0bc-facec059184c ["3x greater healing potion", "50x coins"]
@@ -835,20 +962,25 @@ regions = [
                None,
                [
                ],
-               ["Right", "House1"],
+               #["Right", "House1"],
                ["Right", "House1"]),
 
-    Map_Region("AbandonedMine_House1", False, False, None, None, False, None, None, None, None,
+    Map_Region("AbandonedMine_House1", False,
+               False, #None, None,
+               False, #None, None,
+               None,
+               None,
                [
                    "Complete Main Quest: Demand for Dynamite",
                    "Complete Main Quest: Suit In Hand",
                    "Complete Main Quest: Fishing For Treasure",
                ],
-               ["Bottom"], ["Bottom"]),
+               #["Bottom"],
+               ["Bottom"]),
 
     Map_Region("Trail17", False,
-               True, ["Slithereen", "Deardeer", "Slushie", "Queenbee", "Boobarella"], [29, 32],
-               True, ["Jellybish", "Jawsy"], [29, 32],
+               True, #["Slithereen", "Deardeer", "Slushie", "Queenbee", "Boobarella"], [29, 32],
+               True, #["Jellybish", "Jawsy"], [29, 32],
                [
                    "Trail 17: Chest North of Clara",  # db51e404-218c-4288-8860-b5ecf2b25059 ["2x Spirit crystal +2"]
                    "Trail 17: Chest South-East of Liv",  # 2d01eaea-aecd-4b90-9029-6498f03c3558 ["greater rejuvination potion", "greater healing potion"]
@@ -863,12 +995,12 @@ regions = [
                    "Complete Side Quest: Legend of the Valkyrie part 1.",
                    "Complete Side Quest: Legend of the Valkyrie part 2."
                ],
-               ["Bottom", "Right"],
+               #["Bottom", "Right"],
                ["Bottom", "Right"]),
 
     Map_Region("Trail18", True,
-               True, ["Slushie", "Slithereen", "Queenbee", "Boobarella", "Panthera"], [30, 33],
-               True, ["Jellybish", "Jawsy"], [30, 33],
+               True, #["Slushie", "Slithereen", "Queenbee", "Boobarella", "Panthera"], [30, 33],
+               True, #["Jellybish", "Jawsy"], [30, 33],
                [
                    "Trail 18: Chest South of Anabelle",  # 1f7ba32d-3992-42c2-ab0c-f5b7d382af55 ["2x infinity charm", "2x cleansing tonic"]
                    "Trail 18: Chest in North Part of Map",  # 72243934-12c9-440a-a226-e9de780f25fd ["icey dildo", "55x gold"]
@@ -883,12 +1015,12 @@ regions = [
                    "Complete Main Quest: Crimson Chase",
                    "Complete Main Quest: Through the Portal"
                ],
-               ["Left", "TempleIn"],#, "TempleOut"
+               #["Left", "TempleIn"],#, "TempleOut"
                ["Left", "TempleIn"]),#, "TempleOut"
 
     Map_Region("ArcticTemple1", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [
                    "Artic Temple: Chest in South-East",  # f5c25d35-2be7-445d-8432-f31b58d29f81 ["Vibrating willy+1", "evolution charm"]
                    "Artic Temple: Chest in West",  # c1b51d5f-663e-4ca5-94a2-1611880789d7 ["300x coin", "2x antidote"]
@@ -902,23 +1034,23 @@ regions = [
                    "Artic Temple 1: Defeat 5th Crimson Cloak",  # 5272d410-ae2d-42b5-93a8-b06b4ba20fe2 [{"Gangfang":27}, {"Queenbee":31}]
                ],
                None,
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("ArcticTemple2", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                None,
                [
                    "Artic Temple 2: Defeat Crimson Countess",  # NPC SEQUENCE [{"Queenbee":32}, {"Chocostar":28}, {"Octomommy":30}, {"Archna":31}, {"Jawsy":33}]
                ],
                ["Complete Main Quest: Arctic Harmony"],
-               ["Top", "Bottom"],
+               #["Top", "Bottom"],
                ["Top", "Bottom"]),
 
     Map_Region("Trail19", True,
-               True, ["Queenbee", "Deardeer", "Panthera", "Unihorn", "Fungie"], [33, 35],
-               False, None, None,
+               True, #["Queenbee", "Deardeer", "Panthera", "Unihorn", "Fungie"], [33, 35],
+               False, #None, None,
                [
                    "Trail 19: Chest Near Start",  # c1df6726-ecd8-4863-b1ae-d2d995d6cdf4 ["100 Coin","2x spirit crystal +2"]
                    "Trail 19: Chest South of 1st Crimson Cloak",  # e8bbd1c5-3777-4a13-bcf2-b58e2d6d5d2c ["2x greater healing potion"]
@@ -930,12 +1062,12 @@ regions = [
                    "Trail 19: Defeat 3rd Crimson Cloak",  # bbb2a608-b9f8-4701-a978-549f98628a70 [{"Arachna":32},{"Jellybish":33},]
                ],
                None,
-               ["Top"],
+               #["Top"],
                ["Top"]),
 
     Map_Region("Trail20", False,
-               True, ["Queenbee", "Unihorn", "Fungie", "Juggsie", "Serphina"], [33, 36],
-               False, None, None,
+               True, #["Queenbee", "Unihorn", "Fungie", "Juggsie", "Serphina"], [33, 36],
+               False, #None, None,
                [
                    "Trail 20: Chest Near 1st Crimson Cloak",  # ac4251e7-b377-4124-814a-95601ac2e10f ["Unicorn Dildo"]
                    "Trail 20: Chest Near 2nd Crimson Cloak",  # b8d3a32e-2b9a-45a9-8496-07d98d24ebe3 ["150x coin","2x greater rejuvination potion"]
@@ -948,12 +1080,12 @@ regions = [
                    "Complete Main Quest: Sanctuary Shakedown",
                    "Complete Main Quest: Breezie Runs Free",
                ],
-               ["Bottom", "Left"],
+               #["Bottom", "Left"],
                ["Bottom", "Left"]),
 
     Map_Region("Trail20_Right", False,
-               True, ["Queenbee", "Unihorn", "Fungie", "Juggsie", "Serphina"], [33, 36], #SAME AS Trail20
-               False, None, None,
+               True, #["Queenbee", "Unihorn", "Fungie", "Juggsie", "Serphina"], [33, 36], #SAME AS Trail20
+               False, #None, None,
                [
                    "Trail 20 Right: Chest Near Cave Entrance",  # affeeef4-519b-4b7c-8bea-f6011e35c2fe ["Golden seed of life","2x Spirit Repelent"]
                ],
@@ -961,12 +1093,12 @@ regions = [
                    "Trail 20 Right: Defeat Crimson Cloak",  # 149cf1b9-7344-4037-88b8-42fe6f471e64 [{"Mamaoak":32},{"Jawsy":34},]
                ],
                None,
-               ["Right"],
+               #["Right"],
                ["Right"]),
 
     Map_Region("Trail21", False,
-               True, ["Queenbee", "Fungie", "Juggsie", "Serphina"], [34, 37],
-               True, ["Jellybish", "Lizzie"], [34, 37],
+               True, #["Queenbee", "Fungie", "Juggsie", "Serphina"], [34, 37],
+               True, #["Jellybish", "Lizzie"], [34, 37],
                [
                    "Trail 21: Chest Near Pushable Bolder",  # c9bccc23-9abc-412b-a969-be4b38fe8c07 ["fallen star","2x evolution charm"]
                    "Trail 21: Chest North of Pond",  # a0ea4f50-253d-41c3-a01e-4b2c0de0c846 ["2x candy cane"]
@@ -978,12 +1110,12 @@ regions = [
                    "Trail 21: Defeat Kinley",  # 0ea61b92-8dcd-4adf-a070-4bc5870b2698 [{"Queenbee":32},{"Snowbae":30},{"Pinchie":35},{"Boobarella":34},]
                ],
                ["Complete Main Quest: Hostage Situation"],
-               ["Right"],
+               #["Right"],
                ["Right"]),
 
     Map_Region("SpiritPassage", False,
-               True, ["Slithereen", "Octomommy", "Fungie", "Dominatrix"], [35, 38],
-               False, None, None,
+               True, #["Slithereen", "Octomommy", "Fungie", "Dominatrix"], [35, 38],
+               False, #None, None,
                [
                    "Trail Spirit Passage: Chest north of first fork in path",  # 35f79fc2-e0ce-4b1a-90a5-fc87436b8c51 ["Spiked Collar +3"]
                    "Trail Spirit Passage: Chest in first loop area",  # 1ae0306c-1da3-4248-b1a2-b4ecb14d40c5 ["150x coin","2x cleansing tonic"]
@@ -999,12 +1131,12 @@ regions = [
 
                ],
                None,
-               ["Left", "Right"],
+               #["Left", "Right"],
                ["Left", "Right"]),
 
     Map_Region("Trail22", True,
-               True, ["Unihorn", "Juggsie", "Seraphina", "Dominatrix"], [37, 40],
-               False, None, None,
+               True, #["Unihorn", "Juggsie", "Seraphina", "Dominatrix"], [37, 40],
+               False, #None, None,
                [
                    "Trail 22: Chest north west of pond",  # 22527dc8-b6b1-4af2-974d-2e56b8fc96b6 ["Butt plug of life +2"]
                    "Trail 22: Chest north path before large grass patch",  # a3f235a1-bc10-4012-8203-37be87ecf06c ["2x golden seed of life"]
@@ -1022,23 +1154,23 @@ regions = [
                    "Complete Side Quest: Hunt for the Centiboob part 2.",
                    "Complete Side Quest: Hunt for the Centiboob part 3.",
                ],
-               ["Left", "Top", "Cave"],
+               #["Left", "Top", "Cave"],
                ["Left", "Top", "Cave"]),
 
     Map_Region("Trail22_Cave", False,
-               True, ["Centiboob_Normal"], [37, 40],
-               False, None, None,
+               True, #["Centiboob_Normal"], [37, 40],
+               False, #None, None,
                [
                    "Trail 22 Cave: Chest In Cave",  # afe7ac71-80d5-45c2-b6c0-683732d1fdf4 ["500x coin"]
                ],
                None,
                None,
-               ["Bottom"],
+               #["Bottom"],
                ["Bottom"]),
 
     Map_Region("InnerGrove", False,
-               False, None, None,
-               False, None, None,
+               False, #None, None,
+               False, #None, None,
                [],
                [
                    "Inner Grove: Defeat Spirit Mother",  # [{"SpiritMother":43},]
@@ -1046,7 +1178,7 @@ regions = [
                [
                    "Complete Main Quest: Battle for Spirit Valley"
                ],
-               ["Bottom"],
+               #["Bottom"],
                ["Bottom"]),
 
 ]
@@ -1055,7 +1187,7 @@ transition_areas = [
     transititon("OakwoodVillage", "Top", "Trail1", "Bottom", False),
     #transititon("OakwoodVillage", "ClinicOut", "OakwoodVillage_Clinic", "Bottom", False),
     transititon("OakwoodVillage", "FarmHouseOut", "OakwoodVillage_FarmHouse", "Bottom", False),
-    transititon("OakwoodVillage", "HqOut", "OakwoodVillage_Hq", "Bottom", False),
+    #transititon("OakwoodVillage", "HqOut", "OakwoodVillage_Hq", "Bottom", False),
 
     transititon("Trail1", "Top", "EvergreenOutpost", "Bottom", False),
 
@@ -1271,60 +1403,9 @@ mapid_to_text = {
     "InnerGrove":"Inner Grove",
 }
 
-grass_loc = [
-"Trail1",
-"EvergreenOutpost",
-"Trail2",
-"MillysFarm",
-"Trail3",
-"EvergreenCaverns",
-"Trail4",
-"Trail5",
-"SandyTunnels",
-"Trail6",
-"DairyFarm",
-"Trail7",
-"Trail8",
-"DustyGrotto",
-"OldMastersHut",
-"CaveOfTorment",
-"Trail9",
-"CrashSite",
-"Trail10",
-"Trail11",
-"Trail12",
-"FishingHut",
-"Trail13",
-"Trail14",
-"IslandCave",
-"ColdHarbor",
-"Trail15",
-"Trail16",
-"Trail16_Cave",
-"AbandonedMine",
-"Trail17",
-"Trail18",
-"Trail19",
-"Trail20",
-"Trail21",
-"SpiritPassage",
-"Trail22",
-"Trail22_Cave",
-]
+grass_loc = ["Trail1","EvergreenOutpost","Trail2","MillysFarm","Trail3","EvergreenCaverns","Trail4","Trail5","SandyTunnels","Trail6","DairyFarm","Trail7","Trail8","DustyGrotto","OldMastersHut","CaveOfTorment","Trail9","CrashSite","Trail10","Trail11","Trail12","FishingHut","Trail13","Trail14","IslandCave","ColdHarbor","Trail15","Trail16","Trail16_Cave","AbandonedMine","Trail17","Trail18","Trail19","Trail20","Trail21","SpiritPassage","Trail22","Trail22_Cave",]
 
-water_loc = [
-"Trail10",
-"Trail11",
-"Trail12",
-"Trail13",
-"Trail14",
-"ColdHarbor",
-"Trail16",
-"AbandonedMine",
-"Trail17",
-"Trail18",
-"Trail21",
-]
+water_loc = ["Trail10","Trail11","Trail12","Trail13","Trail14","ColdHarbor","Trail16","AbandonedMine","Trail17","Trail18","Trail21",]
 
 default_grass_loc = {
     "Trail1": ["Petunia", "Beebee","Slimee"],
