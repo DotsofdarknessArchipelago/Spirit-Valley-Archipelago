@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
-using SpiritValleyArchipelagoClient.Archipelago;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
 {

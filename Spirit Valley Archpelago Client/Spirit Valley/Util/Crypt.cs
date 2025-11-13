@@ -2,7 +2,6 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using UnityEngine.Localization.SmartFormat.Core.Settings;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 {

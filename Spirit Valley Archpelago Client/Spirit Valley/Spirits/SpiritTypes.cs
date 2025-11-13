@@ -1,11 +1,4 @@
 ﻿using HarmonyLib;
-using SpiritValleyArchipelagoClient.Archipelago;
-using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
 {

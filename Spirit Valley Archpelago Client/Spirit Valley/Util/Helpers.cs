@@ -3,10 +3,7 @@ using Newtonsoft.Json.Linq;
 using SpiritValleyArchipelagoClient.Archipelago;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine.SceneManagement;
-using static System.Collections.Specialized.BitVector32;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 {
@@ -35,7 +32,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
     public class HelperItems()
     {
-        public static GameState save => GameManager.instance.gameStates[4].data;
+        public static GameState save => GameManager.instance.gameStates[4+Plugin.slot].data;
 
         public static ItemBundle[] centbundle()
         {
@@ -311,7 +308,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
         public class save()
         {
-            public static GameState s => GameManager.instance.gameStates[4].data;
+            public static GameState s => GameManager.instance.gameStates[4 + Plugin.slot].data;
 
 
             public static QuestState getmain(string q)
@@ -519,7 +516,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                             break;
                     }
 
-                    var t = GameManager.instance.gameStates[4].SaveAsync(SaveType.Auto);
+                    var t = GameManager.instance.gameStates[4 + Plugin.slot].SaveAsync(SaveType.Auto);
                     t.Wait();
                 }
                 else

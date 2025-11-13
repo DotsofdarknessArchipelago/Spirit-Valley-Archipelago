@@ -2,7 +2,6 @@
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace SpiritValleyArchipelagoClient.Archipelago;
 

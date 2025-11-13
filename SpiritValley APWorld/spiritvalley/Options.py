@@ -146,6 +146,16 @@ class randomise_map(Toggle):
     display_name = "map rando"
     default = False
 
+class randomise_map_option(Choice):
+    """sets map rando option
+    none (default) = no logic in how the map is connected
+    some = exits that lead to dead ends will always lead to dead ends
+    """
+    display_name = "map rando option"
+    option_none = 0
+    option_some = 1
+    default = 1
+
 class randomise_warps(Toggle):
     """add warp locations/items to the rando pool"""
     display_name = "warp rando"
@@ -210,6 +220,7 @@ class SpiritValleyOptions(PerGameCommonOptions):
     Spirit_Affection_progression:Spirit_Affection_progression
 
     randomise_map:randomise_map
+    randomise_map_option:randomise_map_option
     randomise_warps:randomise_warps
 
     Minigame_Cheat:Minigame_Cheat

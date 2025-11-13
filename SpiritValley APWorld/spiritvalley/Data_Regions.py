@@ -16,7 +16,7 @@ class Map_Region:
     quest_locations: [str]
 
     #entry: [str]
-    exits: {str,int}
+    exits: {str,int} #0=multi exit to multi exit | 1 = multi exit to dead end | 2 = dead end to multi exit
 
     def __init__(self, map_id, warpable, grass, water, chest_locations, trainer_locations, quest_locations, exits):
         self.map_id = map_id
@@ -65,7 +65,7 @@ regions = [
                    "Complete Main Quest: First Mission: Success!",
                ],
                #["Top",  "FarmHouseOut"],#"ClinicOut",HqOut
-               ["Top",  "FarmHouseOut"]),#"ClinicOut",HqOut
+               {"Top":0, "FarmHouseOut":1}),#"ClinicOut":1,HqOut:1
 
     Map_Region("OakwoodVillage_Clinic", False,
                False, #None, None,
@@ -77,7 +77,7 @@ regions = [
                    "Complete Main Quest: Consulting Dolly",
                ],
                #[],
-               []),#["Bottom"], ["Bottom"]),
+               []),#["Bottom":2]),
 
     Map_Region("OakwoodVillage_FarmHouse", False,
                False, #None, None,
@@ -86,7 +86,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("OakwoodVillage_Hq", False,
                False, #None, None,
@@ -95,7 +95,7 @@ regions = [
                None,
                None,
                #[],
-               []),#["Bottom"], ["Bottom"]),
+               []),#["Bottom":2]),
 
     Map_Region("Trail1", False,
                True, #["Petunia", "Beebee", "Slimee"], [3, 3],
@@ -108,7 +108,7 @@ regions = [
                None,
                ["Complete Side Quest: Perky Petunia"],
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("EvergreenOutpost", False,
                True, #["Petunia", "Beebee", "Slimee", "Bunni", "Wolfy"], [3, 4],
@@ -128,7 +128,7 @@ regions = [
                    "Complete Main Quest: Bridge crossing",
                ],
                #["Left", "Bottom"],
-               ["Left", "Bottom"]),
+               {"Left":0, "Bottom":0}),
     # ADDED REGION DUE TO INACCESSIBILITY BEFORE QUEST IS COMPLETE
     Map_Region("EvergreenOutpost_East", False,
                False, #None, None,
@@ -137,7 +137,7 @@ regions = [
                None,
                None,
                #["Right"],
-               ["Right"]),
+               {"Right":0}),
 
     Map_Region("Trail2", False,
                True, #["Petunia", "Beebee", "Slimee", "Wolfy", "Bunni", "Ursie", "Gloria"], [3, 4],
@@ -158,7 +158,7 @@ regions = [
                    "Complete Main Quest: Crimson Agent"
                ],
                #["Left", "Right"],
-               ["Left", "Right"]),
+               {"Left":0, "Right":0}),
 
     Map_Region("Greensvale", True,
                False, #None, None,
@@ -174,7 +174,7 @@ regions = [
                    "Complete Main Quest: Harmonious Disturbance",
                ],
                #["Right", "Top", "Bottom", "ClinicOut", "MerchantOut", "SexShopOut", "SmallHouseOut"],
-               ["Right", "Top", "Bottom", "ClinicOut", "MerchantOut", "SexShopOut", "SmallHouseOut"]),
+               {"Right":0, "Top":0, "Bottom":1, "ClinicOut":1, "MerchantOut":1, "SexShopOut":1, "SmallHouseOut":1}),
 
     Map_Region("Greensvale_Clinic", False,
                False, #None, None,
@@ -183,7 +183,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Greensvale_Merchant", False,
                False, #None, None,
@@ -192,7 +192,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Greensvale_SexShop", False,
                False, #None, None,
@@ -204,7 +204,7 @@ regions = [
                    "Complete Main Quest: Hunt for the chunk",
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Greensvale_SmallHouse", False,
                False, #None, None,
@@ -213,7 +213,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("MillysFarm", False,
                True, #["Serpentia"], [5, 6],
@@ -222,7 +222,7 @@ regions = [
                None,
                ["Complete Side Quest: Slithering Menace"],
                #["Top"],
-               ["Top"]),
+               {"Top":2}),
 
     Map_Region("Trail3", False,
                True, #["Beebee", "Gloria", "Ursie", "Wolfy", "Belle", "Oakie", "trissy"], [5, 7],
@@ -239,7 +239,7 @@ regions = [
                ],
                ["Complete Side Quest: Pleasuring Pusseen"],
                #["Bottom", "Cave"],
-               ["Bottom", "Cave"]),
+               {"Bottom":0, "Cave":0}),
 
     Map_Region("EvergreenCaverns", False,
                True, #["Slimee", "Serpentia", "Spinnie", "Octopussy"], [6, 9],
@@ -257,7 +257,7 @@ regions = [
                ],
                None,
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("Trail4", True,
                True, #["Ursie", "Gloria", "Belle", "Oakie", "Trissy", "Serpentia", "Chubbie", "Pusseen"], [7, 10],
@@ -270,7 +270,7 @@ regions = [
                None,
                None,
                #["Cave", "Temple"],#, "TempleBackDoor"
-               ["Cave", "Temple"]),#, "TempleBackDoor"
+               {"Cave":0, "Temple":0}),#, "TempleBackDoor"
 
     Map_Region("AncientTemple1", False,
                False, #None, None,
@@ -290,7 +290,7 @@ regions = [
                ],
                None,
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("AncientTemple2", False,
                False, #None, None,
@@ -305,7 +305,7 @@ regions = [
                ],
                None,
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("AncientTemple3", False,
                False, #None, None,
@@ -318,7 +318,7 @@ regions = [
                    "Complete Main Quest: Temple Investigation"
                ],
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("Trail5", False,
                True, #["Oakie", "Trissy", "Chubbie", "Pusseen", "Boobae", "Tinky"], [10, 12],
@@ -336,7 +336,7 @@ regions = [
                ],
                None,
                #["Left", "TunnelsOut"],
-               ["Left", "TunnelsOut"]),
+               {"Left":0, "TunnelsOut":0}),
 
     Map_Region("SandyTunnels", False,
                True, #["Spinnie", "Octopussy", "Chubbie", "Rawry", "Serpentax"], [10, 13],
@@ -353,7 +353,7 @@ regions = [
                ],
                None,
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("Trail6", False,
                True, #["Serpentax", "Boobae", "Rawry", "Birdy", "Cactee", "Twerky"], [11, 13],
@@ -370,7 +370,7 @@ regions = [
                ],
                None,
                #["TunnelsOut", "Right"],
-               ["TunnelsOut", "Right"]),
+               {"TunnelsOut":0, "Right":0}),
 
     Map_Region("DairyFarm", True,
                True, #["Serpentax", "Birdy", "Cactee", "Twerky", "Bovina", "lacteena", "Flora"], [11, 14],
@@ -384,7 +384,7 @@ regions = [
                None,
                ["Complete Side Quest: Cattle Thieves"],
                #["Left", "Right"],
-               ["Left", "Right"]),
+               {"Left":0, "Right":0}),
 
     Map_Region("Trail7", False,
                True, #["Bovina", "Lacteena", "Flora", "Birdy", "Hornie", "Buzzeena", "Bellend"], [12, 14],
@@ -403,7 +403,7 @@ regions = [
                ],
                None,
                #["Left", "Right"],
-               ["Left", "Right"]),
+               {"Left":0, "Right":0}),
 
     Map_Region("TumbleweedTown", True,
                False, #None, None,
@@ -429,7 +429,7 @@ regions = [
                    "Complete Main Quest: Big balloon adventure",
                ],
                #["Left", "Bottom", "Top", "ClinicOut", "KingsSaloonOut", "MerchantOut", "SmallHouseOut"],
-               ["Left", "Bottom", "Top", "ClinicOut", "KingsSaloonOut", "MerchantOut", "SmallHouseOut"]),
+               {"Left":0, "Bottom":0, "Top":0, "ClinicOut":1, "KingsSaloonOut":1, "MerchantOut":1, "SmallHouseOut":1}),
 
     Map_Region("TumbleweedTown_Clinic", False,
                False, #None, None,
@@ -438,7 +438,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("TumbleweedTown_KingsSaloon1", False,
                False, #None, None,
@@ -451,7 +451,7 @@ regions = [
                    "Complete Main Quest: Breeding season",
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("TumbleweedTown_Merchant", False,
                False, #None, None,
@@ -460,7 +460,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("TumbleweedTown_SmallHouse1", False,
                False, #None, None,
@@ -471,7 +471,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Trail8", False,
                True, #["Cactee", "Birdy", "Buzzeena", "Bellend", "Flora", "Gloreen", "Triboobe", "Kittypus"], [13, 15],
@@ -488,7 +488,7 @@ regions = [
                ],
                None,
                #["Top", "Tunnel"],
-               ["Top", "Tunnel"]),
+               {"Top":0, "Tunnel":0}),
 
     Map_Region("DustyGrotto", False,
                True, #["Serpentax", "Twerky", "Hornie", "Dripsy", "Octocunt", "Bearboo"], [13, 16],
@@ -504,7 +504,7 @@ regions = [
                ],
                None,
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("OldMastersHut", False,
                True, #["Dripsy", "Cactee", "Triboobe", "Lacteena", "Harlie", "Growleen"], [15, 17],
@@ -516,7 +516,7 @@ regions = [
                None,
                None,
                #["HutOut", "Tunnel", "Cave"],
-               ["HutOut", "Tunnel", "Cave"]),
+               {"HutOut":0, "Tunnel":0, "Cave":1}),
 
     Map_Region("OldMastersHut_Upstairs", False,
                False, #None, None,
@@ -531,7 +531,7 @@ regions = [
                    "Complete Main Quest: Total domination",
                ],
                #["Bottom", "Basement"],
-               ["Bottom", "Basement"]),
+               {"Bottom":1, "Basement":1}),
 
     Map_Region("OldMastersHut_Basement", False,
                False, #None, None,
@@ -542,7 +542,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("CaveOfTorment", False,
                True, #["Hornie", "Octocunt", "Domina", "Dracoomer"], [15, 17],
@@ -555,7 +555,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Trail9", False,
                True, #["Lacteena", "Growleen", "Harlie", "Dracoomer", "Triboobe", "Thiccsie", "Megaboob"], [16, 18],
@@ -572,7 +572,7 @@ regions = [
                ],
                None,
                #["Bottom", "Temple"],#, "TempleBackdoor"
-               ["Bottom", "Temple"]),#, "TempleBackdoor"
+               {"Bottom":0, "Temple":0}),#, "TempleBackdoor"
 
     Map_Region("DesertTemple1", False,
                False, #None, None,
@@ -592,7 +592,7 @@ regions = [
                ],
                None,
                #["Bottom", "Top"],
-               ["Bottom", "Top"]),
+               {"Bottom":0, "Top":0}),
 
     Map_Region("DesertTemple2", False,
                False, #None, None,
@@ -603,7 +603,7 @@ regions = [
                ],
                ["Complete Main Quest: Quest for the crystal"],
                #["Bottom", "Top"],
-               ["Bottom", "Top"]),
+               {"Bottom":0, "Top":0}),
 
     Map_Region("CrashSite", True,
                True, #["Thiccsie", "Megaboob", "Kittypus", "Sexybun", "Mamaoak"], [19, 20],
@@ -619,7 +619,7 @@ regions = [
                ],
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Trail10", False,
                True, #["Megaboob", "Growleen", "Sexybun", "Mamaoak", "Pinchie"], [19, 21],
@@ -635,7 +635,7 @@ regions = [
                ],
                None,
                #["Top", "Left"],
-               ["Top", "Left"]),
+               {"Top":1, "Left":0}),
 
     Map_Region("CoconutVillage", True,
                False, #None, None,
@@ -648,7 +648,7 @@ regions = [
                [
                ],
                #["Right", "Left", "ClinicOut", "MerchantOut", "TempleOut", "House1Out", "House2Out"],
-               ["Right", "Left", "ClinicOut", "MerchantOut", "TempleOut", "House1Out", "House2Out"]),
+               {"Right":0, "Left":0, "ClinicOut":1, "MerchantOut":1, "TempleOut":1, "House1Out":1, "House2Out":1}),
 
     Map_Region("CoconutVillage_Clinic", False,
                False, #None, None,
@@ -657,7 +657,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("CoconutVillage_Merchant", False,
                False, #None, None,
@@ -666,7 +666,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("CoconutVillage_Temple", False,
                False, #None, None,
@@ -684,7 +684,7 @@ regions = [
                    "Complete Main Quest: Arctic Adventure",
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("CoconutVillage_House1", False,
                False, #None, None,
@@ -695,7 +695,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("CoconutVillage_House2", False,
                False, #None, None,
@@ -706,7 +706,7 @@ regions = [
                    "Complete Side Quest: Professional Pleasurer"
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Trail11", False,
                True, #["Octocunt", "Pinchie", "Sexybun", "Mamaoak", "Udderella"], [21, 22],
@@ -727,7 +727,7 @@ regions = [
                    "Complete Side Quest: Deadly Waters"
                ],
                #["Right", "Bottom", "pier"],
-               ["Right", "Bottom", "pier"]),
+               {"Right":0, "Bottom":0, "pier":0}),
 
     Map_Region("Trail12", False,
                True, #["Octocunt", "Pinchie", "Dracoomer", "Udderella", "Faerie"], [21, 23],
@@ -742,7 +742,7 @@ regions = [
                ],
                ["Complete Side Quest: Starry Eyed Surprise"],
                #["Bottom", "Top"],
-               ["Bottom", "Top"]),
+               {"Bottom":1, "Top":0}),
 
     Map_Region("FishingHut", False,
                True, #["Pinchie", "Thiccsie", "Faerie", "Twerqueen"], [21, 23],
@@ -761,7 +761,7 @@ regions = [
                    "Complete Side Quest: The Art of Fishing"
                ],
                #["Top"],
-               ["Top"]),
+               {"Top":2}),
 
     Map_Region("Trail13", False,
                True, #["Twerqueen", "Faerie", "Sexybun", "Amazona"], [22, 24],
@@ -776,7 +776,7 @@ regions = [
                ],
                ["Complete Main Quest: Coconut Conundrum"],
                #["Left", "pier"],
-               ["Left", "pier"]),
+               {"Left":0, "pier":0}),
 
     Map_Region("Trail14", True,
                True, #["Faerie", "Amazona", "Mamaoak", "Harpie"], [23, 25],
@@ -792,7 +792,7 @@ regions = [
                ],
                None,
                #["Right", "CaveIn"],#, "CaveOut"
-               ["Right", "CaveIn"]),#, "CaveOut"
+               {"Right":0, "CaveIn":0}),#, "CaveOut"
 
     Map_Region("IslandCave", False,
                True, #["Amazona", "Harpie", "Twerqueen", "Arachna", "Succubae"], [23, 25],
@@ -811,7 +811,7 @@ regions = [
                ],
                None,
                #["Bottom", "Top"],
-               ["Bottom", "Top"]),
+               {"Bottom":0, "Top":0}),
 
     Map_Region("IslandCave2", False,
                False, #None, None,
@@ -822,7 +822,7 @@ regions = [
                ],
                ["Complete Main Quest: Lusty Cultists"],
                #["Bottom", "Top"],
-               ["Bottom", "Top"]),
+               {"Bottom":0, "Top":0}),
 
     Map_Region("ColdHarbor", True,
                True, #["Harpie", "Pinchie", "Gangfang", "Octomommy", "Snowbae"], [25, 27],
@@ -837,7 +837,7 @@ regions = [
                ],
                ["Complete Main Quest: The Frigid Maiden"],
                #["Top"],
-               ["Top"]),
+               {"Top":2}),
 
     Map_Region("Frostville1", True,
                False, #None, None,
@@ -855,7 +855,7 @@ regions = [
                    "Complete Main Quest: Here Comes the Boom",
                ],
                #["Bottom", "Top", "Left", "ClinicOut", "MerchantOut", "Church", "House1"],
-               ["Bottom", "Top", "Left", "ClinicOut", "MerchantOut", "Church", "House1"]),
+               {"Bottom":1, "Top":0, "Left":0, "ClinicOut":1, "MerchantOut":1, "Church":1, "House1":1}),
 
     Map_Region("Frostville1_Clinic", False,
                False, #None, None,
@@ -864,7 +864,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Frostville1_Merchant", False,
                False, #None, None,
@@ -873,7 +873,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Frostville1_Church", False,
                False, #None, None,
@@ -887,7 +887,7 @@ regions = [
                    "Complete Main Quest: The Lewd Exorcist",
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Frostville1_House1", False,
                False, #None, None,
@@ -898,7 +898,7 @@ regions = [
                    "Complete Main Quest: The Proposal",
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Trail15", False,
                True, #["Archna", "Gangfang", "Octomommy", "Snowbae", "Polaria", "Deardeer"], [26, 27],
@@ -914,7 +914,7 @@ regions = [
                ],
                ["Complete Side Quest: Arctic Menace"],
                #["Right", "Left", "Left2"],
-               ["Right", "Left", "Left2"]),
+               {"Right":0, "Left":0, "Left2":0}),
 
     Map_Region("Trail16", False,
                True, #["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"], [27, 28],
@@ -930,7 +930,7 @@ regions = [
                ],
                None,
                #["Right", "Left"],
-               ["Right", "Left"]),
+               {"Right":0, "Left":0}),
 
     Map_Region("Trail16_Top", False,
                True, #["Gangfang", "Polaria", "Octomommy", "Snowbae", "Deardeer", "Slithereen"], [27, 28],  # SAME AS trail16
@@ -941,7 +941,7 @@ regions = [
                None,
                None,
                #["Right2", "Cave"],
-               ["Right2", "Cave"]),
+               {"Right2":0, "Cave":1}),
 
     Map_Region("Trail16_Cave", False,
                True, #["Valkyrie_Normal"], [29, 32],  # REQUIRES FISHY SCENT
@@ -950,7 +950,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("AbandonedMine", True,
                True, #["Gangfang", "Polaria", "Slithereen", "Deardeer", "Slushie"], [28, 30],
@@ -963,7 +963,7 @@ regions = [
                [
                ],
                #["Right", "House1"],
-               ["Right", "House1"]),
+               {"Right":0, "House1":1}),
 
     Map_Region("AbandonedMine_House1", False,
                False, #None, None,
@@ -976,7 +976,7 @@ regions = [
                    "Complete Main Quest: Fishing For Treasure",
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("Trail17", False,
                True, #["Slithereen", "Deardeer", "Slushie", "Queenbee", "Boobarella"], [29, 32],
@@ -996,7 +996,7 @@ regions = [
                    "Complete Side Quest: Legend of the Valkyrie part 2."
                ],
                #["Bottom", "Right"],
-               ["Bottom", "Right"]),
+               {"Bottom":0, "Right":0}),
 
     Map_Region("Trail18", True,
                True, #["Slushie", "Slithereen", "Queenbee", "Boobarella", "Panthera"], [30, 33],
@@ -1016,7 +1016,7 @@ regions = [
                    "Complete Main Quest: Through the Portal"
                ],
                #["Left", "TempleIn"],#, "TempleOut"
-               ["Left", "TempleIn"]),#, "TempleOut"
+               {"Left":0, "TempleIn":0}),#, "TempleOut"
 
     Map_Region("ArcticTemple1", False,
                False, #None, None,
@@ -1035,7 +1035,7 @@ regions = [
                ],
                None,
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("ArcticTemple2", False,
                False, #None, None,
@@ -1046,7 +1046,7 @@ regions = [
                ],
                ["Complete Main Quest: Arctic Harmony"],
                #["Top", "Bottom"],
-               ["Top", "Bottom"]),
+               {"Top":0, "Bottom":0}),
 
     Map_Region("Trail19", True,
                True, #["Queenbee", "Deardeer", "Panthera", "Unihorn", "Fungie"], [33, 35],
@@ -1063,7 +1063,7 @@ regions = [
                ],
                None,
                #["Top"],
-               ["Top"]),
+               {"Top":2}),
 
     Map_Region("Trail20", False,
                True, #["Queenbee", "Unihorn", "Fungie", "Juggsie", "Serphina"], [33, 36],
@@ -1081,7 +1081,7 @@ regions = [
                    "Complete Main Quest: Breezie Runs Free",
                ],
                #["Bottom", "Left"],
-               ["Bottom", "Left"]),
+               {"Bottom":1, "Left":1}),
 
     Map_Region("Trail20_Right", False,
                True, #["Queenbee", "Unihorn", "Fungie", "Juggsie", "Serphina"], [33, 36], #SAME AS Trail20
@@ -1094,7 +1094,7 @@ regions = [
                ],
                None,
                #["Right"],
-               ["Right"]),
+               {"Right":0}),
 
     Map_Region("Trail21", False,
                True, #["Queenbee", "Fungie", "Juggsie", "Serphina"], [34, 37],
@@ -1111,7 +1111,7 @@ regions = [
                ],
                ["Complete Main Quest: Hostage Situation"],
                #["Right"],
-               ["Right"]),
+               {"Right":2}),
 
     Map_Region("SpiritPassage", False,
                True, #["Slithereen", "Octomommy", "Fungie", "Dominatrix"], [35, 38],
@@ -1132,7 +1132,7 @@ regions = [
                ],
                None,
                #["Left", "Right"],
-               ["Left", "Right"]),
+               {"Left":0, "Right":0}),
 
     Map_Region("Trail22", True,
                True, #["Unihorn", "Juggsie", "Seraphina", "Dominatrix"], [37, 40],
@@ -1155,7 +1155,7 @@ regions = [
                    "Complete Side Quest: Hunt for the Centiboob part 3.",
                ],
                #["Left", "Top", "Cave"],
-               ["Left", "Top", "Cave"]),
+               {"Left":0, "Top":1, "Cave":1}),
 
     Map_Region("Trail22_Cave", False,
                True, #["Centiboob_Normal"], [37, 40],
@@ -1166,7 +1166,7 @@ regions = [
                None,
                None,
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
     Map_Region("InnerGrove", False,
                False, #None, None,
@@ -1179,7 +1179,7 @@ regions = [
                    "Complete Main Quest: Battle for Spirit Valley"
                ],
                #["Bottom"],
-               ["Bottom"]),
+               {"Bottom":2}),
 
 ]
 

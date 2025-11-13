@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using SpiritValleyArchipelagoClient.Archipelago;
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

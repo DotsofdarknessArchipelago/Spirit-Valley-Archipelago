@@ -18,7 +18,7 @@ from worlds.spiritvalley.Rules import rules_normal, rules_map_rando
 class SpiritValley(World):
     game = "Spirit Valley"
     worldversion_major = 0
-    worldversion_minor = 3
+    worldversion_minor = 4
     worldversion_build = 0
 
     item_name_to_id = items_list
@@ -43,13 +43,13 @@ class SpiritValley(World):
             self.options.Char_Hairstyle.value = 3
 
         if self.options.Randomise_Spawns.value:
-            self.data["Grass_spawn"] = rand_grass_spawn(self.options.Grass_slots.value,self.random)
-            self.data["Water_spawn"] = rand_water_spawn(self.options.Water_slots.value,self.random)
+            self.data["Grass_spawn"] = rand_grass_spawn(self.options.Grass_slots.value, self.random)
+            self.data["Water_spawn"] = rand_water_spawn(self.options.Water_slots.value, self.random)
         else:
             self.data["Grass_spawn"] = default_grass_loc.copy()
             self.data["Water_spawn"] = default_water_loc.copy()
 
-        self.data["SPIRITS"] = rand_spirit_list(self.options.Randomise_Spirit_Moves.value, self.options.Randomise_Spirit_Moves_Amount.value, self.options.Randomise_Spirit_Evo.value, self.options.Randomise_Spirit_Type.value, self.options.Randomise_Spirit_Stats.value,self.random)
+        self.data["SPIRITS"] = rand_spirit_list(self.options.Randomise_Spirit_Moves.value, self.options.Randomise_Spirit_Moves_Amount.value, self.options.Randomise_Spirit_Evo.value, self.options.Randomise_Spirit_Type.value, self.options.Randomise_Spirit_Stats.value, self.random)
 
         if self.options.Randomise_Move_Data.value:
             self.data["MOVES"] = rand_move_data(self.random)
@@ -61,7 +61,7 @@ class SpiritValley(World):
         else:
             self.data["TYPES"] = default_type_effective.copy()
 
-        self.data["ENEMIES"] = rand_trainer(self.options.Randomise_Enemies.value,self.random)
+        self.data["ENEMIES"] = rand_trainer(self.options.Randomise_Enemies.value, self.random)
 
         self.data["MAIN_QUEST_TOTAL_DOMINATION"] = self.random.choice(self.data["Grass_spawn"]["CaveOfTorment"])
 
@@ -92,21 +92,33 @@ class SpiritValley(World):
             self.numlocations += len(warp_locations)
         self.numitems = self.numlocations
 
-
     def create_regions(self):
-        Generate_Map(self.multiworld,self.player,self.options,self.location_name_to_id,self.data)
+        Generate_Map(self.multiworld, self.player, self.options, self.location_name_to_id, self.data)
 
     def connect_entrances(self):
         is_ut = getattr(self.multiworld, "generation_is_fake", False)
         if is_ut: return
 
         if self.options.randomise_map.value:
-            self.data["RANDO"] = randomize_entrances(self,True, {0:[0]}).pairings
+            if self.options.randomise_map_option.value == 1:
+                TGL = {
+                    0: [0],
+                    1: [2],
+                    2: [1]
+                }
+            else:
+                TGL = {
+                    0: [0, 1, 2],
+                    1: [0, 1, 2],
+                    2: [0, 1, 2]
+                }
+            self.data["RANDO"] = randomize_entrances(self, True, TGL).pairings
+            hello = ""
 
         visualize_regions(self.multiworld.get_region("Menu", self.player), "spiritvalley.puml", show_entrance_names=True)
 
     def create_item(self, name: str) -> "Item":
-        if name in {**items_key_item, **items_archipelago, **items_warp, "Goldfish":self.item_name_to_id["Goldfish"], "Northern Blowfish":self.item_name_to_id["Northern Blowfish"], "victory":self.item_name_to_id["victory"]}:
+        if name in {**items_key_item, **items_archipelago, **items_warp, "Goldfish": self.item_name_to_id["Goldfish"], "Northern Blowfish": self.item_name_to_id["Northern Blowfish"], "victory": self.item_name_to_id["victory"]}:
             return spiritItem(name, ItemClassification.progression, self.item_name_to_id[name], self.player)
         if name in useful_items_list:
             return spiritItem(name, ItemClassification.useful, self.item_name_to_id[name], self.player)
@@ -119,9 +131,9 @@ class SpiritValley(World):
 
         filleritems = self.numlocations - len(items_key_item) - len(items_archipelago) - 1
         if not self.options.Rare_Locations.value:
-            filleritems =filleritems- len(Rare_spirit_locations)
+            filleritems = filleritems - len(Rare_spirit_locations)
         if self.options.randomise_warps.value:
-            filleritems =filleritems- len(items_warp)
+            filleritems = filleritems - len(items_warp)
 
         for i in items_key_item:
             self.multiworld.itempool.append(self.create_item(i))
@@ -195,7 +207,6 @@ class SpiritValley(World):
             m2 = i[1].rsplit(' ')
             self.multiworld.get_entrance(i[0], self.player).connect(self.multiworld.get_region(m2[0], self.player))
 
-
     def fill_slot_data(self) -> Mapping[str, Any]:
         outdict = {
             **self.data,
@@ -206,36 +217,36 @@ class SpiritValley(World):
             "Char_Haircolor": self.options.Char_Haircolor.value,
             "Char_Outfit": self.options.Char_Outfit.value,
 
-            "Spirit_Id_Start":spirit_id_start,
-            "Spirit_Affection_Start":spirit_affection_id_start,
-            "Spirit_Rare_Start":Rare_spirit_id_start,
-            "Main_Quest_Start":main_quests_id_start,
-            "Side_Quest_Start":side_quests_id_start,
-            "Battle_Start":battle_locations_id_start,
-            "Chest_Start":chest_locations_id_start,
-            "warp_locations":warp_locations_id_start,
+            "Spirit_Id_Start": spirit_id_start,
+            "Spirit_Affection_Start": spirit_affection_id_start,
+            "Spirit_Rare_Start": Rare_spirit_id_start,
+            "Main_Quest_Start": main_quests_id_start,
+            "Side_Quest_Start": side_quests_id_start,
+            "Battle_Start": battle_locations_id_start,
+            "Chest_Start": chest_locations_id_start,
+            "warp_locations": warp_locations_id_start,
 
-            "items_consumable_start":items_consumable_id_start,
-            "items_crystal_start":items_crystal_id_start,
-            "items_equipment_start":items_equipment_id_start,
-            "items_key_item_start":items_key_item_id_start,
-            "items_potion_start":items_potion_id_start,
-            "items_coins_start":items_coins_id_start,
-            "items_archipelago_id_start":items_archipelago_id_start,
-            "items_warp_id_start":items_warp_id_start,
+            "items_consumable_start": items_consumable_id_start,
+            "items_crystal_start": items_crystal_id_start,
+            "items_equipment_start": items_equipment_id_start,
+            "items_key_item_start": items_key_item_id_start,
+            "items_potion_start": items_potion_id_start,
+            "items_coins_start": items_coins_id_start,
+            "items_archipelago_id_start": items_archipelago_id_start,
+            "items_warp_id_start": items_warp_id_start,
 
-            "Spirit_Locations":self.options.Spirit_Locations.value,
-            "Spirit_Affection":self.options.Spirit_Affection.value,
-            "Rare_Locations":self.options.Rare_Locations.value,
+            "Spirit_Locations": self.options.Spirit_Locations.value,
+            "Spirit_Affection": self.options.Spirit_Affection.value,
+            "Rare_Locations": self.options.Rare_Locations.value,
 
-            "Randomise_Move_Data":self.options.Randomise_Move_Data.value,
+            "Randomise_Move_Data": self.options.Randomise_Move_Data.value,
 
-            "randomise_map":self.options.randomise_map.value,
+            "randomise_map": self.options.randomise_map.value,
             "randomise_warps": self.options.randomise_warps.value,
 
-            "Minigame_Cheat":self.options.Minigame_Cheat.value,
-            "Catch_Cheat":self.options.Guaranteed_Catch.value,
-            "Xp_Modifer":self.options.Xp_Modifer.value,
+            "Minigame_Cheat": self.options.Minigame_Cheat.value,
+            "Catch_Cheat": self.options.Guaranteed_Catch.value,
+            "Xp_Modifer": self.options.Xp_Modifer.value,
 
             "world_version_major": self.worldversion_major,
             "world_version_minor": self.worldversion_minor,

@@ -13,9 +13,12 @@ using SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay;
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace SpiritValleyArchipelagoClient.Archipelago;
@@ -33,7 +36,7 @@ public class ArchipelagoClient
     public static int totalitem = 0;
 
     public static int servermajor = 0;
-    public static int serverminor = 3;
+    public static int serverminor = 4;
     public static int serverbuild = 0;
 
 
@@ -162,23 +165,35 @@ public class ArchipelagoClient
                 ServerData.trainerdata.Add(JsonConvert.DeserializeObject<Trainer>(item));
             }
 
-            string alists = session.DataStorage[Scope.Slot, "archdata"];
-            ArchipelageItemList alist2 = JsonConvert.DeserializeObject<ArchipelageItemList>(alists);
-            Plugin.test = alist2;
-            Plugin.BepinLogger.LogMessage("SERVER ARCHDATA:");
-            Plugin.BepinLogger.LogMessage(alists);
-            if (!alist2.seed.IsNullOrWhiteSpace())
-            {
-                ArchipelagoConsole.LogDebug("ARCHDATA FOUND ON SERVER");
-                archlist.merge(alist2.list);
-                archlist.seed = session.RoomState.Seed;
 
+
+
+            if (File.Exists(Application.persistentDataPath + $"/archipelagoslot{Plugin.slot + 1}/archdata.json"))
+            {
+                using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archipelagoslot{Plugin.slot + 1}/archdata.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    ArchipelageItemList savedlist = (ArchipelageItemList)serializer.Deserialize(file, typeof(ArchipelageItemList));
+                    if (session.RoomState.Seed == savedlist.seed)
+                    {
+                        ArchipelagoConsole.LogDebug("archdata file found restoring session");
+                        archlist.merge(savedlist.list);
+                    }
+                    else
+                    {
+                        ArchipelagoConsole.LogDebug("ARCHDATA found but an error occoured just going to use new archdata");
+                    }
+                }
             }
             else
             {
+                ArchipelagoConsole.LogDebug("archdata file not found creating new session");
                 archlist.seed = session.RoomState.Seed;
-                ArchipelagoConsole.LogDebug("ARCHDATA NOT FOUND CREATING NEW");
+                archlist.host = ServerData.Uri;
+                archlist.user = ServerData.SlotName;
+                archlist.pass = ServerData.Password;
             }
+
 
             if (servermajor != Convert.ToInt32(ServerData.slotData["world_version_major"]) || serverminor != Convert.ToInt32(ServerData.slotData["world_version_minor"]) || serverbuild != Convert.ToInt32(ServerData.slotData["world_version_build"]))
             {
@@ -266,6 +281,7 @@ public class ArchipelagoClient
         Plugin.BepinLogger.LogError($"Connection to Archipelago lost: {reason}");
         Disconnect();
     }
+
     public static void complete()
     {
         var statusUpdatePacket = new StatusUpdatePacket();
@@ -277,6 +293,9 @@ public class ArchipelagoClient
     {
         ArchipelagoConsole.LogMessage("RESETING RECIEVED ITEMS");
         ArchipelageItemList newlist = new ArchipelageItemList();
+        newlist.host = archlist.host;
+        newlist.user = archlist.user;
+        newlist.pass = archlist.pass;
         int i = 0;
 
         foreach (ItemInfo item in session.Items.AllItemsReceived)

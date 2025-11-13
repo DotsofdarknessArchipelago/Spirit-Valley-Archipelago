@@ -1,12 +1,11 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
+using Newtonsoft.Json;
 using SpiritValleyArchipelagoClient.Archipelago;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using static System.Collections.Specialized.BitVector32;
 
@@ -27,7 +26,6 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
             {
                 case "$resetitems":
                     ArchipelagoConsole.LogMessage("RESETING SENT ITEM LIST ALL ITEMS WILL BE REPROCESSED");
-                    ArchipelagoClient.session.DataStorage[Scope.Slot, "archdata"] = "";
                     ArchipelagoClient.resetlist();
                     break;
 
@@ -49,25 +47,23 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
                 case "$deletesave":
                     ArchipelagoConsole.LogMessage("resetting save/archdata");
-                    ArchipelagoClient.session.DataStorage[Scope.Slot, "save"] = "";
-                    ArchipelagoClient.session.DataStorage[Scope.Slot, "archdata"] = "";
                     ArchipelagoClient.session.DataStorage[Scope.Slot, "slotsetup"] = false;
                     ArchipelagoClient.resetlist();
                     break;
 
 
-                case "$debugsave":
-                    //string playerfile = Crypt.Decrypt(ArchipelagoClient.session.DataStorage[Scope.Slot, "save"]);
-                    //
-                    //ArchipelagoConsole.LogMessage($"------------PLAYER FILE START -----------");
-                    //ArchipelagoConsole.LogMessage($"{playerfile}");
-                    //ArchipelagoConsole.LogMessage($"------------PLAYER FILE END -----------");
-                    break;
                 case "$debugarchdata":
-                    string adata = ArchipelagoClient.session.DataStorage[Scope.Slot, "archdata"];
+                    ArchipelageItemList alist;
+                    using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archipelagoslot{Plugin.slot + 1}/archdata.json"))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        alist = (ArchipelageItemList)serializer.Deserialize(file, typeof(ArchipelageItemList));
+                    }
+
+                    if (alist == null) { return; }
 
                     ArchipelagoConsole.LogMessage($"------------ARCHDATA START -----------");
-                    ArchipelagoConsole.LogMessage($"{adata}");
+                    ArchipelagoConsole.LogMessage(alist.listprint());
                     ArchipelagoConsole.LogMessage($"------------ARCHDATA END -----------");
                     break;
                 case "$debugdump":
@@ -122,6 +118,8 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     break;
                 case "$fixsave"://might work?
                                 //save.fixsave();
+
+                    ArchipelagoClient.session.DataStorage[Scope.Slot, "save"].Initialize("");
                     break;
 
 

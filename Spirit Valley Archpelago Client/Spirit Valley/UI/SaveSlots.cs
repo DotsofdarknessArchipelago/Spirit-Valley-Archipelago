@@ -1,14 +1,6 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine.Tilemaps;
 using UnityEngine;
-using UnityEngine.Localization.Pseudo;
-using System.Reflection;
-using TMPro;
 using SpiritValleyArchipelagoClient.Archipelago;
-using UnityEngine.UI;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
 {
@@ -62,12 +54,16 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
             ArchipelagoConsole.LogDebug("game manager init");
             if (__instance.gameStates.Length == 4)
             {
-                SystemData<GameState>[] t = new SystemData<GameState>[5];
-                t[0] = __instance.gameStates[0];
-                t[1] = __instance.gameStates[1];
-                t[2] = __instance.gameStates[2];
-                t[3] = __instance.gameStates[3];
-                t[4] = new SystemData<GameState>(Application.persistentDataPath + "/archipelago", "archipelago", "json");
+                SystemData<GameState>[] t =
+                [
+                    __instance.gameStates[0],
+                    __instance.gameStates[1],
+                    __instance.gameStates[2],
+                    __instance.gameStates[3],
+                    new SystemData<GameState>(Application.persistentDataPath + "/archipelagoslot1", "archipelagoslot1", "json"),
+                    new SystemData<GameState>(Application.persistentDataPath + "/archipelagoslot2", "archipelagoslot2", "json"),
+                    new SystemData<GameState>(Application.persistentDataPath + "/archipelagoslot3", "archipelagoslot3", "json"),
+                ];
                 __instance.gameStates = t;
                 //__instance.gameStates[4].Delete(SaveType.Manual);
                 //__instance.gameStates[4].Delete(SaveType.Auto);

@@ -90,6 +90,7 @@ def Generate_Map(multiworld, player, options, loc, data):
 
     join("Menu", "OakwoodVillage", multiworld, player, True)
     join("OakwoodVillage", "OakwoodVillage_Clinic", multiworld, player, False)
+    join("OakwoodVillage", "OakwoodVillage_Hq", multiworld, player, False)
 
     if not options.randomise_map.value:
         for t in [*transition_areas,*specical_transition_areas]:

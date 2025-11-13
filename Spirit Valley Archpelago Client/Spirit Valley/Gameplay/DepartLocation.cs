@@ -17,7 +17,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         public static int items_coins_start = 0;
         public static int items_warp_id_start = 0;
 
-        public static GameState save => GameManager.instance.gameStates[4].data;
+        public static GameState save => GameManager.instance.gameStates[4+Plugin.slot].data;
 
         [HarmonyPatch(typeof(SceneManager), "LoadScene", [typeof(string), typeof(LoadSceneMode)])]
         [HarmonyPrefix]
@@ -33,7 +33,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             if (items_coins_start == 0) { items_coins_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_coins_start"]); };
             if (items_warp_id_start == 0) { items_warp_id_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_warp_id_start"]); };
 
-            ArchipelagoConsole.LogDebug("Moving Scenes");
+            ArchipelagoConsole.LogDebug("Processing Items");
             foreach (ArchipelagoItem item in ArchipelagoClient.archlist.list)
             {
                 if (item.processed) { continue; }

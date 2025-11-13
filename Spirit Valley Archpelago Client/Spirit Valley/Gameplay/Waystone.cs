@@ -4,11 +4,7 @@ using MonoMod.Cil;
 using SpiritValleyArchipelagoClient.Archipelago;
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 {
@@ -80,7 +76,6 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         [HarmonyPrefix]
         public static bool activate(WayStoneMapItem __instance, ref WayStoneState ___state)
         {
-            ArchipelagoConsole.LogMessage($"WAYSTONE ANIMATION COMPLETE");
             int start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["warp_locations"]);
             switch (___state.sceneName)
             {
@@ -132,7 +127,6 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
             if (Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
             {
-                ArchipelagoConsole.LogDebug($"RANDOMISE WARPS ON SKIPPING ORIGNAL METHOD");
                 return false;
             }
             return true;
@@ -209,7 +203,6 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             if (Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
             {
                 int itemstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_warp_id_start"]);
-                ArchipelagoConsole.LogDebug($"RANDOMISE WARPS ON SKIPPING ORIGNAL METHOD3");
                 switch (sceneName)
                 {
                     case "OakwoodVillage":

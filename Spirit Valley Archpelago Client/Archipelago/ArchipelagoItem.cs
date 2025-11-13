@@ -36,6 +36,10 @@ namespace SpiritValleyArchipelagoClient.Archipelago
         public string seed = "";
         public int listversion = 1;
 
+        public string host = "";
+        public string user = "";
+        public string pass = "";
+
         public void add(ItemInfo netitem)
         {
             if (netitem.LocationId <= 0)
@@ -96,7 +100,7 @@ namespace SpiritValleyArchipelagoClient.Archipelago
 
         public string listprint()
         {
-            string output = "";
+            string output = $"Host:{host}, User:{user}, Pass:{pass}\n";
             output += "-------------\n";
             for (int i = 0; i < list.Count; i++)
             {

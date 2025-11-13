@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace SpiritValleyArchipelagoClient;
 
@@ -22,29 +22,33 @@ public class Plugin : BaseUnityPlugin
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 0;
-    public const int PluginVersionMinor = 3;
+    public const int PluginVersionMinor = 4;
     public const int PluginVersionBuild = 0;
-    public const string PluginVersion = "0.3.0";//TODO MAKE SURE THESE MATCH
+    public const string PluginVersion = "0.4.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
     public static ManualLogSource BepinLogger;
     public static ArchipelagoClient ArchipelagoClient;
     public static bool start = false;
+    public static bool newgame = false;
     public static bool versioncheck = true;
 
-    public ArchipelagoData data = ArchipelagoClient.ServerData;
+    //public ArchipelagoData data = ArchipelagoClient.ServerData;
 
     public Rect archwindow = new Rect(Screen.width / 2 - (560 / 2), Screen.height / 2 - (400 / 2), 560, 400);
     public static GUIStyle mlabel;
     public static GUIStyle mlabel2;
     public static GUIStyle mlabel3;
     public static GUIStyle mbutton;
+    public static Texture trash;
     public static GUIStyle mtext;
+
+    public static int slot = 0;
 
     public Dictionary<string, MonsterSkill> skilllist => HelperSpirits.skilllist;
     public static Dictionary<string, object> skilllisttest = new Dictionary<string, object>();
-    public static ArchipelageItemList test = null;
+    public static GameState test = null;
 
 
     private void Awake()
@@ -81,12 +85,31 @@ public class Plugin : BaseUnityPlugin
         if (SceneManager.GetActiveScene().name == "TitleScreen")
         {
             GameObject.Find("TitleScreenMenu/ButtonContainer/StartGameButton/Label").GetComponent<TextMeshProUGUI>().SetText("Start Archipelago Game");
+            if (trash == null)
+            {
+                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                {
+                    if (go.name == "DeleteButton")
+                    {
+                        foreach (Image i in go.GetComponentsInChildren<Image>())
+                        {
+                            if (i.name == "Image")
+                            {
+                                trash = i.mainTexture;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
             if (GameObject.Find("TitleScreenMenu/SaveSlotsWindow") != null)
             {
                 start = true;
             }
             else
             {
+                newgame = false;
                 start= false;
             }
             if (versioncheck)
@@ -131,7 +154,7 @@ public class Plugin : BaseUnityPlugin
         GUI.Window(60, new Rect(10, 10, 320, 40), versionWindow, "");
         if (start)
         {
-            GUI.color = new Color(0, 0, 0, 0);
+            GUI.color = new UnityEngine.Color(0, 0, 0, 0);
             GUI.Window(61, archwindow, archWindow, "");
         }
     }
@@ -139,7 +162,7 @@ public class Plugin : BaseUnityPlugin
     public void versionWindow(int id)
     {
         GUI.depth = 0;
-        GUI.backgroundColor = Color.clear;
+        GUI.backgroundColor = UnityEngine.Color.clear;
         // show the Archipelago Version and whether we're connected or not
         if (ArchipelagoClient.Authenticated)
         {
@@ -169,12 +192,12 @@ public class Plugin : BaseUnityPlugin
             float item = 0;
             if (ArchipelagoClient.slotstate)
             {
-                state = "GAME STARTED";
+                state = $"GAME STARTED (SLOT {slot+1})";
                 button = "CONTINUE";
             }
             else
             {
-                state = "NEW GAME";
+                state = $"NEW GAME (SLOT {slot+1})";
                 button = "START GAME";
             }
             if (ArchipelagoClient.session.Locations.AllLocationsChecked.Count() > 0)
@@ -202,24 +225,119 @@ public class Plugin : BaseUnityPlugin
                 startarch();
             }
         }
-        else
+        else if (newgame)
         {
             GUI.Label(new Rect(10, 20, 540, 60), "Client V(" + PluginVersion + "): Status: NOT Connected", mlabel2);
             GUI.Label(new Rect(10, 120, 270, 40), "Host: ", mlabel);
             GUI.Label(new Rect(10, 160, 270, 40), "Player Name: ", mlabel);
             GUI.Label(new Rect(10, 200, 270, 40), "Password: ", mlabel);
-
+            
             ArchipelagoClient.ServerData.Uri = GUI.TextField(new Rect(archwindow.width / 2, 120, 270, 40), ArchipelagoClient.ServerData.Uri, mtext);
             ArchipelagoClient.ServerData.SlotName = GUI.TextField(new Rect(archwindow.width / 2, 160, 270, 40), ArchipelagoClient.ServerData.SlotName, mtext);
             ArchipelagoClient.ServerData.Password = GUI.TextField(new Rect(archwindow.width / 2, 200, 270, 40), ArchipelagoClient.ServerData.Password, mtext);
-
+            
             if (GUI.Button(new Rect(archwindow.width / 2 - 50, 280, 100, 40), "Connect", mbutton) &&
                 !ArchipelagoClient.ServerData.SlotName.IsNullOrWhiteSpace())
             {
                 ArchipelagoClient.Connect();
             }
-
         }
+        else
+        {
+            List<string> s1 = new List<string>();
+            List<string> s2 = new List<string>();
+            List<string> s3 = new List<string>();
+
+            if (File.Exists(Application.persistentDataPath + "/archipelagoslot1/archdata.json")) 
+            {
+                s1 = readarchdata(Application.persistentDataPath + "/archipelagoslot1/archdata.json");
+                if (GUI.Button(new Rect(20, 10, 475, 120), s1[0], mbutton))
+                {
+                    slot = 0;
+                    ArchipelagoClient.ServerData.Uri = s1[1];
+                    ArchipelagoClient.ServerData.SlotName = s1[2];
+                    ArchipelagoClient.ServerData.Password = s1[3];
+                    ArchipelagoClient.Connect();
+                }
+                if (GUI.Button(new Rect(500, 50, 40, 40), trash, mbutton))
+                {
+                    File.Delete(Application.persistentDataPath + "/archipelagoslot1/archdata.json");
+                }
+            }
+            else 
+            { 
+                if (GUI.Button(new Rect(20, 10, 520, 120), "Click To Start A New Archipelago Game in Slot 1", mbutton))
+                {
+                    slot = 0;
+                    newgame = true;
+                }
+            }
+
+            if (File.Exists(Application.persistentDataPath + "/archipelagoslot2/archdata.json")) 
+            { 
+                s2 = readarchdata(Application.persistentDataPath + "/archipelagoslot2/archdata.json");
+                if (GUI.Button(new Rect(20, 140, 475, 120), s2[0], mbutton))
+                {
+                    slot = 1;
+                    ArchipelagoClient.ServerData.Uri = s2[1];
+                    ArchipelagoClient.ServerData.SlotName = s2[2];
+                    ArchipelagoClient.ServerData.Password = s2[3];
+                    ArchipelagoClient.Connect();
+                }
+                if (GUI.Button(new Rect(500, 180, 40, 40), trash, mbutton))
+                {
+                    File.Delete(Application.persistentDataPath + "/archipelagoslot2/archdata.json");
+                }
+            }
+            else 
+            { 
+                if (GUI.Button(new Rect(20, 140, 520, 120), "Click To Start A New Archipelago Game in Slot 2", mbutton))
+                {
+                    slot = 1;
+                    newgame = true;
+                }
+            }
+
+            if (File.Exists(Application.persistentDataPath + "/archipelagoslot3/archdata.json")) 
+            { 
+                s3 = readarchdata(Application.persistentDataPath + "/archipelagoslot3/archdata.json");
+                if (GUI.Button(new Rect(20, 270, 475, 120), s3[0], mbutton))
+                {
+                    slot = 2;
+                    ArchipelagoClient.ServerData.Uri = s3[1];
+                    ArchipelagoClient.ServerData.SlotName = s3[2];
+                    ArchipelagoClient.ServerData.Password = s3[3];
+                    ArchipelagoClient.Connect();
+                }
+                if (GUI.Button(new Rect(500, 310, 40, 40), trash, mbutton))
+                {
+                    File.Delete(Application.persistentDataPath + "/archipelagoslot3/archdata.json");
+                }
+            }
+            else 
+            { 
+                if (GUI.Button(new Rect(20, 270, 520, 120), "Click To Start A New Archipelago Game in Slot 3", mbutton))
+                {
+                    slot = 2;
+                    newgame = true;
+                }
+            }
+        }
+    }
+
+    public static List<string> readarchdata(string path)
+    {
+        List<string> output = new List<string>();
+        using (StreamReader file = File.OpenText(path))
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            ArchipelageItemList savedlist = (ArchipelageItemList)serializer.Deserialize(file, typeof(ArchipelageItemList));
+            output.Add($"Host:{savedlist.host}\nUser:{savedlist.user}\nLast Played:{File.GetLastWriteTime(path).ToString("d MMM h:m:s tt")}");
+            output.Add(savedlist.host);
+            output.Add(savedlist.user);
+            output.Add(savedlist.pass);
+        }
+        return output;
     }
 
     public void startarch()
@@ -227,23 +345,17 @@ public class Plugin : BaseUnityPlugin
         
         bool setup = ArchipelagoClient.session.DataStorage[Scope.Slot, "slotsetup"];
         ArchipelagoConsole.LogDebug($"SETUP VALUE: {setup}");
-        setup = setup && (File.Exists(Application.persistentDataPath + "/archipelago/archipelago.json") || File.Exists(Application.persistentDataPath + "/archipelago/archipelago_auto.json"));
+        setup = setup && (File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}.json") || File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}_auto.json") && File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot+1}/archdata.json"));
         if (setup)
         {
             ArchipelagoConsole.LogDebug("Archipelago Game Started");
-            //GameManager.instance.gameStates[4].data = JsonConvert.DeserializeObject<GameState>(Crypt.Decrypt(ArchipelagoClient.session.DataStorage[Scope.Slot, "save"]));
-            //ArchipelagoConsole.LogDebug($"SAVE VALUE: \n{ArchipelagoClient.session.DataStorage[Scope.Slot, "save"]}");
-            //GameManager.instance.gameStates[4].SaveAsync(SaveType.Auto).GetAwaiter().OnCompleted(loadgame);
-            //File.WriteAllText(Application.persistentDataPath + "/archipelago/archipelago_auto.json", ArchipelagoClient.session.DataStorage[Scope.Slot, "save"].ToString());
-            loadgame(File.GetLastWriteTimeUtc(Application.persistentDataPath + "/archipelago/archipelago.json") < File.GetLastWriteTimeUtc(Application.persistentDataPath + "/archipelago/archipelago_auto.json"));
+
+            loadgame(File.GetLastWriteTimeUtc(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}.json") < File.GetLastWriteTimeUtc(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}_auto.json"));
         }
         else
         {
-            ArchipelagoClient.session.DataStorage[Scope.Slot, "save"].Initialize("");
-            ArchipelagoClient.session.DataStorage[Scope.Slot, "archdata"].Initialize("");
-
             ArchipelagoConsole.LogDebug("Archipelago Game Not Started");
-            SystemData<GameState> systemData = GameManager.instance.gameStates[4];
+            SystemData<GameState> systemData = GameManager.instance.gameStates[4+slot];
             systemData.InitNew();
             systemData.data.migrationIndex = MigrationManager.instance.GetCurrentMigrationIndex();
             systemData.data.heroName = ArchipelagoClient.ServerData.SlotName;
@@ -265,11 +377,11 @@ public class Plugin : BaseUnityPlugin
     {
         if (auto)
         {
-            GameManager.instance.LoadAndSetActiveGameState(4, SaveType.Auto);
+            GameManager.instance.LoadAndSetActiveGameState(4+slot, SaveType.Auto);
         }
         else
         {
-            GameManager.instance.LoadAndSetActiveGameState(4, SaveType.Manual);
+            GameManager.instance.LoadAndSetActiveGameState(4 + slot, SaveType.Manual);
         }
         AudioManager.instance.StopMusic();
         SceneTransitionManager.instance.screenFade.FadeOut(1f, delegate
