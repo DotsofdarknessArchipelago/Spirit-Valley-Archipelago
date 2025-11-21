@@ -10,7 +10,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     public class BattleOver
     {
 
-
+        /// <summary>
+        /// set the loot pool for after defeating a monster to nothing
+        /// </summary>
         [HarmonyPatch(typeof(MapManager), "RandomizeWildMonsterLoot")]
         [HarmonyPostfix]
         public static void wildlootoverride(ref ItemBundle[] __result)
@@ -19,6 +21,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             __result = HelperItems.voidbundle();
         }
 
+        /// <summary>
+        /// debug for getting result for when a fight is over
+        /// </summary>
         [HarmonyPatch(typeof(FightManager), "FightOverCoroutine")]
         [HarmonyPrefix]
         public static void battleover(FightManager __instance, ref FightManager.FightResult ___fightResult)
@@ -26,6 +31,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             ArchipelagoConsole.LogDebug($"FIGHT OVER result({___fightResult})");
         }
 
+        /// <summary>
+        /// send location for defeating an enemy on the map based on its GUID
+        /// </summary>
         [HarmonyPatch(typeof(EnemyMapItem), "Deactivate")]
         [HarmonyPrefix]
         public static void battle(EnemyMapItem __instance, EnemyMapItemState ___state)
@@ -33,6 +41,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             ArchipelagoConsole.LogDebug($"DEACTIVATING ENEMYMAPITEM:{___state.guid}");
             ArchipelagoConsole.LogDebug($"DEACTIVATING ENEMYMAPITEM:{__instance.guid}");
 
+            //get the start value for battle locations
             int battleidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
             switch (___state.guid)
             {
@@ -415,6 +424,21 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         }
 
 
+
+        /// <summary>
+        /// give player 100 coins for defeating a enemy
+        /// </summary>
+        [HarmonyPatch(typeof(EnemyMapItem), "OnAfterMapInitiAfterFight")]
+        [HarmonyPostfix]
+        public static void givecoinforfight(EnemyMapItem __instance, ref EnemyMapItemState ___state, SystemData<GameState> ___gameState)
+        {
+            ___gameState.data.ModifyMoney(100);
+            ArchipelagoConsole.LogMessage("Got 100 Coin for Defeating Trainer");
+        }
+
+        /// <summary>
+        /// send location for defeating an frendly fight/side quest fight based on its GUID
+        /// </summary>
         [HarmonyPatch(typeof(FrienlyFightNPCGeneric), "AfterReturnFromFightCallback")]
         [HarmonyPrefix]
         public static void frendlyfightend(FrienlyFightNPCGeneric __instance)
@@ -439,6 +463,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
+        /// <summary>
+        /// send location for defeating Bonnie baiter due to NPC having unique class 
+        /// </summary>
         [HarmonyPatch(typeof(BonnieBaiter), "AfterReturnFromFightCallback")]
         [HarmonyPrefix]
         public static void boniefight()
@@ -454,7 +481,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //crismon agient1
+        /// <summary>
+        /// send location for defeating the Crimson Agient on Trail 2 due to NPC having unique class 
+        /// </summary>
         [HarmonyPatch(typeof(CrimsonAgent1), "OnAfterMapInitiAfterFight")]
         [HarmonyPrefix]
         public static void crimsonagentfight()
@@ -470,7 +499,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //sassy fight
+        /// <summary>
+        /// send locations for defeating fights started by sassy in tumbleweed town due to NPC having unique class 
+        /// </summary>
         [HarmonyPatch(typeof(Sassy), "AfterReturnFromFightCallback")]
         [HarmonyPrefix]
         public static void sassyfights()
@@ -505,7 +536,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //mother evilin
+        /// <summary>
+        /// send location for defeating Mother Evilyn due to NPC having unique class 
+        /// </summary>
         [HarmonyPatch(typeof(MotherEvilyn), "OnAfterMapInitiAfterFight")]
         [HarmonyPrefix]
         public static void motherevilinfight()
@@ -521,7 +554,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //sallymctits
+        /// <summary>
+        /// send location for defeating Sally Mc Tits due to NPC having unique class 
+        /// </summary>
         [HarmonyPatch(typeof(SallyMcTits), "OnAfterMapInitiAfterFight")]
         [HarmonyPrefix]
         public static void sallyfight()
@@ -537,7 +572,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //kinley
+        /// <summary>
+        /// send location for defeating Kingley due to NPC having unique class 
+        /// </summary>
         [HarmonyPatch(typeof(Kinley), "OnAfterMapInitiAfterFight")]
         [HarmonyPrefix]
         public static void kinleyfight()
@@ -551,7 +588,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //ancient temple 3 sequence
+        /// <summary>
+        /// send location for defeating Valkrie boss due to it being part of a sripted sequence
+        /// </summary>
         [HarmonyPatch(typeof(AncientTemple3Sequence), "PlayCoroutine")]
         [HarmonyPrefix]
         public static void valkryfight(AncientTemple3Sequence __instance)
@@ -567,7 +606,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //desert temple 2 sequence
+        /// <summary>
+        /// send location for defeating Domino boss due to it being part of a sripted sequence
+        /// </summary>
         [HarmonyPatch(typeof(DesertTemple2Sequence), "PlayCoroutine")]
         [HarmonyPrefix]
         public static void centiboobfight(DesertTemple2Sequence __instance)
@@ -583,7 +624,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //island cave 2 sequence
+        /// <summary>
+        /// send location for defeating Centiboob boss due to it being part of a sripted sequence
+        /// </summary>
         [HarmonyPatch(typeof(IslandCave2Sequence), "PlayCoroutine")]
         [HarmonyPrefix]
         public static void centiboobfight(IslandCave2Sequence __instance)
@@ -599,7 +642,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //artic temple 2 sequence
+        /// <summary>
+        /// send location for defeating Crimson Countess boss due to it being part of a sripted sequence
+        /// </summary>
         [HarmonyPatch(typeof(ArcticTemple2sequence), "PlayCoroutine")]
         [HarmonyPrefix]
         public static void countessfight(ArcticTemple2sequence __instance)
@@ -615,7 +660,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        //Inner Grove 2 sequence
+        /// <summary>
+        /// send location for defeating Spirit Mother boss due to it being part of a sripted sequence
+        /// </summary>
         [HarmonyPatch(typeof(InnerGroveSequence), "PlayCoroutine")]
         [HarmonyPrefix]
         public static void grovefight(InnerGroveSequence __instance)

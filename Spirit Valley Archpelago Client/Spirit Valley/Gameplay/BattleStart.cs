@@ -10,6 +10,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     public class BattleStart
     {
 
+        /// <summary>
+        /// allow for trainers to be rematched
+        /// </summary>
         [HarmonyPatch(typeof(EnemyMapItem), "Interact")]
         [HarmonyPostfix]
         public static void allowmutiplefights(EnemyMapItem __instance, ref EnemyMapItemState ___state, SystemData<GameState> ___gameState)
@@ -28,14 +31,10 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        [HarmonyPatch(typeof(EnemyMapItem), "OnAfterMapInitiAfterFight")]
-        [HarmonyPostfix]
-        public static void givecoinforfight(EnemyMapItem __instance, ref EnemyMapItemState ___state, SystemData<GameState> ___gameState)
-        {
-            ___gameState.data.ModifyMoney(100);
-            ArchipelagoConsole.LogMessage("Got 100 Coin for Defeating Trainer");
-        }
 
+        /// <summary>
+        /// set an enemy team based on its GUID
+        /// </summary>
         [HarmonyPatch(typeof(EnemyMapItem), "StartFight")]
         [HarmonyPrefix]
         public static bool EnemyMapItembattle(EnemyMapItem __instance, EnemyMapItemState ___state, SystemData<GameState> ___gameState)
@@ -54,6 +53,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
 
 
+        /// <summary>
+        /// set frendly fight/side quest team based on its GUID
+        /// </summary>
         [HarmonyPatch(typeof(FrienlyFightNPCGeneric), "StartFight")]
         [HarmonyPrefix]
         public static bool frendlyfightstart(FrienlyFightNPCGeneric __instance, SystemData<GameState> ___gameState)
@@ -84,6 +86,10 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
+
+        /// <summary>
+        /// set the enemy team for Bonie Baiter fight
+        /// </summary>
         [HarmonyPatch(typeof(BonnieBaiter), "StartFight")]
         [HarmonyPrefix]
         public static bool boniefight(BonnieBaiter __instance, SystemData<GameState> ___gameState)
@@ -100,7 +106,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
         }
 
-        //crismon agient1
+        /// <summary>
+        /// set the enemy team for Crimson Agent fight on Trail 2
+        /// </summary>
         [HarmonyPatch(typeof(CrimsonAgent1), "StartFight")]
         [HarmonyPrefix]
         public static bool crimsonagentfight(SystemData<GameState> ___gameState, CrimsonAgent1 __instance)
@@ -123,7 +131,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //sassy fight
+        /// <summary>
+        /// set the enemy team for fights started through sassy
+        /// </summary>
         [HarmonyPatch(typeof(Sassy), "StartFight")]
         [HarmonyPrefix]
         public static bool sassyfights(Sassy __instance)
@@ -171,7 +181,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //mother evilin
+        /// <summary>
+        /// set the enemy team for Mother Evilyn fight
+        /// </summary>
         [HarmonyPatch(typeof(MotherEvilyn), "StartFight")]
         [HarmonyPrefix]
         public static bool motherevilinfight(MotherEvilyn __instance)
@@ -187,7 +199,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //sallymctits
+        /// <summary>
+        /// set the enemy team for Sally Mc Tits fight
+        /// </summary>
         [HarmonyPatch(typeof(SallyMcTits), "StartFight")]
         [HarmonyPrefix]
         public static bool sallyfight(SallyMcTits __instance)
@@ -203,7 +217,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //kinly
+        /// <summary>
+        /// set the enemy team for Kingly fight
+        /// </summary>
         [HarmonyPatch(typeof(Kinley), "StartFight")]
         [HarmonyPrefix]
         public static bool kinlyfight(Kinley __instance)
@@ -219,7 +235,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //ancient temple 3 sequence
+        /// <summary>
+        /// set the enemy team for Valkrie Boss fight
+        /// </summary>
         [HarmonyPatch(typeof(AncientTemple3Sequence), "StartFight")]
         [HarmonyPrefix]
         public static bool valkryfight(AncientTemple3Sequence __instance)
@@ -235,7 +253,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //desert temple 2 sequence
+        /// <summary>
+        /// set the enemy team for Domino Boss fight
+        /// </summary>
         [HarmonyPatch(typeof(DesertTemple2Sequence), "StartFight")]
         [HarmonyPrefix]
         public static bool centiboobfight(DesertTemple2Sequence __instance)
@@ -251,7 +271,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //island cave 2 sequence
+        /// <summary>
+        /// set the enemy team for Centiboob Boss fight
+        /// </summary>
         [HarmonyPatch(typeof(IslandCave2Sequence), "StartFight")]
         [HarmonyPrefix]
         public static bool centiboobfight(IslandCave2Sequence __instance)
@@ -267,7 +289,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //artic temple 2 sequence
+        /// <summary>
+        /// set the enemy team for Crimson Countess fight
+        /// </summary>
         [HarmonyPatch(typeof(ArcticTemple2sequence), "StartFight")]
         [HarmonyPrefix]
         public static bool countessfight(ArcticTemple2sequence __instance)
@@ -283,7 +307,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return false;
         }
 
-        //Inner Grove sequence
+        /// <summary>
+        /// set the enemy team for Spirit Mother Boss fight
+        /// </summary>
         [HarmonyPatch(typeof(InnerGroveSequence), "StartFight")]
         [HarmonyPrefix]
         public static bool grovefight(InnerGroveSequence __instance)

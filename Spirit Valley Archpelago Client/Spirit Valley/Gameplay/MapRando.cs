@@ -8,10 +8,15 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     [HarmonyPatch]
     public class MapRando
     {
+
+        /// <summary>
+        /// Modify the exits in a map location when Map rando is enabled
+        /// </summary>
         [HarmonyPatch(typeof(MapManager), "Start")]
         [HarmonyPrefix]
         public static void maprando1(MapManager __instance)
         {
+            //check if map rando is enabled if not skip mofiying anything
             if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["randomise_map"]) == 0) { return; }
 
             string mapid = SceneManager.GetActiveScene().name;
@@ -19,15 +24,17 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             string scene = null;
             string id = null;
 
-            //ArchipelagoConsole.LogMessage($"MAPID: {mapid}");
+            //loop through all exits in a location
             foreach (TransitionArea a in __instance.transitionObjects.GetComponentsInChildren<TransitionArea>())
             {
                 string newdata = "";
+                //try and get and set the relevent map data for the current exit 
                 if (ArchipelagoClient.ServerData.mapdata.TryGetValue($"{mapid} {a.id}", out newdata))
                 {
                     scene = newdata.Split(' ')[0];
                     id = newdata.Split(' ')[1];
                 }
+                // if failed to get map data probally a special case
                 else
                 {
                     if (mapid == "EvergreenOutpost" && a.id == "Right")
@@ -72,6 +79,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     }
                 }
 
+                //actually set the data here so that if there is a problem getting the data it dosent soflock the client
                 if (scene != null && id != null)
                 {
                     if (scene == "EvergreenOutpost_East") { scene = "EvergreenOutpost"; }

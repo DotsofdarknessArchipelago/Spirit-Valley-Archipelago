@@ -9,6 +9,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     public class DepartLocation
     {
 
+        //starting ids for item catorgories saved so we dont need to retreve them every time
         public static int items_consumable_start = 0;
         public static int items_crystal_start = 0;
         public static int items_equipment_start = 0;
@@ -19,12 +20,16 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 
         public static GameState save => GameManager.instance.gameStates[4+Plugin.slot].data;
 
+        /// <summary>
+        /// process items recieved when moving locations
+        /// </summary>
         [HarmonyPatch(typeof(SceneManager), "LoadScene", [typeof(string), typeof(LoadSceneMode)])]
         [HarmonyPrefix]
         public static void departlocation()
         {
             if (!ArchipelagoClient.Authenticated) { return; }
 
+            //set starting ids for item catories if they are not already set
             if (items_consumable_start == 0) { items_consumable_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_consumable_start"]); };
             if (items_crystal_start == 0) { items_crystal_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_crystal_start"]); };
             if (items_equipment_start == 0) { items_equipment_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_equipment_start"]); };

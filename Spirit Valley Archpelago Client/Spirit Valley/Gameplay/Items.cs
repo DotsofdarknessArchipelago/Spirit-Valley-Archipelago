@@ -9,6 +9,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     public class Items
     {
 
+        /// <summary>
+        /// send the relevent location for opening a chest
+        /// </summary>
         [HarmonyPatch(typeof(ChestMapItem), "Interact")]
         [HarmonyPrefix]
         public static void chestopen(ChestMapItem __instance)
@@ -454,6 +457,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         }
 
 
+        /// <summary>
+        /// send the relevent location for gettin an item from an NPC
+        /// </summary>
         [HarmonyPatch(typeof(GenericNPCMapItem), "OnDialogExited")]
         [HarmonyPrefix]
         public static void npcitem(GenericNPCMapItem __instance)

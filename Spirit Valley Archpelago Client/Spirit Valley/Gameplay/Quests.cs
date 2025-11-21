@@ -10,6 +10,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     public static class Quests
     {
 
+        /// <summary>
+        /// send relevent location for a completed main quest when it gets advanced
+        /// </summary>
         [HarmonyPatch(typeof(GameState), "AdvanceMainQuest")]
         [HarmonyPrefix]
         public static void questtest(GameState __instance, string nextQuestID)
@@ -189,6 +192,11 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
+
+        /// <summary>
+        /// set the quest reward to be a single coin
+        /// NOTE try and fix the problem when setting the reward to be nothing
+        /// </summary>
         [HarmonyPatch(typeof(GameState), "AdvanceMainQuest")]
         [HarmonyPostfix]
         public static void questrewards(GameState __instance, string nextQuestID, ref ItemBundle[] __result)
@@ -196,6 +204,10 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             __result = HelperItems.centbundle();
         }
 
+
+        /// <summary>
+        /// send the relevent location for a side quest once its complete
+        /// </summary>
         [HarmonyPatch(typeof(GameState), "CloseSideQuest")]
         [HarmonyPostfix]
         public static void sidequest(GameState __instance, string id, ref ItemBundle[] __result)
@@ -283,6 +295,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         }
 
 
+        /// <summary>
+        /// overrite the spirit required in the side quests
+        /// </summary>
         [HarmonyPatch(typeof(QuestManager), "GetSideQuestById")]
         [HarmonyPostfix]
         public static void piperquest(string id, QuestManager __instance, ref Quest __result)
@@ -318,6 +333,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
+        /// <summary>
+        /// add checks for the Captain requireing relevant items before continuing the main quest
+        /// </summary>
         [HarmonyPatch(typeof(Captain), "Interact")]
         [HarmonyPrefix]
         public static bool captainquests(Captain __instance, ref string ___currentSceneName)
@@ -451,7 +469,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             {
                 if (activeMainQuestState.Quest.id == "main_quest_46_here_comes_the_boom")
                 {
-                    InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_FancySuit"));
+                    InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_Dynamite"));
                     if (i == null || i.count <= 0)
                     {
                         ArchipelagoConsole.LogMessage("\"Dynamite\" Item required to continue questline");

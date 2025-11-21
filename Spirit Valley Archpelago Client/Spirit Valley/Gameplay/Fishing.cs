@@ -11,6 +11,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
     {
 
 
+        /// <summary>
+        /// start a fight with a random spirit from the relevent map fishing list
+        /// </summary>
         [HarmonyPatch(typeof(FishingSpot), "StartFightWithRandomMonster")]
         [HarmonyPrefix]
         public static bool startfight(ref LootConfiguration lootConf, FishingSpot __instance)
@@ -43,6 +46,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         }
 
 
+        /// <summary>
+        /// disable fishing spots that are only active during quests
+        /// </summary>
         [HarmonyPatch(typeof(FishingSpot), "GetIsDisabled")]
         [HarmonyPrefix]
         public static bool fishquestoverwite(FishingSpot __instance, ref bool __result)
@@ -60,6 +66,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return true;
         }
 
+        /// <summary>
+        /// set the loot configuration for fishing spots to be only wild monsters and money
+        /// </summary>
         [HarmonyPatch(typeof(FishingSpot), "GetLootConfigurationForRewardCount")]
         [HarmonyPrefix]
         public static bool fishlootoverwite(FishingSpot __instance, ref LootConfiguration __result)
