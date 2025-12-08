@@ -32,13 +32,13 @@ namespace SpiritValleyArchipelagoClient.Archipelago
 
     public class ArchipelageItemList
     {
-        public List<ArchipelagoItem> list = new List<ArchipelagoItem>();
-        public string seed = "";
-        public int listversion = 1;
-
         public string host = "";
         public string user = "";
         public string pass = "";
+
+        public string seed = "";
+        public int listversion = 1;
+        public List<ArchipelagoItem> list = new List<ArchipelagoItem>();
 
         public void add(ItemInfo netitem)
         {

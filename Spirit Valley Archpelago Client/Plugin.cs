@@ -23,8 +23,8 @@ public class Plugin : BaseUnityPlugin
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 0;
     public const int PluginVersionMinor = 4;
-    public const int PluginVersionBuild = 1;
-    public const string PluginVersion = "0.4.1";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionBuild = 2;
+    public const string PluginVersion = "0.4.2";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -151,7 +151,7 @@ public class Plugin : BaseUnityPlugin
 
         // show the mod is currently loaded in the corner
         ArchipelagoConsole.OnGUI();
-        GUI.Window(60, new Rect(10, 10, 320, 40), versionWindow, "");
+        GUI.Window(60, new Rect(10, 10, 340, 40), versionWindow, "");
         if (start)
         {
             GUI.color = new UnityEngine.Color(0, 0, 0, 0);
@@ -168,11 +168,11 @@ public class Plugin : BaseUnityPlugin
         {
             if ((PluginVersionMajor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_major"]))&& (PluginVersionMinor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_minor"]))&& (PluginVersionBuild == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_build"])))
             {
-                GUI.Label(new Rect(16, 16, 300, 20), "Client/World V(" + PluginVersion + ") : Status: Connected");
+                GUI.Label(new Rect(16, 16, 300, 20), $"Client/World V({PluginVersion}) : Status: Connected, S{slot}");
             }
             else
             {
-                GUI.Label(new Rect(16, 16, 300, 20), $"Client V({PluginVersion}), World V({ArchipelagoClient.ServerData.slotData["world_version_major"]}.{ArchipelagoClient.ServerData.slotData["world_version_minor"]}.{ArchipelagoClient.ServerData.slotData["world_version_build"]}): Status: Connected");
+                GUI.Label(new Rect(16, 16, 320, 20), $"Client V({PluginVersion}), World V({ArchipelagoClient.ServerData.slotData["world_version_major"]}.{ArchipelagoClient.ServerData.slotData["world_version_minor"]}.{ArchipelagoClient.ServerData.slotData["world_version_build"]}): Status: Connected, S{slot}");
             }
         }
         else
@@ -244,20 +244,27 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            List<string> s1 = new List<string>();
-            List<string> s2 = new List<string>();
-            List<string> s3 = new List<string>();
-
             if (File.Exists(Application.persistentDataPath + "/archipelagoslot1/archdata.json")) 
             {
-                s1 = readarchdata(Application.persistentDataPath + "/archipelagoslot1/archdata.json");
-                if (GUI.Button(new Rect(20, 10, 475, 120), s1[0], mbutton))
+                List<string> s1 = readarchdata(Application.persistentDataPath + "/archipelagoslot1/archdata.json");
+                if (s1[1].IsNullOrWhiteSpace())
                 {
-                    slot = 0;
-                    ArchipelagoClient.ServerData.Uri = s1[1];
-                    ArchipelagoClient.ServerData.SlotName = s1[2];
-                    ArchipelagoClient.ServerData.Password = s1[3];
-                    ArchipelagoClient.Connect();
+                    if (GUI.Button(new Rect(20, 10, 475, 120), s1[0], mbutton))
+                    {
+                        slot = 0;
+                        newgame = true;
+                    }
+                }
+                else
+                {
+                    if (GUI.Button(new Rect(20, 10, 475, 120), s1[0], mbutton))
+                    {
+                        slot = 0;
+                        ArchipelagoClient.ServerData.Uri = s1[1];
+                        ArchipelagoClient.ServerData.SlotName = s1[2];
+                        ArchipelagoClient.ServerData.Password = s1[3];
+                        ArchipelagoClient.Connect();
+                    }
                 }
                 if (GUI.Button(new Rect(500, 50, 40, 40), trash, mbutton))
                 {
@@ -274,15 +281,27 @@ public class Plugin : BaseUnityPlugin
             }
 
             if (File.Exists(Application.persistentDataPath + "/archipelagoslot2/archdata.json")) 
-            { 
-                s2 = readarchdata(Application.persistentDataPath + "/archipelagoslot2/archdata.json");
-                if (GUI.Button(new Rect(20, 140, 475, 120), s2[0], mbutton))
+            {
+                List<string> s2 = readarchdata(Application.persistentDataPath + "/archipelagoslot2/archdata.json");
+
+                if (s2[1].IsNullOrWhiteSpace())
                 {
-                    slot = 1;
-                    ArchipelagoClient.ServerData.Uri = s2[1];
-                    ArchipelagoClient.ServerData.SlotName = s2[2];
-                    ArchipelagoClient.ServerData.Password = s2[3];
-                    ArchipelagoClient.Connect();
+                    if (GUI.Button(new Rect(20, 140, 475, 120), s2[0], mbutton))
+                    {
+                        slot = 1;
+                        newgame = true;
+                    }
+                }
+                else
+                {
+                    if (GUI.Button(new Rect(20, 140, 475, 120), s2[0], mbutton))
+                    {
+                        slot = 1;
+                        ArchipelagoClient.ServerData.Uri = s2[1];
+                        ArchipelagoClient.ServerData.SlotName = s2[2];
+                        ArchipelagoClient.ServerData.Password = s2[3];
+                        ArchipelagoClient.Connect();
+                    }
                 }
                 if (GUI.Button(new Rect(500, 180, 40, 40), trash, mbutton))
                 {
@@ -299,15 +318,27 @@ public class Plugin : BaseUnityPlugin
             }
 
             if (File.Exists(Application.persistentDataPath + "/archipelagoslot3/archdata.json")) 
-            { 
-                s3 = readarchdata(Application.persistentDataPath + "/archipelagoslot3/archdata.json");
-                if (GUI.Button(new Rect(20, 270, 475, 120), s3[0], mbutton))
+            {
+                List<string> s3 = readarchdata(Application.persistentDataPath + "/archipelagoslot3/archdata.json");
+
+                if (s3[1].IsNullOrWhiteSpace())
                 {
-                    slot = 2;
-                    ArchipelagoClient.ServerData.Uri = s3[1];
-                    ArchipelagoClient.ServerData.SlotName = s3[2];
-                    ArchipelagoClient.ServerData.Password = s3[3];
-                    ArchipelagoClient.Connect();
+                    if (GUI.Button(new Rect(20, 270, 475, 120), s3[0], mbutton))
+                    {
+                        slot = 2;
+                        newgame = true;
+                    }
+                }
+                else
+                {
+                    if (GUI.Button(new Rect(20, 270, 475, 120), s3[0], mbutton))
+                    {
+                        slot = 2;
+                        ArchipelagoClient.ServerData.Uri = s3[1];
+                        ArchipelagoClient.ServerData.SlotName = s3[2];
+                        ArchipelagoClient.ServerData.Password = s3[3];
+                        ArchipelagoClient.Connect();
+                    }
                 }
                 if (GUI.Button(new Rect(500, 310, 40, 40), trash, mbutton))
                 {
@@ -332,7 +363,14 @@ public class Plugin : BaseUnityPlugin
         {
             JsonSerializer serializer = new JsonSerializer();
             ArchipelageItemList savedlist = (ArchipelageItemList)serializer.Deserialize(file, typeof(ArchipelageItemList));
-            output.Add($"Host:{savedlist.host}\nUser:{savedlist.user}\nLast Played:{File.GetLastWriteTime(path).ToString("d MMM h:m:s tt")}");
+            if (savedlist.host.IsNullOrWhiteSpace())
+            {
+                output.Add($"ERROR RETREVING SAVED CONNECTION DATA\nCLICK TO RE-ENTER DATA\nLast Played:{File.GetLastWriteTime(path).ToString("d MMM h:m:s tt")}");
+            }
+            else
+            {
+                output.Add($"Host:{savedlist.host}\nUser:{savedlist.user}\nLast Played:{File.GetLastWriteTime(path).ToString("d MMM h:m:s tt")}");
+            }
             output.Add(savedlist.host);
             output.Add(savedlist.user);
             output.Add(savedlist.pass);
