@@ -12,7 +12,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
         [HarmonyPrefix]
         public static void disablewindow()
         {
-            Plugin.BepinLogger.LogMessage("SAVE SLOT WINDOW UPDATE");
+            SpiritValleyArchipelago.BepinLogger.LogMessage("SAVE SLOT WINDOW UPDATE");
             GameObject.Find("TitleScreenMenu/SaveSlotsWindow/Fade/Bg/SlotContainer").SetActive(false);
             GameObject.Find("TitleScreenMenu/SaveSlotsWindow/Fade/Bg/TitleLabel").SetActive(false);
 

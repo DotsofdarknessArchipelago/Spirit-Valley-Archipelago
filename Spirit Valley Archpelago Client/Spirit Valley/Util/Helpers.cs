@@ -32,7 +32,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
     public class HelperItems()
     {
-        public static GameState save => GameManager.instance.gameStates[4+Plugin.slot].data;
+        public static GameState save => GameManager.instance.gameStates[4+SpiritValleyArchipelago.slot].data;
 
         public static ItemBundle[] centbundle()
         {
@@ -308,7 +308,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
         public class save()
         {
-            public static GameState s => GameManager.instance.gameStates[4 + Plugin.slot].data;
+            public static GameState s => GameManager.instance.gameStates[4 + SpiritValleyArchipelago.slot].data;
 
 
             public static QuestState getmain(string q)
@@ -516,7 +516,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                             break;
                     }
 
-                    var t = GameManager.instance.gameStates[4 + Plugin.slot].SaveAsync(SaveType.Auto);
+                    var t = GameManager.instance.gameStates[4 + SpiritValleyArchipelago.slot].SaveAsync(SaveType.Auto);
                     t.Wait();
                 }
                 else

@@ -18,7 +18,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         public static int items_coins_start = 0;
         public static int items_warp_id_start = 0;
 
-        public static GameState save => GameManager.instance.gameStates[4+Plugin.slot].data;
+        public static GameState save => GameManager.instance.gameStates[4+SpiritValleyArchipelago.slot].data;
 
         /// <summary>
         /// process items recieved when moving locations

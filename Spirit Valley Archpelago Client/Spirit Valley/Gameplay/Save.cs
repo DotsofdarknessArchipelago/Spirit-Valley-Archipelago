@@ -24,6 +24,11 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             if (!goal)
             {
                 ArchipelagoConsole.LogDebug("GOAL NOT ACHIEVED YET");
+
+                if (ArchipelagoClient.archlist.host != ArchipelagoClient.ServerData.Uri) { ArchipelagoClient.archlist.host = ArchipelagoClient.ServerData.Uri; }
+                if (ArchipelagoClient.archlist.user != ArchipelagoClient.ServerData.SlotName) { ArchipelagoClient.archlist.user = ArchipelagoClient.ServerData.SlotName; }
+                if (ArchipelagoClient.archlist.pass != ArchipelagoClient.ServerData.Password) { ArchipelagoClient.archlist.pass = ArchipelagoClient.ServerData.Password; }
+
                 using (StreamWriter archfile = File.CreateText(___manualSavePath.Substring(0, ___manualSavePath.Length - 22) + "/archdata.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();

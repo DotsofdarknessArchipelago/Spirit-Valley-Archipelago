@@ -41,7 +41,7 @@ public static class ArchipelagoConsole
             logLines.RemoveAt(0);
         }
         logLines.Add(message);
-        Plugin.BepinLogger.LogMessage(message);
+        SpiritValleyArchipelago.BepinLogger.LogMessage(message);
         lastUpdateTime = Time.time;
         UpdateWindow();
     }
@@ -49,7 +49,7 @@ public static class ArchipelagoConsole
     public static void LogDebug(string message)
     {
         if (message.IsNullOrWhiteSpace()) return;
-        Plugin.BepinLogger.LogMessage(message);
+        SpiritValleyArchipelago.BepinLogger.LogMessage(message);
     }
 
     public static void LogError(string message)
@@ -83,7 +83,7 @@ public static class ArchipelagoConsole
         CommandText = GUI.TextField(CommandTextRect, CommandText);
         if (!CommandText.IsNullOrWhiteSpace() && GUI.Button(SendCommandButton, "Send"))
         {
-            Plugin.ArchipelagoClient.SendMessage(CommandText);
+            SpiritValleyArchipelago.ArchipelagoClient.SendMessage(CommandText);
             CommandText = "";
         }
     }

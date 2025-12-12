@@ -36,7 +36,7 @@ public class ArchipelagoClient
     public static int totalitem = 0;
 
     public static int servermajor = 0;
-    public static int serverminor = 4;
+    public static int serverminor = 5;
     public static int serverbuild = 0;
 
 
@@ -61,7 +61,7 @@ public class ArchipelagoClient
         }
         catch (Exception e)
         {
-            Plugin.BepinLogger.LogError(e);
+            SpiritValleyArchipelago.BepinLogger.LogError(e);
         }
 
         TryConnect();
@@ -99,7 +99,7 @@ public class ArchipelagoClient
         }
         catch (Exception e)
         {
-            Plugin.BepinLogger.LogError(e);
+            SpiritValleyArchipelago.BepinLogger.LogError(e);
             HandleConnectResult(new LoginFailure(e.ToString()));
             attemptingConnection = false;
         }
@@ -168,9 +168,9 @@ public class ArchipelagoClient
 
 
 
-            if (File.Exists(Application.persistentDataPath + $"/archipelagoslot{Plugin.slot + 1}/archdata.json"))
+            if (File.Exists(Application.persistentDataPath + $"/archipelagoslot{SpiritValleyArchipelago.slot + 1}/archdata.json"))
             {
-                using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archipelagoslot{Plugin.slot + 1}/archdata.json"))
+                using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archipelagoslot{SpiritValleyArchipelago.slot + 1}/archdata.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     ArchipelageItemList savedlist = (ArchipelageItemList)serializer.Deserialize(file, typeof(ArchipelageItemList));
@@ -208,7 +208,7 @@ public class ArchipelagoClient
             outText = $"Failed to connect to {ServerData.Uri} as {ServerData.SlotName}.";
             outText = failure.Errors.Aggregate(outText, (current, error) => current + $"\n    {error}");
 
-            Plugin.BepinLogger.LogError(outText);
+            SpiritValleyArchipelago.BepinLogger.LogError(outText);
 
             Authenticated = false;
             Disconnect();
@@ -222,7 +222,7 @@ public class ArchipelagoClient
     /// </summary>
     private void Disconnect()
     {
-        Plugin.BepinLogger.LogDebug("disconnecting from server...");
+        SpiritValleyArchipelago.BepinLogger.LogDebug("disconnecting from server...");
         session?.Socket.DisconnectAsync();
         session = null;
         Authenticated = false;
@@ -268,7 +268,7 @@ public class ArchipelagoClient
     /// <param name="message">message received from the server</param>
     private void OnSessionErrorReceived(Exception e, string message)
     {
-        Plugin.BepinLogger.LogError(e);
+        SpiritValleyArchipelago.BepinLogger.LogError(e);
         ArchipelagoConsole.LogMessage(message);
     }
 
@@ -278,7 +278,7 @@ public class ArchipelagoClient
     /// <param name="reason"></param>
     private void OnSessionSocketClosed(string reason)
     {
-        Plugin.BepinLogger.LogError($"Connection to Archipelago lost: {reason}");
+        SpiritValleyArchipelago.BepinLogger.LogError($"Connection to Archipelago lost: {reason}");
         Disconnect();
     }
 

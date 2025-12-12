@@ -17,14 +17,14 @@ using UnityEngine.UI;
 namespace SpiritValleyArchipelagoClient;
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-public class Plugin : BaseUnityPlugin
+public class SpiritValleyArchipelago : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 0;
-    public const int PluginVersionMinor = 4;
-    public const int PluginVersionBuild = 2;
-    public const string PluginVersion = "0.4.2";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionMinor = 5;
+    public const int PluginVersionBuild = 0;
+    public const string PluginVersion = "0.5.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -33,6 +33,7 @@ public class Plugin : BaseUnityPlugin
     public static bool start = false;
     public static bool newgame = false;
     public static bool versioncheck = true;
+    public static bool overritedata = false;
 
     //public ArchipelagoData data = ArchipelagoClient.ServerData;
 
@@ -77,6 +78,7 @@ public class Plugin : BaseUnityPlugin
         }
         if (Input.GetKeyDown(KeyCode.F9))
         {
+            overritedata = true;
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -366,6 +368,12 @@ public class Plugin : BaseUnityPlugin
             if (savedlist.host.IsNullOrWhiteSpace())
             {
                 output.Add($"ERROR RETREVING SAVED CONNECTION DATA\nCLICK TO RE-ENTER DATA\nLast Played:{File.GetLastWriteTime(path).ToString("d MMM h:m:s tt")}");
+            }
+            else if (overritedata)
+            {
+                output.Add($"OVERWRITE DATA KEY PRESSED\nCLICK TO RE-ENTER DATA\nLast Played:{File.GetLastWriteTime(path).ToString("d MMM h:m:s tt")}");
+                output.Add(null);
+                return output;
             }
             else
             {

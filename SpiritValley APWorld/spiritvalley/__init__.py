@@ -8,7 +8,7 @@ from worlds.generic.Rules import set_rule
 from worlds.spiritvalley.Data_Regions import regions, mapid_to_text
 from worlds.spiritvalley.Data_Spirits import spirit_list, types, attacking_moves, all_moves, rand_grass_spawn, rand_water_spawn, rand_spirit_list, rand_type_chart, default_type_effective, default_grass_loc, default_water_loc, rand_move_data, move_data
 from worlds.spiritvalley.Data_Trainers import Trainer, rand_trainer, Default_Trainers
-from worlds.spiritvalley.Items import items_list, spiritItem, items_key_item, useful_items_list, items_potion, items_consumable, items_crystal, items_equipment, items_coins, items_consumable_id_start, items_crystal_id_start, items_equipment_id_start, items_key_item_id_start, items_potion_id_start, items_coins_id_start, items_archipelago, items_warp, items_archipelago_id_start, items_warp_id_start
+from worlds.spiritvalley.Items import items_list, spiritItem, items_key_item, useful_items_list, items_potion, items_consumable, items_crystal, items_equipment, items_coins, items_consumable_id_start, items_crystal_id_start, items_equipment_id_start, items_key_item_id_start, items_potion_id_start, items_coins_id_start, items_archipelago, items_warp, items_archipelago_id_start, items_warp_id_start, filler_item
 from worlds.spiritvalley.Locations import SpiritValleyLocation, location_list, Rare_spirit_locations, spirit_id_start, spirit_affection_id_start, Rare_spirit_id_start, main_quests_id_start, side_quests_id_start, battle_locations_id_start, chest_locations_id_start, spirit_locations, spirit_affection_locations, main_quests, side_quests, battle_locations, chest_locations, warp_locations, warp_locations_id_start
 from worlds.spiritvalley.Options import SpiritValleyOptions
 from worlds.spiritvalley.Regions import Generate_Map
@@ -18,7 +18,7 @@ from worlds.spiritvalley.Rules import rules_normal, rules_map_rando
 class SpiritValley(World):
     game = "Spirit Valley"
     worldversion_major = 0
-    worldversion_minor = 4
+    worldversion_minor = 5
     worldversion_build = 0
 
     item_name_to_id = items_list
@@ -148,6 +148,9 @@ class SpiritValley(World):
         for x in range(filleritems):
             self.multiworld.itempool.append(self.create_item(self.random.choice(filleritemlist)))
 
+    def get_filler_item_name(self) -> str:
+        return self.random.choice(filler_item)
+
     def set_rules(self):
         if self.options.randomise_map.value:
             rules_map_rando(self.multiworld, self.player, self.options, self.data)
@@ -238,6 +241,9 @@ class SpiritValley(World):
             "Spirit_Locations": self.options.Spirit_Locations.value,
             "Spirit_Affection": self.options.Spirit_Affection.value,
             "Rare_Locations": self.options.Rare_Locations.value,
+
+            "Enemy_Vision": self.options.Enemy_Vision.value,
+            "Enemy_Spin": self.options.Enemy_Spin.value,
 
             "Randomise_Move_Data": self.options.Randomise_Move_Data.value,
 

@@ -2,6 +2,7 @@
 using SpiritValleyArchipelagoClient.Archipelago;
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay

@@ -234,3 +234,11 @@ useful_items_list = [
     *items_archipelago,
     *items_warp,
 ]
+
+filler_item = [
+    *items_consumable,
+    *items_crystal,
+    *items_equipment,
+    *items_potion,
+    *items_coins,
+]

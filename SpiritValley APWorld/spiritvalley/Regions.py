@@ -16,11 +16,34 @@ def Generate_Map(multiworld, player, options, loc, data):
 
     if options.Spirit_Locations.value:
         region_spirit = Region("Spirits", player, multiworld)
-        region_spirit.add_locations(spirit_locations, SpiritValleyLocation)
+
+        if options.Randomise_Spawns.value:
+            region_spirit.add_locations(spirit_locations, SpiritValleyLocation)
+        else:
+            sloc = spirit_locations.copy()
+            del sloc["Obtain a EV-3 Spirit"]
+            region_spirit.add_locations(sloc, SpiritValleyLocation)
+
         if options.Spirit_Affection.value:
-            region_spirit.add_locations(spirit_affection_locations, SpiritValleyLocation)
+            if options.Randomise_Spawns.value:
+                region_spirit.add_locations(spirit_affection_locations, SpiritValleyLocation)
+            else:
+                sloc = spirit_affection_locations.copy()
+                del sloc["Get EV-3 to Affection LV1"]
+                del sloc["Get EV-3 to Affection LV2"]
+                del sloc["Get EV-3 to Affection LV3"]
+                del sloc["Get EV-3 to Affection LV4"]
+                del sloc["Get EV-3 to Affection LV5"]
+                region_spirit.add_locations(sloc, SpiritValleyLocation)
+
         if options.Rare_Locations.value:
-            region_spirit.add_locations(Rare_spirit_locations, SpiritValleyLocation)
+            if options.Randomise_Spawns.value:
+                region_spirit.add_locations(Rare_spirit_locations, SpiritValleyLocation)
+            else:
+                sloc = Rare_spirit_locations.copy()
+                del sloc["Obtain a Rare EV-3 Spirit"]
+                region_spirit.add_locations(sloc, SpiritValleyLocation)
+
         multiworld.regions.append(region_spirit)
         hub_region.connect(region_spirit, "Menu-Spirit")
 

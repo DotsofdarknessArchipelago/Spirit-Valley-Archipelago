@@ -67,6 +67,18 @@ class Randomise_Enemies(Toggle):
     display_name = "Randomise Enemies"
     default = True
 
+class Enemy_Vision(Toggle):
+    """Enable/Disable Enemy Vision"""
+    display_name = "Enemy Vision"
+    default = True
+
+class Enemy_Spin(Choice):
+    """Sets whether Enemy's will stand sill, spin in a circle or randomly rotate"""
+    display_name = "Enemy Spin"
+    option_still = 0
+    option_spin = 1
+    option_rotate = 2
+    default = 0
 
 
 class Randomise_Spirit_Moves(Toggle):
@@ -201,6 +213,8 @@ class SpiritValleyOptions(PerGameCommonOptions):
     Water_slots: Water_slots
 
     Randomise_Enemies: Randomise_Enemies
+    Enemy_Vision:Enemy_Vision
+    Enemy_Spin:Enemy_Spin
 
     Randomise_Spirit_Moves: Randomise_Spirit_Moves
     Randomise_Spirit_Moves_Amount: Randomise_Spirit_Moves_Amount

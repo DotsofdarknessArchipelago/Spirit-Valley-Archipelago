@@ -54,7 +54,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
                 case "$debugarchdata":
                     ArchipelageItemList alist;
-                    using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archipelagoslot{Plugin.slot + 1}/archdata.json"))
+                    using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archipelagoslot{SpiritValleyArchipelago.slot + 1}/archdata.json"))
                     {
                         JsonSerializer serializer = new JsonSerializer();
                         alist = (ArchipelageItemList)serializer.Deserialize(file, typeof(ArchipelageItemList));
@@ -131,29 +131,29 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     break;
                 case "$cheat.quest":
                     ArchipelagoConsole.LogMessage("advanceing main quest");
-                    Plugin.ArchipelagoClient.SendMessage($"Activated quest dev cheat to advance main quest");
+                    SpiritValleyArchipelago.ArchipelagoClient.SendMessage($"Activated quest dev cheat to advance main quest");
                     string quest = QuestManager.instance.mainQuest[QuestManager.instance.GetIndexForMainQuestByID(HelperItems.save.GetActiveMainQuestState().id) + 1].id;
                     HelperItems.save.AdvanceMainQuest(quest);
                     break;
                 case "$cheat.crystals":
                     ArchipelagoConsole.LogMessage("Adding 10 Spirit Crystal+2 to Inventory");
-                    Plugin.ArchipelagoClient.SendMessage($"Activated crystal dev cheat for extra spirit crystals");
+                    SpiritValleyArchipelago.ArchipelagoClient.SendMessage($"Activated crystal dev cheat for extra spirit crystals");
                     HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Crystal_SpiritCrystal+2"), 10, true);
                     break;
                 case "$cheat.potion":
                     ArchipelagoConsole.LogMessage("Adding 10 Greater Rejuvenation Potion and Golden Seed of Life to Inventory");
-                    Plugin.ArchipelagoClient.SendMessage($"Activated potion dev cheat for extra potions/revives");
+                    SpiritValleyArchipelago.ArchipelagoClient.SendMessage($"Activated potion dev cheat for extra potions/revives");
                     HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Potion_GreaterRejuvenationPotion"), 10, true);
                     HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Consumable_CleansingTonic"), 10, true);
                     HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Consumable_GoldenSeedOfLife"), 10, true);
                     break;
                 case "$cheat.sex":
                     ArchipelagoConsole.LogMessage("Adding 10 ChocolateCake to Inventory");
-                    Plugin.ArchipelagoClient.SendMessage($"Activated affection dev cheat giving extra affection items");
+                    SpiritValleyArchipelago.ArchipelagoClient.SendMessage($"Activated affection dev cheat giving extra affection items");
                     HelperItems.save.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Consumable_ChocolateCake"), 10, true);
                     break;
                 case "$cheat.warp":
-                    Plugin.ArchipelagoClient.SendMessage($"Activated warp dev cheat unlocking all warp locations");
+                    SpiritValleyArchipelago.ArchipelagoClient.SendMessage($"Activated warp dev cheat unlocking all warp locations");
                     ArchipelagoConsole.LogMessage("MAKING ALL WARPS ACCESSIABLE");
                     HelperItems.save.isFastTravelUnlocked = true;
                     HelperItems.save.GetWayStoneState("OakwoodVillage").isActive = true;
