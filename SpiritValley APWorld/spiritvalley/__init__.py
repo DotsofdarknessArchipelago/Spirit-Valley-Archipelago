@@ -17,9 +17,6 @@ from worlds.spiritvalley.Rules import rules_normal, rules_map_rando
 
 class SpiritValley(World):
     game = "Spirit Valley"
-    worldversion_major = 0
-    worldversion_minor = 5
-    worldversion_build = 0
 
     item_name_to_id = items_list
     location_name_to_id = location_list
@@ -31,17 +28,18 @@ class SpiritValley(World):
     options: SpiritValleyOptions
 
     data = {}
-    randolist = []
 
     def generate_early(self):
-        self.randolist = []
+        #Reset default values just incase the value isnt default
         self.data = {}
         self.numitems = 0
         self.numlocations = 0
 
+        #make sure that if YMAL selects char gender to male it isn't trying to set the hairstyle to an invalid option
         if self.options.Char_Gender.value == 0 and self.options.Char_Hairstyle.value == 4:
             self.options.Char_Hairstyle.value = 3
 
+        #Randomise grass/water spawns
         if self.options.Randomise_Spawns.value:
             self.data["Grass_spawn"] = rand_grass_spawn(self.options.Grass_slots.value, self.random)
             self.data["Water_spawn"] = rand_water_spawn(self.options.Water_slots.value, self.random)
@@ -49,22 +47,28 @@ class SpiritValley(World):
             self.data["Grass_spawn"] = default_grass_loc.copy()
             self.data["Water_spawn"] = default_water_loc.copy()
 
+        #randomise spirit data
         self.data["SPIRITS"] = rand_spirit_list(self.options.Randomise_Spirit_Moves.value, self.options.Randomise_Spirit_Moves_Amount.value, self.options.Randomise_Spirit_Evo.value, self.options.Randomise_Spirit_Type.value, self.options.Randomise_Spirit_Stats.value, self.random)
 
+        #randomise move data
         if self.options.Randomise_Move_Data.value:
             self.data["MOVES"] = rand_move_data(self.random)
         else:
             self.data["MOVES"] = move_data.copy()
 
+        #randomise type chart
         if self.options.Randomise_Type_Effective.value:
             self.data["TYPES"] = rand_type_chart(self.random)
         else:
             self.data["TYPES"] = default_type_effective.copy()
 
+        #randomise trainer battles
         self.data["ENEMIES"] = rand_trainer(self.options.Randomise_Enemies.value, self.random)
 
+        #make the spirit for main quest TOTAL DOMINATION quest be obtainable from the cave of torment
         self.data["MAIN_QUEST_TOTAL_DOMINATION"] = self.random.choice(self.data["Grass_spawn"]["CaveOfTorment"])
 
+        #make spirits required for side quests be available where they are expected to be
         self.data["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"] = self.random.choice(self.data["Grass_spawn"]["Trail1"])
         self.data["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"] = self.random.choice(self.data["Grass_spawn"]["MillysFarm"])
         self.data["SIDE_QUEST_DEADLY_WATERS_SPIRIT"] = self.random.choice(self.data["Water_spawn"]["Trail11"])
@@ -74,12 +78,19 @@ class SpiritValley(World):
         self.data["SIDE_QUEST_CENTIBOOB_2_SPIRIT"] = self.random.choice(self.data["Grass_spawn"]["Trail22"])
         self.data["SIDE_QUEST_CENTIBOOB_3_SPIRIT"] = self.random.choice(self.data["Grass_spawn"]["Trail22"])
 
+        #calculate the amount of locations our world will generate
         if self.options.Spirit_Locations.value:
             self.numlocations += len(spirit_locations)
+            if not self.options.Randomise_Spawns.value:
+                self.numlocations -=1
         if self.options.Spirit_Affection.value:
             self.numlocations += len(spirit_affection_locations)
+            if not self.options.Randomise_Spawns.value:
+                self.numlocations -=5
         if self.options.Rare_Locations.value and self.options.Spirit_Locations.value:
             self.numlocations += len(Rare_spirit_locations)
+            if not self.options.Randomise_Spawns.value:
+                self.numlocations -=1
         if True:
             self.numlocations += len(main_quests)
         if True:
@@ -90,15 +101,20 @@ class SpiritValley(World):
             self.numlocations += len(chest_locations)
         if True:
             self.numlocations += len(warp_locations)
+
+        #set num of items the world will need to be how may locations we have
         self.numitems = self.numlocations
 
     def create_regions(self):
+        #create reagions and fill with their locations
         Generate_Map(self.multiworld, self.player, self.options, self.location_name_to_id, self.data)
 
     def connect_entrances(self):
+        #something for universial tracker
         is_ut = getattr(self.multiworld, "generation_is_fake", False)
         if is_ut: return
 
+        #randomise map
         if self.options.randomise_map.value:
             if self.options.randomise_map_option.value == 1:
                 TGL = {
@@ -113,12 +129,11 @@ class SpiritValley(World):
                     2: [0, 1, 2]
                 }
             self.data["RANDO"] = randomize_entrances(self, True, TGL).pairings
-            hello = ""
 
-        visualize_regions(self.multiworld.get_region("Menu", self.player), "spiritvalley.puml", show_entrance_names=True)
+        #visualize_regions(self.multiworld.get_region("Menu", self.player), "spiritvalley.puml", show_entrance_names=True)
 
     def create_item(self, name: str) -> "Item":
-        if name in {**items_key_item, **items_archipelago, **items_warp, "Goldfish": self.item_name_to_id["Goldfish"], "Northern Blowfish": self.item_name_to_id["Northern Blowfish"], "victory": self.item_name_to_id["victory"]}:
+        if name in {**items_key_item, **items_archipelago, **items_warp, "victory": self.item_name_to_id["victory"]}:
             return spiritItem(name, ItemClassification.progression, self.item_name_to_id[name], self.player)
         if name in useful_items_list:
             return spiritItem(name, ItemClassification.useful, self.item_name_to_id[name], self.player)
@@ -126,14 +141,15 @@ class SpiritValley(World):
         return spiritItem(name, ItemClassification.filler, self.item_name_to_id[name], self.player)
 
     def create_items(self):
+        #get victory location and add victory item
         self.multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", self.player).place_locked_item(self.create_item("victory"))
         self.multiworld.completion_condition[self.player] = lambda state: state.has("victory", self.player)
 
+        #calculate how many filler items we need to have in the item pool
         filleritems = self.numlocations - len(items_key_item) - len(items_archipelago) - 1
-        if not self.options.Rare_Locations.value:
-            filleritems = filleritems - len(Rare_spirit_locations)
         if self.options.randomise_warps.value:
             filleritems = filleritems - len(items_warp)
+
 
         for i in items_key_item:
             self.multiworld.itempool.append(self.create_item(i))
@@ -143,11 +159,13 @@ class SpiritValley(World):
             for i in items_warp:
                 self.multiworld.itempool.append(self.create_item(i))
 
+        #generate a filler item list and add the amount of filler items needed to item pool
         filleritemlist = list({**items_potion, **items_consumable, **items_crystal, **items_equipment, **items_coins, }.keys())
-
         for x in range(filleritems):
             self.multiworld.itempool.append(self.create_item(self.random.choice(filleritemlist)))
+        hello=""
 
+    #something to stop warnings happening in console when running tests
     def get_filler_item_name(self) -> str:
         return self.random.choice(filler_item)
 
@@ -157,6 +175,7 @@ class SpiritValley(World):
         else:
             rules_normal(self.multiworld, self.player, self.options, self.data)
 
+    #Method for making Universal Tracker work properly
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
         self.data["Grass_spawn"] = slot_data["Grass_spawn"]
         self.data["Water_spawn"] = slot_data["Water_spawn"]
@@ -178,19 +197,19 @@ class SpiritValley(World):
             self.connectUTentrencerando(slot_data["RANDO"])
 
         for r in regions:
-            map = self.multiworld.get_region(r.map_id, self.player)
+            wmap = self.multiworld.get_region(r.map_id, self.player)
             if r.grass:
                 if r.map_id == "Trail16_Top":
                     for s in self.data["Grass_spawn"]["Trail16"]:
-                        map.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
+                        wmap.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
                         self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, self.player))
                 elif r.map_id == "Trail20_Right":
                     for s in self.data["Grass_spawn"]["Trail20"]:
-                        map.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
+                        wmap.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
                         self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, self.player))
                 else:
                     for s in self.data["Grass_spawn"][r.map_id]:
-                        map.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
+                        wmap.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
                         self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, self.player))
                         if r.map_id == "Trail16_Cave":
                             set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player), lambda state: state.has("Fishy Scent", self.player))
@@ -199,7 +218,7 @@ class SpiritValley(World):
 
             if r.water:
                 for s in self.data["Water_spawn"][r.map_id]:
-                    map.add_locations({f"{mapid_to_text[r.map_id]} {s} Water": None}, SpiritValleyLocation)
+                    wmap.add_locations({f"{mapid_to_text[r.map_id]} {s} Water": None}, SpiritValleyLocation)
                     set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Water", self.player), lambda state: state.has("Fishing Rod", self.player))
                     self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Water", self.player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, self.player))
 
@@ -254,9 +273,9 @@ class SpiritValley(World):
             "Catch_Cheat": self.options.Guaranteed_Catch.value,
             "Xp_Modifer": self.options.Xp_Modifer.value,
 
-            "world_version_major": self.worldversion_major,
-            "world_version_minor": self.worldversion_minor,
-            "world_version_build": self.worldversion_build,
+            "world_version_major": self.world_version.major,
+            "world_version_minor": self.world_version.minor,
+            "world_version_build": self.world_version.build,
             "total_locations": self.numlocations,
             "total_items": self.numitems,
         }

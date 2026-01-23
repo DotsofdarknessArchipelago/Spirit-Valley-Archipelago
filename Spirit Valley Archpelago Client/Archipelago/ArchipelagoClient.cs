@@ -37,7 +37,7 @@ public class ArchipelagoClient
 
     public static int servermajor = 0;
     public static int serverminor = 5;
-    public static int serverbuild = 0;
+    public static int serverbuild = 1;
 
 
     public static ArchipelageItemList archlist = new ArchipelageItemList();

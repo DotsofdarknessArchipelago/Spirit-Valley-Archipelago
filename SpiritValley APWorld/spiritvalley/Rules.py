@@ -144,6 +144,8 @@ def base_rules(multiworld, player, options, data):
     # SPIRIT OBTAIN RULES
     for spirit in obtainable_spirit_list:
         if options.Spirit_Locations.value:
+            if not options.Randomise_Spawns.value and spirit == "EV-3":
+                continue
             set_rule(multiworld.get_location(f"Obtain a {spirit} Spirit", player), lambda state, s=spirit, p=player: spirit_Obtain(state, p, s))
             if options.Spirit_Obtain_progression.value:
                 multiworld.get_location(f"Obtain a {spirit} Spirit", player).progress_type = LocationProgressType.EXCLUDED
