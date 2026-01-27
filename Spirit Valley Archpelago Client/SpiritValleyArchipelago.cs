@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -21,10 +22,10 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
-    public const int PluginVersionMajor = 0;
-    public const int PluginVersionMinor = 5;
-    public const int PluginVersionBuild = 1;
-    public const string PluginVersion = "0.5.1";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionMajor = 1;
+    public const int PluginVersionMinor = 0;
+    public const int PluginVersionBuild = 0;
+    public const string PluginVersion = "1.0.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -74,7 +75,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
         }
         if (Input.GetKeyDown(KeyCode.F7))
         {
-            //Cheats.wallhaks();
+
         }
         if (Input.GetKeyDown(KeyCode.F9))
         {

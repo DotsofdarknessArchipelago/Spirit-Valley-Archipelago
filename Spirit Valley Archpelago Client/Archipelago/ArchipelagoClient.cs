@@ -35,15 +35,15 @@ public class ArchipelagoClient
     public static int totalloc = 0;
     public static int totalitem = 0;
 
-    public static int servermajor = 0;
-    public static int serverminor = 5;
-    public static int serverbuild = 1;
+    public static int servermajor = 1;
+    public static int serverminor = 0;
+    public static int serverbuild = 0;
 
 
     public static ArchipelageItemList archlist = new ArchipelageItemList();
 
     public static ArchipelagoData ServerData = new();
-    private DeathLinkHandler DeathLinkHandler;
+    public DeathLinkHandler DeathLinkHandler;
     public static ArchipelagoSession session;
 
     /// <summary>
@@ -122,6 +122,8 @@ public class ArchipelagoClient
             HelperSpirits.genskilllist();
 
             DeathLinkHandler = new(session.CreateDeathLinkService(), ServerData.SlotName);
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["deathlink"].ToString()) == 1) { DeathLinkHandler.ToggleDeathLink(); }
+
             session.Locations.CompleteLocationChecksAsync(ServerData.CheckedLocations.ToArray());
             outText = $"Successfully connected to {ServerData.Uri} as {ServerData.SlotName}!";
 
@@ -178,10 +180,19 @@ public class ArchipelagoClient
                     {
                         ArchipelagoConsole.LogDebug("archdata file found restoring session");
                         archlist.merge(savedlist.list);
+                        archlist.host = savedlist.host;
+                        archlist.user = savedlist.user;
+                        archlist.pass = savedlist.pass;
+                        archlist.seed = savedlist.seed;
+                        archlist.caughtmaps = savedlist.caughtmaps;
                     }
                     else
                     {
                         ArchipelagoConsole.LogDebug("ARCHDATA found but an error occoured just going to use new archdata");
+                        archlist.seed = session.RoomState.Seed;
+                        archlist.host = ServerData.Uri;
+                        archlist.user = ServerData.SlotName;
+                        archlist.pass = ServerData.Password;
                     }
                 }
             }
@@ -198,7 +209,7 @@ public class ArchipelagoClient
             if (servermajor != Convert.ToInt32(ServerData.slotData["world_version_major"]) || serverminor != Convert.ToInt32(ServerData.slotData["world_version_minor"]) || serverbuild != Convert.ToInt32(ServerData.slotData["world_version_build"]))
             {
                 ArchipelagoConsole.LogMessage("WARNING EXPECTED APWORLD VERSION MISSMATCH");
-                ArchipelagoConsole.LogError($"EXPECTED V{servermajor}:{serverminor}:{serverbuild} GOT V{ServerData.slotData["world_version_major"]}:{ServerData.slotData["world_version_minor"]}:{ServerData.slotData["world_version_build"]}");
+                ArchipelagoConsole.LogError($"EXPECTED V{servermajor}.{serverminor}.{serverbuild} GOT V{ServerData.slotData["world_version_major"]}.{ServerData.slotData["world_version_minor"]}.{ServerData.slotData["world_version_build"]}");
             }
 
         }

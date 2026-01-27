@@ -127,12 +127,14 @@ class Spirit_Locations(Toggle):
     default = True
 
 class Spirit_Affection(Toggle):
-    """have affection lv for spirits as locations requires spirit locations to be true"""
+    """have affection lv for spirits as locations
+    NOTE: requires Spirit_Locations to be true"""
     display_name = "Spirits Affection"
     default = False
 
 class Rare_Locations(Toggle):
-    """have catch/obtaining rare spirits as locations requires spirit locations to be true"""
+    """have catch/obtaining rare spirits as locations
+    NOTE: requires Spirit_Locations to be true"""
     display_name = "Rare Spirits"
     default = True
 
@@ -175,6 +177,28 @@ class randomise_warps(Toggle):
 
 
 
+class Single_Catch(Toggle):
+    """enable or disable to limit only a single spirit to be caught per map/route
+    NOTE: requires "Spirit_Locations" to be set to false"""
+    display_name = "Single Catch"
+    default = False
+
+#class Perma_Death(Toggle):
+#    """enable or disable to release spirits when they faint
+#    NOTE: requires "Spirit_Affection" to be set to false"""
+#    display_name = "Single Catch"
+#    default = False
+
+
+
+
+class Deathlink(Toggle):
+    """enable or disable Deathlink"""
+    display_name = "Deathlink"
+    default = False
+
+
+
 class Minigame_Cheat(Toggle):
     """set to enable cheat so sex minigame cant miss"""
     display_name = "minigame cheat"
@@ -182,7 +206,7 @@ class Minigame_Cheat(Toggle):
 
 class Guaranteed_Catch(Toggle):
     """set to make sprit crystals catch guaranteed"""
-    display_name = "minigame cheat"
+    display_name = "guaranteed catch"
     default = False
 
 class Xp_Modifer(Range):
@@ -236,6 +260,10 @@ class SpiritValleyOptions(PerGameCommonOptions):
     randomise_map:randomise_map
     randomise_map_option:randomise_map_option
     randomise_warps:randomise_warps
+
+    Single_Catch:Single_Catch
+
+    Deathlink:Deathlink
 
     Minigame_Cheat:Minigame_Cheat
     Guaranteed_Catch:Guaranteed_Catch

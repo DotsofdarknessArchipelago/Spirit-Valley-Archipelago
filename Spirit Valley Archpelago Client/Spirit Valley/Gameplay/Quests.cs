@@ -4,6 +4,11 @@ using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 {
@@ -16,7 +21,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         /// </summary>
         [HarmonyPatch(typeof(GameState), "AdvanceMainQuest")]
         [HarmonyPrefix]
-        public static void questtest(GameState __instance, string nextQuestID)
+        public static void mainquest(GameState __instance, string nextQuestID)
         {
             ArchipelagoConsole.LogDebug($"MAIN QUEST ADVANCING TO: {nextQuestID}");
             int main_quests_id_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Main_Quest_Start"]) - 1;
@@ -288,6 +293,18 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                         ArchipelagoConsole.LogDebug("side_quest_legend_of_valkyrie_part2");
                         ArchipelagoClient.sendloc(id_start + 15);
                         break;
+                    case "side_quest_hunt_for_the_centiboob_part1":
+                        ArchipelagoConsole.LogDebug("side_quest_hunt_for_the_centiboob_part1");
+                        ArchipelagoClient.sendloc(id_start + 16);
+                        break;
+                    case "side_quest_hunt_for_the_centiboob_part2":
+                        ArchipelagoConsole.LogDebug("side_quest_hunt_for_the_centiboob_part2");
+                        ArchipelagoClient.sendloc(id_start + 17);
+                        break;
+                    case "side_quest_hunt_for_the_centiboob_part3":
+                        ArchipelagoConsole.LogDebug("side_quest_hunt_for_the_centiboob_part3");
+                        ArchipelagoClient.sendloc(id_start + 18);
+                        break;
                     default:
                         ArchipelagoConsole.LogMessage($"SIDE QUEST NOT RECONISED: {id}");
                         break;
@@ -301,38 +318,94 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         /// </summary>
         [HarmonyPatch(typeof(QuestManager), "GetSideQuestById")]
         [HarmonyPostfix]
-        public static void piperquest(string id, QuestManager __instance, ref Quest __result)
+        public static void sidequestoverwrite(string id, QuestManager __instance, ref Quest __result)
         {
+
+            LocalizedString newspirit = null; //= MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit(__instance.sideQuestID)).monsterName;
+            LocalizedString oldspirit = null;
+
             switch (id)
             {
                 case "side_quest_perky_petunia":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"].ToString())];
                     break;
                 case "side_quest_slithering_menace":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"].ToString())];
                     break;
                 case "side_quest_deadly_waters":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_DEADLY_WATERS_SPIRIT"].ToString())];
                     break;
                 case "side_quest_starry_eyed_surprise":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"].ToString())];
                     break;
                 case "side_quest_arctic_menace":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_ARCTIC_MENACE_SPIRIT"].ToString())];
                     break;
                 case "side_quest_hunt_for_the_centiboob_part1":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_CENTIBOOB_1_SPIRIT"].ToString())];
                     break;
                 case "side_quest_hunt_for_the_centiboob_part2":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_CENTIBOOB_2_SPIRIT"].ToString())];
                     break;
                 case "side_quest_hunt_for_the_centiboob_part3":
+                    oldspirit = __result.requiredMonsters[0].monsterName;
                     __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_CENTIBOOB_3_SPIRIT"].ToString())];
                     break;
                 default:
-                    break;
+                    return;
+            }
+
+            newspirit = __result.requiredMonsters[0].monsterName;
+
+            if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
+
+            LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+            if (__result.description.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+            {
+                db.GetTable(__result.description.TableReference).AddEntryFromReference(__result.description.TableEntryReference, __result.description.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
             }
         }
+
+        /// <summary>
+        /// overrite the spirit required in the side quests
+        /// </summary>
+        [HarmonyPatch(typeof(QuestManager), "GetMainQuestById")]
+        [HarmonyPostfix]
+        public static void mainquestoverwrite(string id, QuestManager __instance, ref Quest __result)
+        {
+
+            LocalizedString newspirit = null;
+            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Domina").monsterName; ;
+
+            switch (id)
+            {
+                case "main_quest_19_total_domination":
+                    __result.requiredMonsters = [MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("main_quest_19_total_domination"))];
+                    break;
+                default:
+                    return;
+            }
+
+            newspirit = __result.requiredMonsters[0].monsterName;
+
+            if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
+
+            LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+            if (__result.description.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+            {
+                db.GetTable(__result.description.TableReference).AddEntryFromReference(__result.description.TableEntryReference, __result.description.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
+            }
+        }
+
 
         /// <summary>
         /// add checks for the Captain requireing relevant items before continuing the main quest
@@ -354,17 +427,8 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_PowerCrystal"));
                     if (i == null || i.count <= 0)
                     {
-                        ArchipelagoConsole.LogMessage("\"Power Crystal\" Item required to continue questline");
+                        __instance.StartDialog("Captain_Arch_Quest13");
                         return false;
-                    }
-                }
-                if (QuestManager.instance.GetIsActiveMainQuestLessThan("main_quest_13_bridge_crossing"))
-                {
-                    InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_PowerCrystal"));
-                    if (i != null && i.count > 0)
-                    {
-                        ArchipelagoConsole.LogMessage("Advance Main Quest Line to Unlock Bridge");
-                        return true;
                     }
                 }
             }
@@ -373,33 +437,13 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                 InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_YellowHarmonyCrystal"));
                 if (i == null || i.count <= 0)
                 {
-                    ArchipelagoConsole.LogMessage("\"Yellow Harmony Crystal\" Item required to continue questline");
+                    __instance.StartDialog("Captain_Arch_Quest28");
                     return false;
                 }
             }
             return true;
         }
 
-        // TODO IMPLEMENT THIS IN V0.2.0
-        //[HarmonyPatch(typeof(Becky), "Interact")]
-        //[HarmonyPrefix]
-        //public static bool Beckyquests(SergeantCassie __instance)
-        //{
-        //    QuestState activeMainQuestState = HelperItems.save.GetActiveMainQuestState();
-        //    if (activeMainQuestState != null)
-        //    {
-        //        if (activeMainQuestState.Quest.id == "main_quest_11_becky_can_fix_it")
-        //        {
-        //            InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_CrackedPowerCrystal"));
-        //            if (i == null || i.count <= 0)
-        //            {
-        //                ArchipelagoConsole.LogMessage("\"Cracked Power Crystal\" Item required to continue questline");
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //    return true;
-        //}
 
         [HarmonyPatch(typeof(SergeantCassie), "Interact")]
         [HarmonyPrefix]
@@ -413,7 +457,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_SuperSecretOrders"));
                     if (i == null || i.count <= 0)
                     {
-                        ArchipelagoConsole.LogMessage("\"Super Secret Orders\" Item required to continue questline");
+                        __instance.StartDialog("SergeantCassie_Arch_Quest5");
                         return false;
                     }
                 }
@@ -433,7 +477,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_SpiritHandlerLicense"));
                     if (i == null || i.count <= 0)
                     {
-                        ArchipelagoConsole.LogMessage("\"Spirit Handler Licence\" Item required to continue questline");
+                        __instance.StartDialog("Sassy_Arch_Quest20");
                         return false;
                     }
                 }
@@ -453,7 +497,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_FancySuit"));
                     if (i == null || i.count <= 0)
                     {
-                        ArchipelagoConsole.LogMessage("\"Fancy Suit\" Item required to continue questline");
+                        __instance.StartDialog("MinerJohnson_Arch_Quest43");
                         return false;
                     }
                 }
@@ -473,7 +517,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     InventoryItemState i = HelperItems.save.GetInventoryItemStateForItem(ItemManager.instance.GetItemAssetByName("KeyItem_Dynamite"));
                     if (i == null || i.count <= 0)
                     {
-                        ArchipelagoConsole.LogMessage("\"Dynamite\" Item required to continue questline");
+                        __instance.StartDialog("PaisleyBones_Arch_Quest46");
                         return false;
                     }
                 }
@@ -481,71 +525,189 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             return true;
         }
 
+        //TODO FIX SPIRIT QUESTS
+        //LocalizedString text; // found from somewhere in the game
+        //
+        //LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+        //StringTable table = db.GetTable(text.TableReference);
+        //table.AddEntryFromReference(text.TableEntryReference, "Replacement text");
+
+        public static Dictionary<string, string> questdict = new Dictionary<string, string>{
+            {"side_quest_perky_petunia","Petunia" },
+            {"side_quest_slithering_menace","Serpentina" },
+            {"side_quest_deadly_waters","Sharky" },
+            {"side_quest_starry_eyed_surprise","Chocostar" },
+            {"side_quest_arctic_menace","Polaria" },
+            {"side_quest_hunt_for_the_centiboob_part1","Bunni" },
+            {"side_quest_hunt_for_the_centiboob_part2","Hornie" },
+            {"side_quest_hunt_for_the_centiboob_part3","Marinel" },
+            };
+
         [HarmonyPatch(typeof(CollectSpiritQuestNPCGeneric), "Interact")]
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         public static void collectionsidequest1(CollectSpiritQuestNPCGeneric __instance)
         {
+            if (__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part1" ||__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part2" ||__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part3") { return; }
+            if (!questdict.ContainsKey(__instance.sideQuestID)) { return; }
+            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName(questdict[__instance.sideQuestID]).monsterName;
+            LocalizedString newspirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit(__instance.sideQuestID)).monsterName;
 
-            QuestState sideQuestStateById = HelperItems.save.GetSideQuestStateById(__instance.sideQuestID);
-            if (sideQuestStateById == null) { return; }
-            if (!sideQuestStateById.isClosed)
+            if (oldspirit == null) { return; }
+            if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
+
+            LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+            foreach (Dialog d in __instance.dialogs)
             {
-                ArchipelagoConsole.LogMessage($"SPIRIT REQUIRED FOR QUEST: {ArchipelagoData.getquestspirit(__instance.sideQuestID)}");
+                foreach (DialogLine l in d.GetLines())
+                {
+                    if (l.line.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+                    {
+                        db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
+                        //ArchipelagoConsole.LogDebug("CHANGING LINE");
+                    }
+                }
             }
+
         }
 
         [HarmonyPatch(typeof(DefeatOrCaptureSpiritsQuest_NPC_Generic), "Interact")]
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         public static void collectionsidequest2(DefeatOrCaptureSpiritsQuest_NPC_Generic __instance)
         {
+            if (!questdict.ContainsKey(__instance.sideQuestID)) { return; }
+            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName(questdict[__instance.sideQuestID]).monsterName;
+            LocalizedString newspirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit(__instance.sideQuestID)).monsterName;
 
-            QuestState sideQuestStateById = HelperItems.save.GetSideQuestStateById(__instance.sideQuestID);
-            if (sideQuestStateById == null) { return; }
-            if (!sideQuestStateById.isClosed)
+            if (oldspirit == null) { return; }
+            if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
+
+            LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+            foreach (Dialog d in __instance.dialogs)
             {
-                ArchipelagoConsole.LogMessage($"SPIRIT REQUIRED FOR QUEST: {ArchipelagoData.getquestspirit(__instance.sideQuestID)}");
+                foreach (DialogLine l in d.GetLines())
+                {
+                    if (l.line.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+                    {
+                        db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
+                    }
+                }
             }
         }
+
+        [HarmonyPatch(typeof(CollectSpiritQuestMultipleNPCGeneric), "Start")]
+        [HarmonyPrefix]
+        public static void collectionsidequest3(CollectSpiritQuestMultipleNPCGeneric __instance)
+        {
+            foreach (var t in __instance.npcConfs)
+            {
+                LocalizedString oldspirit1 = MonsterManager.instance.GetBaseStatsByName(questdict["side_quest_hunt_for_the_centiboob_part1"]).monsterName;
+                LocalizedString oldspirit2 = MonsterManager.instance.GetBaseStatsByName(questdict["side_quest_hunt_for_the_centiboob_part2"]).monsterName;
+                LocalizedString oldspirit3 = MonsterManager.instance.GetBaseStatsByName(questdict["side_quest_hunt_for_the_centiboob_part3"]).monsterName;
+
+                LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+                foreach (Dialog d in t.npc.dialogs)
+                {
+                    foreach (DialogLine l in d.GetLines())
+                    {
+                        if (l.line.GetLocalizedString().Contains(oldspirit1.GetLocalizedString()))
+                        {
+                            db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit1.GetLocalizedString(), "side_quest_hunt_for_the_centiboob_part1"));
+                        }
+                        if (l.line.GetLocalizedString().Contains(oldspirit2.GetLocalizedString()))
+                        {
+                            db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit2.GetLocalizedString(), "side_quest_hunt_for_the_centiboob_part2"));
+                        }
+                        if (l.line.GetLocalizedString().Contains(oldspirit3.GetLocalizedString()))
+                        {
+                            db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit3.GetLocalizedString(), "side_quest_hunt_for_the_centiboob_part3"));
+                        }
+                    }
+                }
+            }
+
+            foreach (var t in __instance.npcConfs)
+            {
+                LocalizedString n1spirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("side_quest_hunt_for_the_centiboob_part1")).monsterName;
+                LocalizedString n2spirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("side_quest_hunt_for_the_centiboob_part2")).monsterName;
+                LocalizedString n3spirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("side_quest_hunt_for_the_centiboob_part3")).monsterName;
+
+                LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+                foreach (Dialog d in t.npc.dialogs)
+                {
+                    foreach (DialogLine l in d.GetLines())
+                    {
+                        if (l.line.GetLocalizedString().Contains("side_quest_hunt_for_the_centiboob_part1"))
+                        {
+                            db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace("side_quest_hunt_for_the_centiboob_part1", n1spirit.GetLocalizedString()));
+                        }
+                        if (l.line.GetLocalizedString().Contains("side_quest_hunt_for_the_centiboob_part2"))
+                        {
+                            db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace("side_quest_hunt_for_the_centiboob_part2", n2spirit.GetLocalizedString()));
+                        }
+                        if (l.line.GetLocalizedString().Contains("side_quest_hunt_for_the_centiboob_part3"))
+                        {
+                            db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace("side_quest_hunt_for_the_centiboob_part3", n3spirit.GetLocalizedString()));
+                        }
+                    }
+                }
+            }
+        }
+
+
+        [HarmonyPatch(typeof(Skipper), "Interact")]
+        [HarmonyPrefix]
+        public static void collectionmainsidequest1(Skipper __instance)
+        {
+            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Sharky").monsterName;
+            LocalizedString newspirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("side_quest_deadly_waters")).monsterName;
+
+            if (oldspirit == null) { return; }
+            if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
+
+            LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+            foreach (Dialog d in __instance.dialogs)
+            {
+                foreach (DialogLine l in d.GetLines())
+                {
+                    if (l.line.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+                    {
+                        db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
+                    }
+                }
+            }
+        }
+
 
         [HarmonyPatch(typeof(OldMaster), "Interact")]
         [HarmonyPrefix]
         public static void collectionmainquest(OldMaster __instance)
         {
+            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Domina").monsterName;
+            LocalizedString newspirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("main_quest_19_total_domination")).monsterName;
+            //ArchipelagoConsole.LogDebug($"old: {oldspirit.GetLocalizedString()}, NEW: {newspirit.GetLocalizedString()}");
 
-            QuestState activeMainQuestState = HelperItems.save.GetActiveMainQuestState();
-            if (activeMainQuestState == null) { return; }
-            if (activeMainQuestState.Quest.id == "main_quest_19_total_domination")
+            if (oldspirit == null) { return; }
+            if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
+
+            LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+            foreach (Dialog d in __instance.dialogs)
             {
-                HelperItems.save.mainQuestStates.Last<QuestState>().Quest.requiredMonsters = [ArchipelagoClient.ServerData.getspirit(ArchipelagoData.getquestspirit("main_quest_19_total_domination"))];
+                foreach (DialogLine l in d.GetLines())
+                {
+                    if (l.line.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+                    {
+                        db.GetTable(l.line.TableReference).AddEntryFromReference(l.line.TableEntryReference, l.line.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
+                        //ArchipelagoConsole.LogDebug("CHANGING LINE");
+                    }
+                }
             }
         }
-
-        [HarmonyPatch(typeof(OldMaster), "Interact")]
-        [HarmonyPostfix]
-        public static void collectionmainquest2(OldMaster __instance)
-        {
-
-            QuestState activeMainQuestState = HelperItems.save.GetActiveMainQuestState();
-            if (activeMainQuestState == null) { return; }
-            if (activeMainQuestState.Quest.id == "main_quest_19_total_domination")
-            {
-                ArchipelagoConsole.LogMessage($"SPIRIT REQUIRED FOR QUEST: {ArchipelagoData.getquestspirit("main_quest_19_total_domination")}");
-            }
-        }
-
-        [HarmonyPatch(typeof(Skipper), "Interact")]
-        [HarmonyPostfix]
-        public static void collectionmainsidequest1(Skipper __instance)
-        {
-
-            QuestState activeMainQuestState = HelperItems.save.GetActiveMainQuestState();
-            if (activeMainQuestState == null) { return; }
-            if (activeMainQuestState.Quest.id == "main_quest_19_total_domination")
-            {
-                ArchipelagoConsole.LogMessage($"SPIRIT REQUIRED FOR QUEST: {ArchipelagoData.getquestspirit("side_quest_deadly_waters")}");
-            }
-        }
-
     }
 }
 

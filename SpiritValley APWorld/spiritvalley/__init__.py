@@ -1,3 +1,4 @@
+import logging
 from typing import Mapping, Any
 
 from BaseClasses import ItemClassification, Item
@@ -35,9 +36,29 @@ class SpiritValley(World):
         self.numitems = 0
         self.numlocations = 0
 
-        #make sure that if YMAL selects char gender to male it isn't trying to set the hairstyle to an invalid option
-        if self.options.Char_Gender.value == 0 and self.options.Char_Hairstyle.value == 4:
-            self.options.Char_Hairstyle.value = 3
+
+        #check YMAL options and fix any problems
+        if self.options.Char_Hairstyle.value == 3 and self.options.Char_Gender.value == 0:
+            self.options.Char_Hairstyle.value = 2
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Char_Hairstyle" from 3->2 as it requires "Char_Gender" to be set to "female\"""")
+
+        if self.options.Spirit_Affection.value and not self.options.Spirit_Locations.value:
+            self.options.Spirit_Affection.value = False
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Spirit_Affection" from True->False as it requires "Spirit_Locations" to be set to True""")
+
+        if self.options.Rare_Locations.value and not self.options.Spirit_Locations.value:
+            self.options.Rare_Locations.value = False
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Rare_Locations" from True->False as it requires "Spirit_Locations" to be set to True""")
+
+        if self.options.Single_Catch.value and self.options.Spirit_Locations.value:
+            self.options.Single_Catch.value = False
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Single_Catch" from True->False as it requires "Spirit_Locations" to be set to False""")
+
+        #if self.options.Perma_Death.value and self.options.Spirit_Affection.value:
+        #    self.options.Perma_Death.value = False
+        #    logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Perma_Death" from True->False as it requires "Spirit_Affection" to be set to False""")
+
+
 
         #Randomise grass/water spawns
         if self.options.Randomise_Spawns.value:
@@ -268,6 +289,10 @@ class SpiritValley(World):
 
             "randomise_map": self.options.randomise_map.value,
             "randomise_warps": self.options.randomise_warps.value,
+
+            "Single_Catch": self.options.Single_Catch.value,
+
+            "deathlink": self.options.Deathlink.value,
 
             "Minigame_Cheat": self.options.Minigame_Cheat.value,
             "Catch_Cheat": self.options.Guaranteed_Catch.value,

@@ -1,7 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+﻿using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using BepInEx;
+using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SpiritValleyArchipelagoClient.Archipelago;
 
@@ -11,6 +16,9 @@ public class DeathLinkHandler
     private string slotName;
     private readonly DeathLinkService service;
     private readonly Queue<DeathLink> deathLinks = new();
+    public bool processingdeath = false;
+
+    private Timer timer1;
 
     /// <summary>
     /// instantiates our death link handler, sets up the hook for receiving death links, and enables death link if needed
@@ -24,7 +32,7 @@ public class DeathLinkHandler
         service.OnDeathLinkReceived += DeathLinkReceived;
         slotName = name;
         deathLinkEnabled = enableDeathLink;
-
+        
         if (deathLinkEnabled)
         {
             service.EnableDeathLink();
@@ -36,15 +44,18 @@ public class DeathLinkHandler
     /// </summary>
     public void ToggleDeathLink()
     {
+        ArchipelagoConsole.LogDebug("TOGGLING DEATHLINK");
         deathLinkEnabled = !deathLinkEnabled;
 
         if (deathLinkEnabled)
         {
             service.EnableDeathLink();
+            timer1 = new Timer(KillPlayer, null, 5000, 5000);
         }
         else
         {
             service.DisableDeathLink();
+            timer1.Dispose();
         }
     }
 
@@ -61,6 +72,8 @@ public class DeathLinkHandler
             : deathLink.Cause);
     }
 
+    public void KillPlayer(object state) => KillPlayer();
+
     /// <summary>
     /// can be called when in a valid state to kill the player, dequeueing and immediately killing the player with a
     /// message if we have a death link in the queue
@@ -71,11 +84,55 @@ public class DeathLinkHandler
         {
             if (deathLinks.Count < 1) return;
 
-            var deathLink = deathLinks.Dequeue();
-            var cause = deathLink.Cause.IsNullOrWhiteSpace() ? GetDeathLinkCause(deathLink) : deathLink.Cause;
+            if (SceneManager.GetActiveScene().name == "TitleScreen" || SceneManager.GetActiveScene().name == "IntroScene") { return; }
+            if (!QuestManager.instance.GetIsActiveMainQuestGreaterThan("main_quest_2_captain_maria")) {  return; }
 
-            //TODO kill the player
-            SpiritValleyArchipelago.BepinLogger.LogMessage(cause);
+            if (processingdeath) { return; }
+
+            if (SceneManager.GetActiveScene().name == "OakwoodVillage_Clinic" ||
+                SceneManager.GetActiveScene().name == "Greensvale_Clinic" ||
+                SceneManager.GetActiveScene().name == "TumbleweedTown_Clinic" ||
+                SceneManager.GetActiveScene().name == "CoconutVillage_Clinic" ||
+                SceneManager.GetActiveScene().name == "Frostville1_Clinic") { return; }
+
+            var deathLink = deathLinks.Dequeue();
+
+            processingdeath = true;
+
+            if (deathLink.Cause.IsNullOrWhiteSpace())
+            {
+                ArchipelagoConsole.LogMessage($"Receved DEATH from {deathLink.Source}");
+            }
+            else
+            {
+                ArchipelagoConsole.LogMessage($"Receved {deathLink.Source} DEATH caused by:{deathLink.Cause}");
+            }
+
+            if (SceneManager.GetActiveScene().name == "FightScene")
+            {
+                FightManager fm = GameObject.Find("FightManager").GetComponent<FightManager>();
+                fm.EndFight(FightManager.FightResult.EnemyWon);
+                fm.OnRestPressed();
+            }
+            else
+            {
+                GameState s = HelperItems.save;
+                s.ReviveAllTeamMembers();
+                string lastClinicName = s.lastVisitedClinicSceneName;
+                if (string.IsNullOrEmpty(lastClinicName))
+                {
+                    lastClinicName = "OakwoodVillage_Clinic";
+                }
+
+                s.ClearFightStateData();
+                s.ClearActiveItems();
+                AudioManager.instance.StopMusic(0.4f);
+                SceneTransitionManager.instance.screenFade.FadeOut(0.5f, delegate
+                {
+                    SceneManager.LoadScene(lastClinicName, LoadSceneMode.Single);
+                });
+
+            }
         }
         catch (Exception e)
         {
@@ -84,19 +141,9 @@ public class DeathLinkHandler
     }
 
     /// <summary>
-    /// returns message for the player to see when a death link is received without a cause
-    /// </summary>
-    /// <param name="deathLink">death link object to get relevant info from</param>
-    /// <returns></returns>
-    private string GetDeathLinkCause(DeathLink deathLink)
-    {
-        return $"Received death from {deathLink.Source}";
-    }
-
-    /// <summary>
     /// called to send a death link to the multiworld
     /// </summary>
-    public void SendDeathLink()
+    public void SendDeathLink(string cause = null)
     {
         try
         {
@@ -104,8 +151,15 @@ public class DeathLinkHandler
 
             SpiritValleyArchipelago.BepinLogger.LogMessage("sharing your death...");
 
-            // add the cause here
-            var linkToSend = new DeathLink(slotName);
+            DeathLink linkToSend;
+            if (cause == null)
+            {
+                linkToSend = new DeathLink(slotName);
+            }
+            else
+            {
+                linkToSend = new DeathLink(slotName, cause);
+            }
 
             service.SendDeathLink(linkToSend);
         }

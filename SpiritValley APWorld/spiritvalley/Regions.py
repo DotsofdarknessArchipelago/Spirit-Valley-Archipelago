@@ -92,6 +92,9 @@ def Generate_Map(multiworld, player, options, loc, data):
 
         if r.quest_locations is not None:
             for l in r.quest_locations:
+                if options.Single_Catch.value:
+                    if l == "Complete Side Quest: Perky Petunia" or l == "Complete Side Quest: Starry Eyed Surprise":
+                        continue
                 map.add_locations({l:loc[l]}, SpiritValleyLocation)
 
         if options.randomise_map.value:

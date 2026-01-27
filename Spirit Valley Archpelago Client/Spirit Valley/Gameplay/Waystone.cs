@@ -125,10 +125,10 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     ArchipelagoConsole.LogMessage($"SCENE NAME NOT KNOWN: {___state.sceneName}");
                     break;
             }
-            if (Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
-            {
-                return false;
-            }
+            //if (Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
+            //{
+            //    return false;
+            //}
             return true;
         }
 
@@ -137,6 +137,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         [HarmonyPrefix]
         public static bool activateoverqite(WayStoneMapItem __instance, ref WayStoneState ___state,ref bool __result)
         {
+            __result = true;
+            return false;
+
 
             if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["randomise_warps"]))
             {
@@ -352,124 +355,130 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             }
         }
 
-        [HarmonyPatch(typeof(ColdHarborSequence), "PlayCoroutine")]
-        [HarmonyILManipulator]
-        public static void coldharbormod(ILContext ctx, MethodBase orig)
-        {
-            for (int i = 20; i < ctx.Instrs.Count; i++)
-            {
-                if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
-                    ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
-                    ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
-                    ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
-                    ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
-                    ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_8 &&
-                    ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
-                    ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
-                    ctx.Instrs[i-3].OpCode == OpCodes.Br &&
-                    ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
-                    ctx.Instrs[i].OpCode == OpCodes.Stfld
-                    )
-                {
-                    ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i].OpCode = OpCodes.Nop;
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(CrashSiteSequence), "PlayCoroutine")]
-        [HarmonyILManipulator]
-        public static void crashsitemod(ILContext ctx, MethodBase orig)
-        {
-            for (int i = 20; i < ctx.Instrs.Count; i++)
-            {
-                if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
-                    ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
-                    ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
-                    ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
-                    ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
-                    ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_7 &&
-                    ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
-                    ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
-                    ctx.Instrs[i-3].OpCode == OpCodes.Br &&
-                    ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
-                    ctx.Instrs[i].OpCode == OpCodes.Stfld
-                    )
-                {
-                    ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i].OpCode = OpCodes.Nop;
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(Trail19Sequence), "PlayCoroutine")]
-        [HarmonyILManipulator]
-        public static void trail19mod(ILContext ctx, MethodBase orig)
-        {
-            for (int i = 20; i < ctx.Instrs.Count; i++)
-            {
-                if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
-                    ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
-                    ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
-                    ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
-                    ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
-                    ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_4 &&
-                    ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
-                    ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
-                    ctx.Instrs[i-3].OpCode == OpCodes.Br &&
-                    ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
-                    ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
-                    ctx.Instrs[i].OpCode == OpCodes.Stfld
-                    )
-                {
-                    ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
-                    ctx.Instrs[i].OpCode = OpCodes.Nop;
-                }
-            }
-        }
+        //[HarmonyPatch(typeof(ColdHarborSequence), "PlayCoroutine")]
+        //[HarmonyILManipulator]
+        //public static void coldharbormod(ILContext ctx, MethodBase orig)
+        //{
+        //    SpiritValleyArchipelago.BepinLogger.LogMessage("TESTcold");
+        //    for (int i = 20; i < ctx.Instrs.Count; i++)
+        //    {
+        //        if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
+        //            ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
+        //            ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
+        //            ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
+        //            ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
+        //            ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_8 &&
+        //            ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
+        //            ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
+        //            ctx.Instrs[i-3].OpCode == OpCodes.Br &&
+        //            ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
+        //            ctx.Instrs[i].OpCode == OpCodes.Stfld
+        //            )
+        //        {
+        //            SpiritValleyArchipelago.BepinLogger.LogMessage("TESTcold");
+        //            ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i].OpCode = OpCodes.Nop;
+        //        }
+        //    }
+        //}
+        //
+        //[HarmonyPatch(typeof(CrashSiteSequence), "PlayCoroutine")]
+        //[HarmonyILManipulator]
+        //public static void crashsitemod(ILContext ctx, MethodBase orig)
+        //{
+        //    SpiritValleyArchipelago.BepinLogger.LogMessage("TESTcrash");
+        //    for (int i = 20; i < ctx.Instrs.Count; i++)
+        //    {
+        //        if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
+        //            ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
+        //            ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
+        //            ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
+        //            ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
+        //            ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_7 &&
+        //            ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
+        //            ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
+        //            ctx.Instrs[i-3].OpCode == OpCodes.Br &&
+        //            ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
+        //            ctx.Instrs[i].OpCode == OpCodes.Stfld
+        //            )
+        //        {
+        //            SpiritValleyArchipelago.BepinLogger.LogMessage("TESTcrash");
+        //            ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i].OpCode = OpCodes.Nop;
+        //        }
+        //    }
+        //}
+        //
+        //[HarmonyPatch(typeof(Trail19Sequence), "PlayCoroutine")]
+        //[HarmonyILManipulator]
+        //public static void trail19mod(ILContext ctx, MethodBase orig)
+        //{
+        //    SpiritValleyArchipelago.BepinLogger.LogMessage("TEST19");
+        //    for (int i = 20; i < ctx.Instrs.Count; i++)
+        //    {
+        //        if (ctx.Instrs[i-13].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-12].OpCode == OpCodes.Ldloc_1 &&
+        //            ctx.Instrs[i-11].OpCode == OpCodes.Ldftn &&
+        //            ctx.Instrs[i-10].OpCode == OpCodes.Newobj &&
+        //            ctx.Instrs[i-9].OpCode == OpCodes.Newobj &&
+        //            ctx.Instrs[i-8].OpCode == OpCodes.Stfld &&
+        //            ctx.Instrs[i-7].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-6].OpCode == OpCodes.Ldc_I4_4 &&
+        //            ctx.Instrs[i-5].OpCode == OpCodes.Stfld &&
+        //            ctx.Instrs[i-4].OpCode == OpCodes.Ldc_I4_1 &&
+        //            ctx.Instrs[i-3].OpCode == OpCodes.Br &&
+        //            ctx.Instrs[i-2].OpCode == OpCodes.Ldarg_0 &&
+        //            ctx.Instrs[i-1].OpCode == OpCodes.Ldc_I4_M1 &&
+        //            ctx.Instrs[i].OpCode == OpCodes.Stfld
+        //            )
+        //        {
+        //            SpiritValleyArchipelago.BepinLogger.LogMessage("TEST19");
+        //            ctx.Instrs[i - 13].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 12].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 11].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 10].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 9].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 8].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 7].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 6].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 5].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 4].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 3].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 2].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i - 1].OpCode = OpCodes.Nop;
+        //            ctx.Instrs[i].OpCode = OpCodes.Nop;
+        //        }
+        //    }
+        //}
     }
 }

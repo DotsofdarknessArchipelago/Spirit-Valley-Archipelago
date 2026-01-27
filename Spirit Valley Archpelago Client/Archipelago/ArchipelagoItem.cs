@@ -39,6 +39,7 @@ namespace SpiritValleyArchipelagoClient.Archipelago
         public string seed = "";
         public int listversion = 1;
         public List<ArchipelagoItem> list = new List<ArchipelagoItem>();
+        public List<string> caughtmaps = new List<string>();
 
         public void add(ItemInfo netitem)
         {

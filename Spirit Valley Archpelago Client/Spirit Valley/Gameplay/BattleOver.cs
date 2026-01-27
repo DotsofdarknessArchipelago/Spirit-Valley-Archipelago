@@ -677,5 +677,22 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                 //break;
             }
         }
+
+        /// <summary>
+        /// send deathlink
+        /// </summary>
+        [HarmonyPatch(typeof(GameOverMenu), "Start")]
+        [HarmonyPrefix]
+        public static void death(GameOverMenu __instance)
+        {
+            if (HelperItems.save.isWildEncounter)
+            {
+                SpiritValleyArchipelago.ArchipelagoClient.DeathLinkHandler.SendDeathLink($"Beaten up by a wild {HelperItems.save.currentlyFightingEnemyMonster.baseStatsName}");
+            }
+            else
+            {
+                SpiritValleyArchipelago.ArchipelagoClient.DeathLinkHandler.SendDeathLink($"Defeated by {HelperItems.save.enemyNPCName.GetLocalizedString()}");
+            }
+        }
     }
 }

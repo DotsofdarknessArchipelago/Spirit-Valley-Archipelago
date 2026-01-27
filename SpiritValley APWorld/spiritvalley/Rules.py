@@ -120,10 +120,12 @@ def base_rules(multiworld, player, options, data):
     set_rule(multiworld.get_location("Complete Side Quest: Legend of the Valkyrie part 1.", player), lambda state: state.has("Cum Rag", player))
     set_rule(multiworld.get_location("Complete Side Quest: Legend of the Valkyrie part 2.", player), lambda state: state.has("Northern Blowfish Available in Shop", player))
 
-    set_rule(multiworld.get_location("Complete Side Quest: Perky Petunia", player), lambda state, s=data["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"]: spirit_Obtain(state, player, s))
+    if not options.Single_Catch.value:
+        set_rule(multiworld.get_location("Complete Side Quest: Perky Petunia", player), lambda state, s=data["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"]: spirit_Obtain(state, player, s))
+        set_rule(multiworld.get_location("Complete Side Quest: Starry Eyed Surprise", player), lambda state, s=data["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"]: spirit_Obtain(state, player, s))
+
     set_rule(multiworld.get_location("Complete Side Quest: Slithering Menace", player), lambda state, s=data["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"]: state.has(f"{s} Obtainable", player))
     set_rule(multiworld.get_location("Complete Side Quest: Deadly Waters", player), lambda state, s=data["SIDE_QUEST_DEADLY_WATERS_SPIRIT"]: state.has_all([f"{s} Obtainable", "Fishing Rod"], player))
-    set_rule(multiworld.get_location("Complete Side Quest: Starry Eyed Surprise", player), lambda state, s=data["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"]: spirit_Obtain(state, player, s))
     set_rule(multiworld.get_location("Complete Side Quest: Arctic Menace", player), lambda state, s=data["SIDE_QUEST_ARCTIC_MENACE_SPIRIT"]: state.has(f"{s} Obtainable", player))
     set_rule(multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 1.", player), lambda state, s=data["SIDE_QUEST_CENTIBOOB_1_SPIRIT"]: spirit_Obtain(state, player, s))
     set_rule(multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 2.", player), lambda state, s=data["SIDE_QUEST_CENTIBOOB_2_SPIRIT"]: spirit_Obtain(state, player, s))
