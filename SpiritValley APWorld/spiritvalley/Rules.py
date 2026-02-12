@@ -172,6 +172,8 @@ def base_rules(multiworld, player, options, data):
     set_rule(multiworld.get_location("Sandy Tunnels: Chest North of Chad", player), lambda state: state.has("Testosterone Pills", player))
     set_rule(multiworld.get_location("Old Masters Hut: Chest in Basement", player), lambda state: state.has("Testosterone Pills", player))
 
+    set_rule(multiworld.get_location("Evergreen Caverns: Defeat Rawry", player), lambda state: state.has("Testosterone Pills", player))
+
     set_rule(multiworld.get_entrance("Trail16_Top->Trail16", player), lambda state: state.has("Testosterone Pills", player))
 
 
