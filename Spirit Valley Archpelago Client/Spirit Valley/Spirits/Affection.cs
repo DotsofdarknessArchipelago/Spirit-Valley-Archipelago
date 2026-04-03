@@ -18,9 +18,10 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
         [HarmonyPostfix]
         public static void affectionpost(MonsterState __instance, int amount, int __state)
         {
+            int affectionidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Affection_Start"]);
+
             if (__instance.AffectionLevel != __state)
             {
-                int affectionidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Affection_Start"]);
                 for (int i = 0; i < GameDataManager.instance.databaseEntries.Length; i++)
                 {
                     if (GameDataManager.instance.databaseEntries[i].name == __instance.baseStatsName)
@@ -30,6 +31,20 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
                     }
                 }
             }
+
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]) == 3)
+            {
+                bool goal = true;
+                for (int i = 0; i < 75; i++)
+                {
+                    if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(affectionidstart + (i * 5) + 5)) { goal = false; break; }
+                }
+                if (goal)
+                {
+                    ArchipelagoClient.complete();
+                }
+            }
+
         }
 
         [HarmonyPatch(typeof(Minigame), "TestRectOverlaps")]

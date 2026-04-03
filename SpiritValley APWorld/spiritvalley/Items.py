@@ -159,9 +159,12 @@ items_archipelago = {
     "Spirit Repellent Available in Shop": items_archipelago_id_start + 22,
     "Xp Booster Available in Shop": items_archipelago_id_start + 23,
     "Cleansing Tonic Available in Shop": items_archipelago_id_start + 24,
+    "Balloon Ride Ticket": items_archipelago_id_start + 25,
+    "Boat Ride Ticket": items_archipelago_id_start + 26,
+    "Ancient Warp Core": items_archipelago_id_start + 27,
 }
 
-items_warp_id_start = items_archipelago_id_start+24
+items_warp_id_start = items_archipelago_id_start+27
 items_warp = {
     "Warp Cords(Oakwood Village)": items_warp_id_start + 1,
     "Warp Cords(Greensvale)": items_warp_id_start + 2,
@@ -189,7 +192,7 @@ items_list = {
     **items_coins,
     **items_archipelago,
     **items_warp,
-    "victory": item_list_id_start+1
+    "Goal": item_list_id_start+1
 }
 
 affection_items = [

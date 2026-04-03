@@ -2,6 +2,7 @@
 using HarmonyLib;
 using Newtonsoft.Json;
 using SpiritValleyArchipelagoClient.Archipelago;
+using System;
 using System.IO;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
@@ -20,7 +21,48 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             ArchipelagoConsole.LogDebug("SAVING GAME");
             if (type == SaveType.Manual) { ArchipelagoConsole.LogDebug("MANUAL SAVE"); } else { ArchipelagoConsole.LogDebug("AUTO SAVE"); }
 
-            bool goal = __instance.data.GetActiveMainQuestState().id == "main_quest_55_life_as_a_spirit_warden";
+
+            bool goal = false;
+            switch (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]))
+            {
+                case 0: //missions
+                    if (__instance.data.GetActiveMainQuestState() == null) break;
+                    if (__instance.data.GetActiveMainQuestState().id == "main_quest_55_life_as_a_spirit_warden")
+                    {
+                        ArchipelagoClient.complete();
+                        goal = true;
+                    }
+                    break;
+                case 1: //catch all spirits
+                    if (__instance.data.database.GetCountCaptured() == 75)
+                    {
+                        ArchipelagoClient.complete();
+                        goal = true;
+                    }
+                    break;
+                case 2: //catch all rare spirits
+                    if (__instance.data.database.GetCountRaresCaptured() == 75)
+                    {
+                        ArchipelagoClient.complete();
+                        goal = true;
+                    }
+                    break;
+                case 3: //affection
+
+                    int affectionidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Affection_Start"]);
+                    goal = true;
+                    for (int i = 0; i < 75; i++)
+                    {
+                        if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(affectionidstart + (i * 5) + 5)) { goal = false; break; }
+                    }
+                    if (goal)
+                    {
+                        ArchipelagoClient.complete();
+                    }
+                    break;
+            }
+
+
             if (!goal)
             {
                 ArchipelagoConsole.LogDebug("GOAL NOT ACHIEVED YET");

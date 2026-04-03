@@ -35,9 +35,9 @@ public class ArchipelagoClient
     public static int totalloc = 0;
     public static int totalitem = 0;
 
-    public static int servermajor = 1;
+    public static int servermajor = 2;
     public static int serverminor = 0;
-    public static int serverbuild = 2;
+    public static int serverbuild = 0;
 
 
     public static ArchipelageItemList archlist = new ArchipelageItemList();

@@ -22,10 +22,10 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Spirit Valley Archipelago Client";
-    public const int PluginVersionMajor = 1;
+    public const int PluginVersionMajor = 2;
     public const int PluginVersionMinor = 0;
-    public const int PluginVersionBuild = 2;
-    public const string PluginVersion = "1.0.2";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionBuild = 0;
+    public const string PluginVersion = "2.0.0";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -75,7 +75,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
         }
         if (Input.GetKeyDown(KeyCode.F7))
         {
-
+            Cheats.wallhaks();
         }
         if (Input.GetKeyDown(KeyCode.F9))
         {
@@ -113,7 +113,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
             else
             {
                 newgame = false;
-                start= false;
+                start = false;
             }
             if (versioncheck)
             {
@@ -169,7 +169,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
         // show the Archipelago Version and whether we're connected or not
         if (ArchipelagoClient.Authenticated)
         {
-            if ((PluginVersionMajor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_major"]))&& (PluginVersionMinor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_minor"]))&& (PluginVersionBuild == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_build"])))
+            if ((PluginVersionMajor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_major"])) && (PluginVersionMinor == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_minor"])) && (PluginVersionBuild == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["world_version_build"])))
             {
                 GUI.Label(new Rect(16, 16, 300, 20), $"Client/World V({PluginVersion}) : Status: Connected, S{slot}");
             }
@@ -195,12 +195,12 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
             float item = 0;
             if (ArchipelagoClient.slotstate)
             {
-                state = $"GAME STARTED (SLOT {slot+1})";
+                state = $"GAME STARTED (SLOT {slot + 1})";
                 button = "CONTINUE";
             }
             else
             {
-                state = $"NEW GAME (SLOT {slot+1})";
+                state = $"NEW GAME (SLOT {slot + 1})";
                 button = "START GAME";
             }
             if (ArchipelagoClient.session.Locations.AllLocationsChecked.Count() > 0)
@@ -234,11 +234,11 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
             GUI.Label(new Rect(10, 120, 270, 40), "Host: ", mlabel);
             GUI.Label(new Rect(10, 160, 270, 40), "Player Name: ", mlabel);
             GUI.Label(new Rect(10, 200, 270, 40), "Password: ", mlabel);
-            
+
             ArchipelagoClient.ServerData.Uri = GUI.TextField(new Rect(archwindow.width / 2, 120, 270, 40), ArchipelagoClient.ServerData.Uri, mtext);
             ArchipelagoClient.ServerData.SlotName = GUI.TextField(new Rect(archwindow.width / 2, 160, 270, 40), ArchipelagoClient.ServerData.SlotName, mtext);
             ArchipelagoClient.ServerData.Password = GUI.TextField(new Rect(archwindow.width / 2, 200, 270, 40), ArchipelagoClient.ServerData.Password, mtext);
-            
+
             if (GUI.Button(new Rect(archwindow.width / 2 - 50, 280, 100, 40), "Connect", mbutton) &&
                 !ArchipelagoClient.ServerData.SlotName.IsNullOrWhiteSpace())
             {
@@ -247,7 +247,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
         }
         else
         {
-            if (File.Exists(Application.persistentDataPath + "/archipelagoslot1/archdata.json")) 
+            if (File.Exists(Application.persistentDataPath + "/archipelagoslot1/archdata.json"))
             {
                 List<string> s1 = readarchdata(Application.persistentDataPath + "/archipelagoslot1/archdata.json");
                 if (s1[1].IsNullOrWhiteSpace())
@@ -274,8 +274,8 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
                     File.Delete(Application.persistentDataPath + "/archipelagoslot1/archdata.json");
                 }
             }
-            else 
-            { 
+            else
+            {
                 if (GUI.Button(new Rect(20, 10, 520, 120), "Click To Start A New Archipelago Game in Slot 1", mbutton))
                 {
                     slot = 0;
@@ -283,7 +283,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
                 }
             }
 
-            if (File.Exists(Application.persistentDataPath + "/archipelagoslot2/archdata.json")) 
+            if (File.Exists(Application.persistentDataPath + "/archipelagoslot2/archdata.json"))
             {
                 List<string> s2 = readarchdata(Application.persistentDataPath + "/archipelagoslot2/archdata.json");
 
@@ -311,8 +311,8 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
                     File.Delete(Application.persistentDataPath + "/archipelagoslot2/archdata.json");
                 }
             }
-            else 
-            { 
+            else
+            {
                 if (GUI.Button(new Rect(20, 140, 520, 120), "Click To Start A New Archipelago Game in Slot 2", mbutton))
                 {
                     slot = 1;
@@ -320,7 +320,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
                 }
             }
 
-            if (File.Exists(Application.persistentDataPath + "/archipelagoslot3/archdata.json")) 
+            if (File.Exists(Application.persistentDataPath + "/archipelagoslot3/archdata.json"))
             {
                 List<string> s3 = readarchdata(Application.persistentDataPath + "/archipelagoslot3/archdata.json");
 
@@ -348,8 +348,8 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
                     File.Delete(Application.persistentDataPath + "/archipelagoslot3/archdata.json");
                 }
             }
-            else 
-            { 
+            else
+            {
                 if (GUI.Button(new Rect(20, 270, 520, 120), "Click To Start A New Archipelago Game in Slot 3", mbutton))
                 {
                     slot = 2;
@@ -389,10 +389,10 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
 
     public void startarch()
     {
-        
+
         bool setup = ArchipelagoClient.session.DataStorage[Scope.Slot, "slotsetup"];
         ArchipelagoConsole.LogDebug($"SETUP VALUE: {setup}");
-        setup = setup && (File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}.json") || File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}_auto.json") && File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot+1}/archdata.json"));
+        setup = setup && (File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}.json") || File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archipelagoslot{slot + 1}_auto.json") && File.Exists(Application.persistentDataPath + $"/archipelagoslot{slot + 1}/archdata.json"));
         if (setup)
         {
             ArchipelagoConsole.LogDebug("Archipelago Game Started");
@@ -402,7 +402,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
         else
         {
             ArchipelagoConsole.LogDebug("Archipelago Game Not Started");
-            SystemData<GameState> systemData = GameManager.instance.gameStates[4+slot];
+            SystemData<GameState> systemData = GameManager.instance.gameStates[4 + slot];
             systemData.InitNew();
             systemData.data.migrationIndex = MigrationManager.instance.GetCurrentMigrationIndex();
             systemData.data.heroName = ArchipelagoClient.ServerData.SlotName;
@@ -414,6 +414,17 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
             systemData.data.hairColorPresetIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Haircolor"]);
             systemData.data.costumePresetIndex = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Char_Outfit"]);
 
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Side_Missions"]))
+            {
+                ArchipelagoConsole.LogDebug("Side Missions YMAL option false completing all side missions");
+                List<QuestState> ql = [];
+                foreach (Quest q in QuestManager.instance.sideQuests)
+                {
+                    ql.Add(new(q, QuestState.Type.SideQuest) { isClosed = true });
+                }
+                HelperItems.save.sideQuestStates = ql;
+            }
+
             systemData.data.AddItemToInventory(ItemManager.instance.GetItemAssetByName("Crystal_SpiritCrystal"), 5, true);
 
             systemData.SaveAsync(SaveType.Auto).GetAwaiter().OnCompleted(delegate { loadgame(true); });
@@ -424,7 +435,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
     {
         if (auto)
         {
-            GameManager.instance.LoadAndSetActiveGameState(4+slot, SaveType.Auto);
+            GameManager.instance.LoadAndSetActiveGameState(4 + slot, SaveType.Auto);
         }
         else
         {

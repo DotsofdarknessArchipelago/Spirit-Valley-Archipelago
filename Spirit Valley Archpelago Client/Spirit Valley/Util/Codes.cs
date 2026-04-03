@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static System.Collections.Specialized.BitVector32;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 {
@@ -24,11 +23,89 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
             switch (code)
             {
+                case "$goal":
+                    GameState savefile = GameManager.instance.gameStates[4 + SpiritValleyArchipelago.slot].data;
+                    switch (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]))
+                    {
+                        case 0: //missions
+                            ArchipelagoConsole.LogMessage("Goal is to Complete Main Quest Line");
+                            if (savefile.GetActiveMainQuestState() == null)
+                            {
+                                break;
+                            }
+                            if (savefile.GetActiveMainQuestState().id == "main_quest_55_life_as_a_spirit_warden")
+                            {
+                                ArchipelagoClient.complete();
+                                ArchipelagoConsole.LogMessage("Main Quest Line Completed");
+                            }
+                            else
+                            {
+                                ArchipelagoConsole.LogMessage("Main Quest Line Not Complete Yet");
+                            }
+                            break;
+                        case 1: //catch all spirits
+                            ArchipelagoConsole.LogMessage("Goal is to Catch All Spirits");
+                            if (savefile.database.GetCountCaptured() == 75)
+                            {
+                                ArchipelagoClient.complete();
+                                ArchipelagoConsole.LogMessage("Successfully Captured All Spirits");
+                            }
+                            else
+                            {
+                                ArchipelagoConsole.LogMessage($"Captured {savefile.database.GetCountCaptured()}/75 Spirits");
+                            }
+                            break;
+                        case 2: //catch all rare spirits
+                            ArchipelagoConsole.LogMessage("Goal is to Catch all Rare Spirits");
+                            if (savefile.database.GetCountRaresCaptured() == 75)
+                            {
+                                ArchipelagoClient.complete();
+                                ArchipelagoConsole.LogMessage("Successfully Captured All Rare Spirits");
+                            }
+                            else
+                            {
+                                ArchipelagoConsole.LogMessage($"Captured {savefile.database.GetCountRaresCaptured()}/75 Rare Spirits");
+                            }
+                            break;
+                        case 3: //affection
+                            ArchipelagoConsole.LogMessage("Goal is to Get All Spirits to Max Affection");
+
+                            int affectionidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Affection_Start"]);
+                            int done = 0;
+                            bool goal = true;
+                            for (int i = 0; i < 75; i++)
+                            {
+                                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(affectionidstart + (i * 5) + 5)) { goal = false; continue; }
+                                done++;
+                            }
+
+                            if (goal)
+                            {
+                                ArchipelagoClient.complete();
+                                ArchipelagoConsole.LogMessage("Successfully Got All Spirits To Max Affection");
+                            }
+                            else
+                            {
+                                ArchipelagoConsole.LogMessage($"Spirits At Max Affection {done}/75");
+                            }
+                            break;
+                    }
+
+                    break;
+
                 case "$resetitems":
                     ArchipelagoConsole.LogMessage("RESETING SENT ITEM LIST ALL ITEMS WILL BE REPROCESSED");
                     ArchipelagoClient.resetlist();
                     break;
 
+                case "$stuck":
+                    HelperItems.save.transitionSceneName = "OakwoodVillage";
+                    HelperItems.save.transitionAreaID = "waystone";
+                    SceneTransitionManager.instance.screenFade.FadeOut(0.5f, delegate
+                    {
+                        SceneManager.LoadScene("OakwoodVillage", LoadSceneMode.Single);
+                    });
+                    break;
 
                 case "$resync":
                     ArchipelagoConsole.LogMessage("Resyncing Client");
@@ -225,7 +302,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
             if (SceneManager.GetActiveScene().name == "TitleScreen") { ArchipelagoConsole.LogMessage("CANNOT WARP WHEN ON TITLE SCREEN:"); return; }
 
-                string[] warps = code.Split(' ');
+            string[] warps = code.Split(' ');
 
             bool rando = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["randomise_map"]) == 1;
 
@@ -234,7 +311,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                 case "list":
                     ArchipelagoConsole.LogMessage("Use: \"$warp <location>\"");
                     ArchipelagoConsole.LogMessage("Possibe locations:");
-                    ArchipelagoConsole.LogMessage("trail1, trail2 ... trail21, trail 22, oakwood, greensvale, tumbleweedtown, coconutvillage, frostville, evergreenoutpost, evergreencaverns, sandytunnels, dairyfarm, dustygrotto, oldMastershut, coldharbor, abandonedmine, spiritpassage, crashsite");
+                    ArchipelagoConsole.LogMessage("trail1, trail2 ... trail21, trail22, oakwood, greensvale, tumbleweedtown, coconutvillage, frostville, evergreenoutpost, evergreencaverns, sandytunnels, dairyfarm, dustygrotto, oldMastershut, coldharbor, abandonedmine, spiritpassage, crashsite");
                     break;
 
 
@@ -735,7 +812,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                         ArchipelagoConsole.LogMessage("Player Hasnt Visted Location Unable To Warp");
                     }
                     break;
-                
+
                 case "trail1":
                     if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail1))
                     {
@@ -1656,8 +1733,8 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                         ArchipelagoConsole.LogMessage("Player Hasnt Visted Location Unable To Warp");
                     }
                     break;
-                
-                
+
+
                 default:
                     ArchipelagoConsole.LogMessage($"WARP CODE ({code}) NOT RECONISED USE CODE \"$warp list\" to get list of possible warps");
                     break;

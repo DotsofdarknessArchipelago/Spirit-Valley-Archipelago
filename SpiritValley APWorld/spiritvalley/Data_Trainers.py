@@ -37,20 +37,20 @@ Default_Trainers = [
     Trainer("Miriam",[["Petunia",7], ["Wolfy",6]],"c029e36a-14ec-4d07-a45b-b7b57f406575"),
     Trainer("Jenna",[["Ursie",6]],"6778b3a1-97d4-457d-adc1-c324dbad017e"),
     #"Evergreen Caverns"
-    Trainer("Stu",[["Serpentia",7], ["Gloria",6]],"e6929a89-5dc3-4118-bcf9-ff20df7ed4af"),
+    Trainer("Stu",[["Serpentina",7], ["Gloria",6]],"e6929a89-5dc3-4118-bcf9-ff20df7ed4af"),
     Trainer("Nicole",[["Octopussy",8], ["Slimee",6]],"364ef3fd-dfe9-41bb-aa8c-9583af54d8f8"),
     Trainer("Rawry",[["Rawry",15]],"72e0b641-b787-46cb-8fe8-eb17f93073fa"),
     #"Ancient temple entrense"
     Trainer("1st crimson cloak near entrense",[["Spinnie",8]],"5efd2110-61ad-4bea-9551-2bffee802492"),
-    Trainer("2nd crimson cloak near pillars",[["Trissy",8], ["chubbie",7]],"27d2018d-9706-4b17-981d-e408d42e1041"),
-    Trainer("3rd crimson cloak near chest",[["Serpentia",9], ["Belle",6]],"cae4d216-6d69-470b-a721-3d83290c0de6"),
+    Trainer("2nd crimson cloak near pillars",[["Trissy",8], ["Chubbie",7]],"27d2018d-9706-4b17-981d-e408d42e1041"),
+    Trainer("3rd crimson cloak near chest",[["Serpentina",9], ["Belle",6]],"cae4d216-6d69-470b-a721-3d83290c0de6"),
     Trainer("4th crimson cloak right after first fork",[["Wolfy",8], ["Beebee",7]],"2174dd35-f25f-4d1a-86a3-c1f46f576ff9"),
     Trainer("5th crimson cloak",[["Trissy",9]],"677f47ac-c833-42c8-a19a-4d99d5985fdd"),
     Trainer("6th crimson cloak blocking chest",[["Ursie",8], ["Oakie",6]],"7c73c737-4fd5-4266-92ea-caf02f8c9320"),
     #"Ancient temple room 1"
-    Trainer("1st L-S-L-S-R",[["Octopussy",8], ["Serpentia",6], ["Spinnie",7]],"122ab3e7-c278-402b-a741-c83633c93626"),
+    Trainer("1st L-S-L-S-R",[["Octopussy",8], ["Serpentina",6], ["Spinnie",7]],"122ab3e7-c278-402b-a741-c83633c93626"),
     #"Ancient temple room 2"
-    Trainer("Valkrie",[["Valkrie",11]], "Boss_Valkrie"),#SCRIPTED FIGHT
+    Trainer("Valkrie",[["Valkyrie_Boss",11]], "Boss_Valkrie"),#SCRIPTED FIGHT
     #"Trail 05"
     Trainer("Mila",[["Pusseen",9], ["Slimee",7]],"83b06037-1fe2-47d9-8887-479a7b0104d6"),
     Trainer("Roy",[["Rawry",10]],"e6cda171-22b9-43fb-9ca0-f2411e2e4226"),
@@ -64,7 +64,7 @@ Default_Trainers = [
     Trainer("Juliet",[["Spinnie",10], ["Tinky",7]],"4cc138d0-8b3d-4ea6-8dd4-e593ae0d9aef"),
     #"Trail 07"
     Trainer("Sally McTits",[["Dripsy",14], ["Gloreen",13], ["Kittypus",13], ["Boobae",11]],"6db1fd7b-c78b-4de1-967c-ce67e656236e"),
-    Trainer("Bella",[["Serpentax",13], ["cactee",10], ["Bovina",11]],"56c3e787-d36a-4e11-aead-ea47f500e261"),
+    Trainer("Bella",[["Serpentax",13], ["Cactee",10], ["Bovina",11]],"56c3e787-d36a-4e11-aead-ea47f500e261"),
     Trainer("Dakota",[["Birdy",12], ["Flora",11]],"ab480291-fa67-4ec2-a724-c048b4537914"),
     Trainer("Cassidy",[["Twerky",11], ["Buzzeena",13], ["Tinky",10], ["Octopussy",11]],"0f05b20d-99cf-4cee-852e-7e5edac5a456"),
     #"Tumbleweed Town"
@@ -82,7 +82,7 @@ Default_Trainers = [
     #"Trail 09"
     Trainer("Mike", [["Birdy",16], ["Buzzeena",15]],"f792e755-6771-4f50-8dca-8d3cf8b6017a"),
     Trainer("Clementine", [["Bovina",14], ["Gloreen",16]],"00c525ca-41d2-40ba-a68e-c40f8990652c"),
-    Trainer("Bonnie", [["Octocunt",17], ["Buxzzeena",16], ["Growleen",16]],"b4d3fec1-9f7f-4b2e-a3de-cf25bc3fe399"),
+    Trainer("Bonnie", [["Octocunt",17], ["Buzzeena",16], ["Growleen",16]],"b4d3fec1-9f7f-4b2e-a3de-cf25bc3fe399"),
     #"stone temple entrence"
     Trainer("1st crismon cloak", [["Domina",19], ["Growleen",18]],"48a6856e-4dbd-4ca9-b6d5-066b5a55d783"),
     Trainer("2nd crismon cloak", [["Buzzeena",17]],"7b40e4f2-990b-4a2c-8ccc-aa283653436a"),
@@ -104,9 +104,9 @@ Default_Trainers = [
     Trainer("Sydney", [["Octocunt",16], ["Mamaoak",20], ["Serpentax",17]],"2bf2f7ed-e375-4747-875c-3bd1b2048e46"),
     #"Trail 12"
     Trainer("Sophie", [["Harlie",17], ["Faerie",21]],"ddc0cee9-5a37-431b-baf8-8653a97f13a0"),
-    Trainer("Ciara", [["Grewleen",17], ["Dracoomer",17], ["Sharky",20]],"961a23f5-023b-4d31-ab65-b8d227a52ded"),
+    Trainer("Ciara", [["Growleen",17], ["Dracoomer",17], ["Sharky",20]],"961a23f5-023b-4d31-ab65-b8d227a52ded"),
     #"Fishing Hut"
-    Trainer("Bonnie Baiter", [["chocostar",21], ["Mamaoak",20], ["Marinel",20]],"05ba33a6-2693-49ba-b570-543c25feeeb2"),#SCRIPTED FIGHT "05ba33a6-2693-49ba-b570-543c25feeeb2"
+    Trainer("Bonnie Baiter", [["Chocostar",21], ["Mamaoak",20], ["Marinel",20]],"05ba33a6-2693-49ba-b570-543c25feeeb2"),#SCRIPTED FIGHT "05ba33a6-2693-49ba-b570-543c25feeeb2"
     #"Trail 13"
     Trainer("1st cultist", [["Gloreen",23], ["Mamaoak",21], ["Sharky",20]],"a4a13dee-d151-407c-8ed1-8db2d45efdf2"),
     Trainer("2nd cultist", [["Triboobe",21], ["Dripsy",23]],"b4a8bd50-ab01-4e3c-8aba-0469ada1c52f"),
@@ -119,7 +119,7 @@ Default_Trainers = [
     Trainer("3rd cultist", [["Lacteena",22], ["Jellygal",24]],"46a60f99-3cb9-42cf-860f-9e471707e263"),
     Trainer("4th cultist", [["Succubae",25], ["Udderella",22]],"5f53e18a-e6b1-473a-8252-f0d68286ca57"),
     #"Island Cave lv2"
-    Trainer("Centiboob", [["Centiboob",26]],"Island Cave: Centiboob"),#SCRIPTED FIGHT
+    Trainer("Centiboob", [["Centiboob_Boss",26]],"Island Cave: Centiboob"),#SCRIPTED FIGHT
     #"Cold Harbor"
     Trainer("Vanessa", [["Harpie",25], ["Gangfang",26]],"323cbfec-0db2-43c2-a538-e3b4cf02d260"),
     Trainer("Iris", [["Amazona",22], ["Polaria",26], ["Snowbae",23]],"c34254a6-6f54-4643-8319-75636a798542"),
@@ -146,7 +146,7 @@ Default_Trainers = [
     Trainer("4th Crismon Cloak", [["Slithereen",31], ["Deardeer",32]],"60f3aad3-3f2d-4ce1-ab4a-f6833957b8ab"),
     Trainer("5th Crismon Cloak", [["Gangfang",27], ["Queenbee",31]],"5272d410-ae2d-42b5-93a8-b06b4ba20fe2"),
     #"artic temple room1"
-    Trainer("Crismon countess", [["Queenbee",32], ["Chocostar",28], ["Octomommy",30], ["Archna",31], ["Jawsy",33]],"Artic Temple: Crimson Countess"), #SCRIPTED FIGHT
+    Trainer("Crismon countess", [["Queenbee",32], ["Chocostar",28], ["Octomommy",30], ["Arachna",31], ["Jawsy",33]],"Artic Temple: Crimson Countess"), #SCRIPTED FIGHT
 
     #"Trail 19"
     Trainer("1st Crimson Cloak", [["Harpie", 34], ["Slithereen", 32]], "97fab556-a752-489c-8de5-04d3449afeca"),

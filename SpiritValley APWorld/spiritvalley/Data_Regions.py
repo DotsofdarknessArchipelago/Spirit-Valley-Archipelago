@@ -93,8 +93,10 @@ regions = [
                False, #None, None,
                None,
                None,
-               None,
-               #[],
+               [
+                "Complete Side Quest: Simulated Scuffle",
+                "Complete Side Quest: Gold Plated",
+                ],
                []),#["Bottom":2]),
 
     Map_Region("Trail1", False,

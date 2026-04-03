@@ -6,6 +6,14 @@ from worlds.spiritvalley.Data_Regions import regions, mapid_to_text, transition_
 
 def Generate_Map(multiworld, player, options, loc, data):
     hub_region = Region("Menu", player, multiworld)
+
+    if options.goal.value == 1:
+        hub_region.add_locations({"Catch all Spirits": loc["Catch all Spirits"]}, SpiritValleyLocation)
+    elif options.goal.value == 2:
+        hub_region.add_locations({"Catch all Rare Spirits": loc["Catch all Rare Spirits"]}, SpiritValleyLocation)
+    elif options.goal.value == 3:
+        hub_region.add_locations({"Get All Spirits To Affection Lv5": loc["Get All Spirits To Affection Lv5"]}, SpiritValleyLocation)
+
     multiworld.regions.append(hub_region)
 
     is_ut = getattr(multiworld, "generation_is_fake", False)
@@ -17,7 +25,7 @@ def Generate_Map(multiworld, player, options, loc, data):
     if options.Spirit_Locations.value:
         region_spirit = Region("Spirits", player, multiworld)
 
-        if options.Randomise_Spawns.value:
+        if options.Randomise_Spawns.value or options.goal.value != 0:
             region_spirit.add_locations(spirit_locations, SpiritValleyLocation)
         else:
             sloc = spirit_locations.copy()
@@ -25,7 +33,7 @@ def Generate_Map(multiworld, player, options, loc, data):
             region_spirit.add_locations(sloc, SpiritValleyLocation)
 
         if options.Spirit_Affection.value:
-            if options.Randomise_Spawns.value:
+            if options.Randomise_Spawns.value or options.goal.value != 0:
                 region_spirit.add_locations(spirit_affection_locations, SpiritValleyLocation)
             else:
                 sloc = spirit_affection_locations.copy()
@@ -37,7 +45,7 @@ def Generate_Map(multiworld, player, options, loc, data):
                 region_spirit.add_locations(sloc, SpiritValleyLocation)
 
         if options.Rare_Locations.value:
-            if options.Randomise_Spawns.value:
+            if options.Randomise_Spawns.value or options.goal.value != 0:
                 region_spirit.add_locations(Rare_spirit_locations, SpiritValleyLocation)
             else:
                 sloc = Rare_spirit_locations.copy()
@@ -88,14 +96,19 @@ def Generate_Map(multiworld, player, options, loc, data):
 
         if r.trainer_locations is not None:
             for l in r.trainer_locations:
-                map.add_locations({l:loc[l]}, SpiritValleyLocation)
+                if not (l=="Trail 07: Defeat Sally McTits" and not options.Side_Missions.value):
+                    map.add_locations({l:loc[l]}, SpiritValleyLocation)
 
         if r.quest_locations is not None:
             for l in r.quest_locations:
                 if options.Single_Catch.value:
                     if l == "Complete Side Quest: Perky Petunia" or l == "Complete Side Quest: Starry Eyed Surprise":
                         continue
-                map.add_locations({l:loc[l]}, SpiritValleyLocation)
+                if options.goal.value == 0:
+                    if l == "Complete Side Quest: Simulated Scuffle" or l == "Complete Side Quest: Gold Plated":
+                        continue
+                if (l.startswith("Complete Main Quest") and options.Main_Missions.value) or (l.startswith("Complete Side Quest") and options.Side_Missions.value):
+                    map.add_locations({l:loc[l]}, SpiritValleyLocation)
 
         if options.randomise_map.value:
             for e in r.exits:

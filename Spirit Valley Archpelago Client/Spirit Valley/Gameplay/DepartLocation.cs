@@ -18,7 +18,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         public static int items_coins_start = 0;
         public static int items_warp_id_start = 0;
 
-        public static GameState save => GameManager.instance.gameStates[4+SpiritValleyArchipelago.slot].data;
+        public static GameState save => GameManager.instance.gameStates[4 + SpiritValleyArchipelago.slot].data;
 
         /// <summary>
         /// process items recieved when moving locations
@@ -30,13 +30,13 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
             if (!ArchipelagoClient.Authenticated) { return; }
 
             //set starting ids for item catories if they are not already set
-            if (items_consumable_start == 0) { items_consumable_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_consumable_start"]); };
-            if (items_crystal_start == 0) { items_crystal_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_crystal_start"]); };
-            if (items_equipment_start == 0) { items_equipment_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_equipment_start"]); };
-            if (items_key_item_start == 0) { items_key_item_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_key_item_start"]); };
-            if (items_potion_start == 0) { items_potion_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_potion_start"]); };
-            if (items_coins_start == 0) { items_coins_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_coins_start"]); };
-            if (items_warp_id_start == 0) { items_warp_id_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_warp_id_start"]); };
+            if (items_consumable_start == 0) { items_consumable_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_consumable_start"]); }
+            if (items_crystal_start == 0) { items_crystal_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_crystal_start"]); }
+            if (items_equipment_start == 0) { items_equipment_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_equipment_start"]); }
+            if (items_key_item_start == 0) { items_key_item_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_key_item_start"]); }
+            if (items_potion_start == 0) { items_potion_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_potion_start"]); }
+            if (items_coins_start == 0) { items_coins_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_coins_start"]); }
+            if (items_warp_id_start == 0) { items_warp_id_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_warp_id_start"]); }
 
             ArchipelagoConsole.LogDebug("Processing Items");
             foreach (ArchipelagoItem item in ArchipelagoClient.archlist.list)
@@ -182,7 +182,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                             ArchipelagoConsole.LogMessage("Added Spirit Crystal +2 to Inventory");
                             item.processed = true;
                             break;
-                        default: 
+                        default:
                             break;
                     }
                 }
@@ -710,6 +710,33 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                             break;
                     }
                 }
+            }
+
+            switch (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]))
+            {
+                case 0: //missions
+                    if (save.GetActiveMainQuestState() == null) break;
+                    if (save.GetActiveMainQuestState().id == "main_quest_55_life_as_a_spirit_warden") ArchipelagoClient.complete();
+                    break;
+                case 1: //catch all spirits
+                    if (save.database.GetCountCaptured() == 75) ArchipelagoClient.complete();
+                    break;
+                case 2: //catch all rare spirits
+                    if (save.database.GetCountRaresCaptured() == 75) ArchipelagoClient.complete();
+                    break;
+                case 3: //affection
+
+                    int affectionidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Affection_Start"]);
+                    bool goal = true;
+                    for (int i = 0; i < 75; i++)
+                    {
+                        if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(affectionidstart + (i * 5) + 5)) { goal = false; break; }
+                    }
+                    if (goal)
+                    {
+                        ArchipelagoClient.complete();
+                    }
+                    break;
             }
         }
     }

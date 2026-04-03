@@ -2,7 +2,6 @@
 using SpiritValleyArchipelagoClient.Archipelago;
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
-using System.Linq;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
@@ -27,16 +26,24 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Spirits
                 rarestartid = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Rare_Start"]);
             }
             startid = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Spirit_Id_Start"]);
-            
+
             for (int i = 0; i < GameDataManager.instance.databaseEntries.Length; i++)
             {
                 if (GameDataManager.instance.databaseEntries[i].name == monsterState.baseStatsName)
                 {
-                    if (rarestartid != 0){ArchipelagoClient.sendloc(rarestartid + i + 1);}
+                    if (rarestartid != 0) { ArchipelagoClient.sendloc(rarestartid + i + 1); }
                     ArchipelagoClient.sendloc(startid + i + 1);
                     return;
                 }
             }
+        }
+
+        [HarmonyPatch(typeof(GameEventManager), "OnMonsterCaptured")]
+        [HarmonyPostfix]
+        public static void mongoal()
+        {
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]) == 1 && GameManager.instance.GetActiveGameState().data.database.GetCountCaptured() == 75) ArchipelagoClient.complete();
+            else if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]) == 2 && GameManager.instance.GetActiveGameState().data.database.GetCountRaresCaptured() == 75) ArchipelagoClient.complete();
         }
 
 

@@ -3,12 +3,8 @@ using SpiritValleyArchipelagoClient.Archipelago;
 using SpiritValleyArchipelagoClient.Spirit_Valley.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
-using UnityEngine.Localization.Tables;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
 {
@@ -21,16 +17,34 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         /// </summary>
         [HarmonyPatch(typeof(GameState), "AdvanceMainQuest")]
         [HarmonyPrefix]
-        public static void mainquest(GameState __instance, string nextQuestID)
+        public static bool mainquest(GameState __instance, string nextQuestID, ref ItemBundle[] __result)
         {
             ArchipelagoConsole.LogDebug($"MAIN QUEST ADVANCING TO: {nextQuestID}");
             int main_quests_id_start = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Main_Quest_Start"]) - 1;
             switch (nextQuestID)
             {
                 case "main_quest_1_doctors_appointment":
-                    break;
+                    return true;
                 case "main_quest_2_captain_maria":
-                    ArchipelagoClient.sendloc(main_quests_id_start + 2);
+                    if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+                    {
+                        ArchipelagoConsole.LogDebug("Main Missions YMAL option false completing all main missions");
+                        List<QuestState> ql = [];
+                        foreach (Quest q in QuestManager.instance.mainQuest)
+                        {
+                            if (q.id == "main_quest_55_life_as_a_spirit_warden")
+                            {
+                                ql.Add(new(q, QuestState.Type.MainQuest));
+                                break;
+                            }
+                            ql.Add(new(q, QuestState.Type.MainQuest) { isClosed = true });
+                        }
+                        HelperItems.save.mainQuestStates = ql;
+                    }
+                    else
+                    {
+                        ArchipelagoClient.sendloc(main_quests_id_start + 2);
+                    }
                     break;
                 case "main_quest_3_first_orders":
                     ArchipelagoClient.sendloc(main_quests_id_start + 3);
@@ -190,12 +204,20 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     break;
                 case "main_quest_55_life_as_a_spirit_warden":
                     ArchipelagoClient.sendloc(main_quests_id_start + 55);
-                    ArchipelagoClient.complete();
+                    if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]) == 0) ArchipelagoClient.complete();
                     break;
                 default:
                     ArchipelagoConsole.LogMessage($"MAIN QUEST NOT RECONISED: {nextQuestID}");
                     break;
             }
+
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                __result = HelperItems.centbundle();
+                return false;
+            }
+            return true;
+
         }
 
 
@@ -304,6 +326,14 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     case "side_quest_hunt_for_the_centiboob_part3":
                         ArchipelagoConsole.LogDebug("side_quest_hunt_for_the_centiboob_part3");
                         ArchipelagoClient.sendloc(id_start + 18);
+                        break;
+                    case "side_quest_simulated_scuffle":
+                        ArchipelagoConsole.LogDebug("side_quest_simulated_scuffle");
+                        ArchipelagoClient.sendloc(id_start + 19);
+                        break;
+                    case "side_quest_gold_plated":
+                        ArchipelagoConsole.LogDebug("side_quest_gold_plated");
+                        ArchipelagoClient.sendloc(id_start + 20);
                         break;
                     default:
                         ArchipelagoConsole.LogMessage($"SIDE QUEST NOT RECONISED: {id}");
@@ -431,6 +461,11 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                         return false;
                     }
                 }
+                else if (QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_14_dusty_vale_awaits") && !ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_key_item_start"]) + 10))
+                {
+                    __instance.StartDialog("Captain_Arch_Quest13");
+                    return false;
+                }
             }
             if (activeMainQuestState.Quest.id == "main_quest_28_how_the_dominoes_fall")
             {
@@ -441,6 +476,26 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     return false;
                 }
             }
+
+            if (___currentSceneName == __instance.tumbleweedTownSceneName && QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_30_welcome_to_paradise"))
+            {
+                if (ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_archipelago_id_start"]) + 25) || Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"])) __instance.StartDialog("confirm_balloon_ride_dialog");
+                else __instance.StartDialog("Captain_balloon_ride_unavaliable");
+                return false;
+            }
+            if (___currentSceneName == __instance.coconutVillageTeampleSceneName && QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_37_the_frigid_maiden"))
+            {
+                if (ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_archipelago_id_start"]) + 26) || Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"])) __instance.StartDialog("confirm_boat_ride_dialog");
+                else __instance.StartDialog("Captain_boat_ride_unavaliable");
+                return false;
+            }
+            if (___currentSceneName == __instance.trail18SceneName && QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_50_sanctuary_shakedown"))
+            {
+                if (ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_archipelago_id_start"]) + 27) || Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"])) __instance.StartDialog("ask_portal_transition_dialog");
+                else __instance.StartDialog("Captain_ancient_warp_unavaliable");
+                return false;
+            }
+
             return true;
         }
 
@@ -547,7 +602,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         [HarmonyPrefix]
         public static void collectionsidequest1(CollectSpiritQuestNPCGeneric __instance)
         {
-            if (__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part1" ||__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part2" ||__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part3") { return; }
+            if (__instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part1" || __instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part2" || __instance.sideQuestID == "side_quest_hunt_for_the_centiboob_part3") { return; }
             if (!questdict.ContainsKey(__instance.sideQuestID)) { return; }
             LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName(questdict[__instance.sideQuestID]).monsterName;
             LocalizedString newspirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit(__instance.sideQuestID)).monsterName;
@@ -707,6 +762,351 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     }
                 }
             }
+        }
+
+
+
+        [HarmonyPatch(typeof(DoctorDolly_Hq), "OnDialogExited")]
+        [HarmonyPrefix]
+        public static bool evquestovverwite(DoctorDolly_Hq __instance, ref Dialog ___activeDialog, SystemData<GameState> ___gameState, Hero ___hero)
+        {
+            if (___activeDialog.id == "give_quest_simulated_scuffle")
+            {
+                if (___gameState.data.StartSideQuest("side_quest_simulated_scuffle"))
+                {
+                    GlobalHUD.instance.EnqueueToast(Utils.GetLocalizedStringObject("New quest started: {questTitle}", new Dictionary<string, string> {
+                {
+                    "questTitle",
+                    QuestManager.instance.GetSideQuestById("side_quest_simulated_scuffle").title.GetLocalizedString()
+                } }));
+                }
+            }
+            else if (___activeDialog.id == "close_quest_simulated_scuffle")
+            {
+                //base.CloseSideQuestAndAutograntQuestRewards("side_quest_simulated_scuffle", true);
+                ___gameState.data.CloseSideQuest("side_quest_simulated_scuffle", true);
+
+                //MonsterState monsterState = __instance.simulatedScuffleSpiritReward.CreateDefaultMonsterState();
+                MonsterState monsterState = new MonsterTeamMemberBlueprint()
+                {
+                    monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.namehelper2(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_SIMULATED_SCUFFLE"].ToString())),
+
+                    level = 5,
+                    isRare = false,
+                    isActiveSkillCountUnlimited = false
+                }.CreateDefaultMonsterState();
+
+                __instance.captureMenu.SetMonsterState(monsterState);
+                __instance.captureMenu.gameObject.SetActive(true);
+                AudioManager.instance.PlaySfx(___hero.addItemsSound);
+            }
+            else if (___activeDialog.id == "give_side_quest_gold_plated")
+            {
+                if (___gameState.data.StartSideQuest("side_quest_gold_plated"))
+                {
+                    GlobalHUD.instance.EnqueueToast(Utils.GetLocalizedStringObject("New quest started: {questTitle}", new Dictionary<string, string> {
+                {
+                    "questTitle",
+                    QuestManager.instance.GetSideQuestById("side_quest_gold_plated").title.GetLocalizedString()
+                } }));
+                }
+            }
+            else if (___activeDialog.id == "side_quest_gold_plated_active_completed_accepted_part2")
+            {
+                ___gameState.data.ModifyMoney(-3000);
+
+                //base.CloseSideQuestAndAutograntQuestRewards("side_quest_gold_plated", true);
+                ___gameState.data.CloseSideQuest("side_quest_gold_plated", true);
+
+                //MonsterState monsterState2 = __instance.goldPlatedSpiritReward.CreateDefaultMonsterState();
+                MonsterState monsterState2 = new MonsterTeamMemberBlueprint()
+                {
+                    monster = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.namehelper2(ArchipelagoClient.ServerData.slotData["SIDE_QUEST_GOLD_PLATED"].ToString())),
+
+                    level = 5,
+                    isRare = true,
+                    isActiveSkillCountUnlimited = false
+                }.CreateDefaultMonsterState();
+
+                __instance.captureMenu.SetMonsterState(monsterState2);
+                __instance.captureMenu.gameObject.SetActive(true);
+                AudioManager.instance.PlaySfx(___hero.addItemsSound);
+            }
+            //base.OnDialogExited();
+            if (___activeDialog.autoSetHeroInputEnabledDialogExit)
+            {
+                ___hero.SetInputEnabled(true);
+            }
+            ___activeDialog = null;
+
+            return false;
+        }
+
+        [HarmonyPatch(typeof(LightBridge), "Start")]
+        [HarmonyPrefix]
+        public static bool lightbridge(LightBridge __instance)
+        {
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]) != 0)
+            {
+                if (ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_key_item_start"]) + 10)) return true;
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(BoundToMainQuest), "Start")]
+        [HarmonyPrefix]
+        public static bool iceblock(BoundToMainQuest __instance)
+        {
+            if (__instance.name != "IceBlock") return true;
+            if (Convert.ToInt32(ArchipelagoClient.ServerData.slotData["goal"]) != 0)
+            {
+                if (ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_key_item_start"]) + 6)) return true;
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(FrienlyFightNPCGeneric), "Interact")]
+        [HarmonyPrefix]
+        public static bool fightquest(FrienlyFightNPCGeneric __instance, ref bool ___questWasStartedDuringThisInteraction)
+        {
+            //Oakwood Village: Defeat Robbie 
+            //Trail 11: Defeat Alice 
+
+            ___questWasStartedDuringThisInteraction = false;
+            bool flag = true;
+            if (!string.IsNullOrEmpty(__instance.activeWhenMainQuestIsGreatedThanID))
+            {
+                flag = QuestManager.instance.GetIsActiveMainQuestGreaterThan(__instance.activeWhenMainQuestIsGreatedThanID);
+            }
+            if (flag)
+            {
+                QuestState sideQuestStateById = HelperItems.save.GetSideQuestStateById(__instance.sideQuestID);
+                if (sideQuestStateById == null)
+                {
+                    __instance.StartDialog("start_quest_dialog");
+                    return false;
+                }
+
+                if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Side_Missions"]))
+                {
+                    int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+                    switch (__instance.sideQuestID)
+                    {
+                        case "side_quest_sparring_match":
+                            if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 1))
+                            {
+                                __instance.StartDialog("start_fight_dialog");
+                                return false;
+                            }
+                            else
+                            {
+                                __instance.StartDialog("exhausted_dialog");
+                                return false;
+                            }
+                        case "side_quest_fishmasters_challenge":
+                            if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 56))
+                            {
+                                __instance.StartDialog("start_fight_dialog");
+                                return false;
+                            }
+                            else
+                            {
+                                __instance.StartDialog("exhausted_dialog");
+                                return false;
+                            }
+                        default:
+                            ArchipelagoConsole.LogError($"FrienlyFightNPCGeneric ERROR SIDE QUEST NOT ACCOUNTED FOR {__instance.sideQuestID}");
+                            break;
+                    }
+                }
+
+
+                if (!sideQuestStateById.isClosed)
+                {
+                    __instance.StartDialog("start_fight_dialog");
+                    return false;
+                }
+                if (sideQuestStateById.isClosed)
+                {
+                    __instance.StartDialog("exhausted_dialog");
+                    return false;
+                }
+            }
+            else
+            {
+                __instance.StartDialog("inactive_dialog");
+            }
+            return false;
+        }
+
+
+        [HarmonyPatch(typeof(BonnieBaiter), "Interact")]
+        [HarmonyPrefix]
+        public static bool fightquest(BonnieBaiter __instance, SystemData<GameState> ___gameState)
+        {
+            QuestState sideQuestStateById = ___gameState.data.GetSideQuestStateById("side_quest_fishy_duel");
+            if (sideQuestStateById == null)
+            {
+                __instance.StartDialog("give_side_quest_fishy_duel");
+                return false;
+            }
+            if (!sideQuestStateById.isClosed)
+            {
+
+                __instance.StartDialog("confirm_fight_dialog");
+                return false;
+            }
+            if (sideQuestStateById.isClosed)
+            {
+
+                if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Side_Missions"]))
+                {
+                    int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+
+                    if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 61))
+                    {
+                        __instance.StartDialog("confirm_fight_dialog");
+                        return false;
+                    }
+                }
+
+
+                QuestState sideQuestStateById2 = ___gameState.data.GetSideQuestStateById("side_quest_the_art_of_fishing");
+                if (sideQuestStateById2 != null)
+                {
+                    if (sideQuestStateById2.isClosed)
+                    {
+
+                        __instance.StartDialog("idle_dialog");
+                        return false;
+                    }
+                    if (sideQuestStateById2.GetIsCompleted())
+                    {
+
+                        __instance.StartDialog("side_quest_the_art_of_fishing_active_completed_dialog");
+                        return false;
+                    }
+
+                    __instance.StartDialog("side_quest_the_art_of_fishing_active_not_completed_dialog");
+                }
+            }
+
+            return false;
+        }
+
+        [HarmonyPatch(typeof(MotherEvilyn), "Interact")]
+        [HarmonyPrefix]
+        public static bool fightquest2(MotherEvilyn __instance, SystemData<GameState> ___gameState)
+        {
+
+            QuestState activeMainQuestState = ___gameState.data.GetActiveMainQuestState();
+            if (QuestManager.instance.GetIsActiveMainQuestLessThan("main_quest_42_the_lewd_exorcist"))
+            {
+                __instance.StartDialog("idle_dialog");
+                return false;
+            }
+            if (activeMainQuestState.Quest.id == "main_quest_42_the_lewd_exorcist")
+            {
+                __instance.StartDialog("start_minigame_dialog");
+                return false;
+            }
+
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+
+                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 73))
+                {
+                    __instance.StartDialog("start_fight_dialog");
+                    return false;
+                }
+            }
+
+            __instance.StartDialog("idle_exhausted_dialog");
+
+            return false;
+        }
+
+        [HarmonyPatch(typeof(AncientTemple3Sequence), "GetShouldPlay")]
+        [HarmonyPrefix]
+        public static bool fightquest2(AncientTemple3Sequence __instance, ref bool __result)
+        {
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 20))
+                {
+                    __result = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(ArcticTemple2sequence), "GetShouldPlay")]
+        [HarmonyPrefix]
+        public static bool fightquest2(ArcticTemple2sequence __instance, ref bool __result)
+        {
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 89))
+                {
+                    __result = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(DesertTemple2Sequence), "GetShouldPlay")]
+        [HarmonyPrefix]
+        public static bool fightquest2(DesertTemple2Sequence __instance, ref bool __result)
+        {
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 51))
+                {
+                    __result = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(IslandCave2Sequence), "GetShouldPlay")]
+        [HarmonyPrefix]
+        public static bool fightquest2(IslandCave2Sequence __instance, ref bool __result)
+        {
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 70))
+                {
+                    __result = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(InnerGroveSequence), "GetShouldPlay")]
+        [HarmonyPrefix]
+        public static bool fightquest2(InnerGroveSequence __instance, ref bool __result)
+        {
+            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["Main_Missions"]))
+            {
+                int questidstart = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["Battle_Start"]);
+                if (!ArchipelagoClient.session.Locations.AllLocationsChecked.Contains(questidstart + 107))
+                {
+                    __result = true;
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

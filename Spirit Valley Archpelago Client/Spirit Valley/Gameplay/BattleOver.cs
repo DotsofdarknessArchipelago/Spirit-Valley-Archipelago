@@ -454,7 +454,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     ArchipelagoConsole.LogDebug("Oakwood Village: Defeat Robbie");
                     ArchipelagoClient.sendloc(battleidstart + 1);
                     break;
-                case "Alice"://Trail 11: Defeat Alice
+                case "ceba2e6b-5cd3-40ae-8696-f9ef461c7b14"://Trail 11: Defeat Alice
                     ArchipelagoConsole.LogDebug("Trail 11: Defeat Alice");
                     ArchipelagoClient.sendloc(battleidstart + 56);
                     break;

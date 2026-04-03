@@ -1,19 +1,19 @@
 import logging
 from typing import Mapping, Any
 
-from BaseClasses import ItemClassification, Item
+from BaseClasses import ItemClassification, Item, LocationProgressType
 from Utils import visualize_regions
 from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
 from worlds.generic.Rules import set_rule
 from worlds.spiritvalley.Data_Regions import regions, mapid_to_text
-from worlds.spiritvalley.Data_Spirits import spirit_list, types, attacking_moves, all_moves, rand_grass_spawn, rand_water_spawn, rand_spirit_list, rand_type_chart, default_type_effective, default_grass_loc, default_water_loc, rand_move_data, move_data
+from worlds.spiritvalley.Data_Spirits import spirit_list, types, attacking_moves, all_moves, rand_grass_spawn, rand_water_spawn, rand_spirit_list, rand_type_chart, default_type_effective, default_grass_loc, default_water_loc, rand_move_data, move_data, obtainable_spirit_list
 from worlds.spiritvalley.Data_Trainers import Trainer, rand_trainer, Default_Trainers
 from worlds.spiritvalley.Items import items_list, spiritItem, items_key_item, useful_items_list, items_potion, items_consumable, items_crystal, items_equipment, items_coins, items_consumable_id_start, items_crystal_id_start, items_equipment_id_start, items_key_item_id_start, items_potion_id_start, items_coins_id_start, items_archipelago, items_warp, items_archipelago_id_start, items_warp_id_start, filler_item
 from worlds.spiritvalley.Locations import SpiritValleyLocation, location_list, Rare_spirit_locations, spirit_id_start, spirit_affection_id_start, Rare_spirit_id_start, main_quests_id_start, side_quests_id_start, battle_locations_id_start, chest_locations_id_start, spirit_locations, spirit_affection_locations, main_quests, side_quests, battle_locations, chest_locations, warp_locations, warp_locations_id_start
 from worlds.spiritvalley.Options import SpiritValleyOptions
 from worlds.spiritvalley.Regions import Generate_Map
-from worlds.spiritvalley.Rules import rules_normal, rules_map_rando
+from worlds.spiritvalley.Rules import rules_normal, rules_map_rando, base_rules, rules_missions, rules_access
 
 
 class SpiritValley(World):
@@ -42,9 +42,13 @@ class SpiritValley(World):
             self.options.Char_Hairstyle.value = 2
             logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Char_Hairstyle" from 3->2 as it requires "Char_Gender" to be set to "female\"""")
 
-        if self.options.Spirit_Affection.value and not self.options.Spirit_Locations.value:
+        if self.options.Spirit_Affection.value and not self.options.Spirit_Locations.value and (self.options.goal.value != 3):
             self.options.Spirit_Affection.value = False
             logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Spirit_Affection" from True->False as it requires "Spirit_Locations" to be set to True""")
+
+        if self.options.Spirit_Affection.value and not self.options.Spirit_Locations.value and (self.options.goal.value == 3):
+            self.options.Spirit_Locations.value = True
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Spirit_Locations" from False->True as it required when "Spirit_Affection" is True and "goal" is affection(3)""")
 
         if self.options.Rare_Locations.value and not self.options.Spirit_Locations.value:
             self.options.Rare_Locations.value = False
@@ -53,6 +57,18 @@ class SpiritValley(World):
         if self.options.Single_Catch.value and self.options.Spirit_Locations.value:
             self.options.Single_Catch.value = False
             logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Single_Catch" from True->False as it requires "Spirit_Locations" to be set to False""")
+
+        if not self.options.Main_Missions.value and (self.options.goal.value == 0):
+            self.options.goal.value = 1
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "goal" from mission(0)->catch(1) as it requires "Main_Missions" to be set to True""")
+
+        if not self.options.Spirit_Affection.value and (self.options.goal.value == 3):
+            self.options.Spirit_Affection.value = True
+            logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Spirit_Affection" from False->True as it required when "goal" is set to affection(3)""")
+
+        #if self.options.Spirit_Affection_progression.value and (self.options.goal.value == 3):
+        #    self.options.Spirit_Affection_progression.value = False
+        #    logging.warning(f"""(Spirit Valley) Changing Player:"{self.player_name}" YMAL option "Spirit_Affection_progression" from True->False as it required when "goal" is set to affection(3)""")
 
         #if self.options.Perma_Death.value and self.options.Spirit_Affection.value:
         #    self.options.Perma_Death.value = False
@@ -99,6 +115,14 @@ class SpiritValley(World):
         self.data["SIDE_QUEST_CENTIBOOB_2_SPIRIT"] = self.random.choice(self.data["Grass_spawn"]["Trail22"])
         self.data["SIDE_QUEST_CENTIBOOB_3_SPIRIT"] = self.random.choice(self.data["Grass_spawn"]["Trail22"])
 
+        if self.options.Randomise_Spawns.value:
+            self.data["SIDE_QUEST_SIMULATED_SCUFFLE"] = self.random.choice(obtainable_spirit_list)
+            self.data["SIDE_QUEST_GOLD_PLATED"] = self.random.choice(obtainable_spirit_list)
+        else:
+            self.data["SIDE_QUEST_SIMULATED_SCUFFLE"] = "EV-3"
+            self.data["SIDE_QUEST_GOLD_PLATED"] = "EV-3"
+
+
         #calculate the amount of locations our world will generate
         if self.options.Spirit_Locations.value:
             self.numlocations += len(spirit_locations)
@@ -112,16 +136,20 @@ class SpiritValley(World):
             self.numlocations += len(Rare_spirit_locations)
             if not self.options.Randomise_Spawns.value:
                 self.numlocations -=1
-        if True:
+        if self.options.Main_Missions.value:
             self.numlocations += len(main_quests)
-        if True:
+        if self.options.Side_Missions.value:
             self.numlocations += len(side_quests)
+            if self.options.goal == 0:
+                self.numlocations -= 2 #remove the HQ side quests since we complete the game before we can access them might change later
         if True:
             self.numlocations += len(battle_locations)
         if True:
             self.numlocations += len(chest_locations)
         if True:
             self.numlocations += len(warp_locations)
+        if self.options.goal.value != 0:
+            self.numlocations += 1
 
         #set num of items the world will need to be how may locations we have
         self.numitems = self.numlocations
@@ -154,7 +182,7 @@ class SpiritValley(World):
         #visualize_regions(self.multiworld.get_region("Menu", self.player), "spiritvalley.puml", show_entrance_names=True)
 
     def create_item(self, name: str) -> "Item":
-        if name in {**items_key_item, **items_archipelago, **items_warp, "victory": self.item_name_to_id["victory"]}:
+        if name in {**items_key_item, **items_archipelago, **items_warp, "Goal": self.item_name_to_id["Goal"], "Balloon Ride Ticket": self.item_name_to_id["Balloon Ride Ticket"], "Boat Ride Ticket": self.item_name_to_id["Boat Ride Ticket"], "Ancient Warp Core": self.item_name_to_id["Ancient Warp Core"]}:
             return spiritItem(name, ItemClassification.progression, self.item_name_to_id[name], self.player)
         if name in useful_items_list:
             return spiritItem(name, ItemClassification.useful, self.item_name_to_id[name], self.player)
@@ -163,18 +191,31 @@ class SpiritValley(World):
 
     def create_items(self):
         #get victory location and add victory item
-        self.multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", self.player).place_locked_item(self.create_item("victory"))
-        self.multiworld.completion_condition[self.player] = lambda state: state.has("victory", self.player)
+        if self.options.goal.value == 0:
+            self.multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", self.player).place_locked_item(self.create_item("Goal"))
+        elif self.options.goal.value == 1:
+            self.multiworld.get_location("Catch all Spirits", self.player).place_locked_item(self.create_item("Goal"))
+        elif self.options.goal.value == 2:
+            self.multiworld.get_location("Catch all Rare Spirits", self.player).place_locked_item(self.create_item("Goal"))
+        elif self.options.goal.value == 3:
+            self.multiworld.get_location("Get All Spirits To Affection Lv5", self.player).place_locked_item(self.create_item("Goal"))
+
+
+        self.multiworld.completion_condition[self.player] = lambda state: state.has("Goal", self.player)
 
         #calculate how many filler items we need to have in the item pool
-        filleritems = self.numlocations - len(items_key_item) - len(items_archipelago) - 1
+        filleritems = self.numlocations - len(items_key_item) - (len(items_archipelago)-3) - 1
         if self.options.randomise_warps.value:
             filleritems = filleritems - len(items_warp)
+        if not self.options.Main_Missions.value:
+            filleritems = filleritems - 3 #"Balloon Ride Ticket","Boat Ride Ticket","Ancient Warp Core"
 
 
         for i in items_key_item:
             self.multiworld.itempool.append(self.create_item(i))
         for i in items_archipelago:
+            if i in ["Balloon Ride Ticket","Boat Ride Ticket","Ancient Warp Core"] and self.options.Main_Missions.value:
+                continue
             self.multiworld.itempool.append(self.create_item(i))
         if self.options.randomise_warps.value:
             for i in items_warp:
@@ -191,10 +232,21 @@ class SpiritValley(World):
         return self.random.choice(filler_item)
 
     def set_rules(self):
-        if self.options.randomise_map.value:
-            rules_map_rando(self.multiworld, self.player, self.options, self.data)
-        else:
-            rules_normal(self.multiworld, self.player, self.options, self.data)
+        base_rules(self.multiworld, self.player, self.options, self.data)
+
+        if self.options.Main_Missions.value:
+            rules_missions(self.multiworld, self.player, self.options, self.data)
+
+        rules_access(self.multiworld, self.player, self.options, self.data)
+
+        if self.options.goal.value != 0 and self.options.Side_Missions.value:
+            self.multiworld.get_location("Complete Side Quest: Simulated Scuffle", self.player).progress_type = LocationProgressType.EXCLUDED
+            self.multiworld.get_location("Complete Side Quest: Gold Plated", self.player).progress_type = LocationProgressType.EXCLUDED
+
+        #if self.options.randomise_map.value:
+        #    rules_map_rando(self.multiworld, self.player, self.options, self.data)
+        #else:
+        #    rules_normal(self.multiworld, self.player, self.options, self.data)
 
     #Method for making Universal Tracker work properly
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
@@ -260,6 +312,8 @@ class SpiritValley(World):
             "Char_Haircolor": self.options.Char_Haircolor.value,
             "Char_Outfit": self.options.Char_Outfit.value,
 
+            "goal": self.options.goal.value,
+
             "Spirit_Id_Start": spirit_id_start,
             "Spirit_Affection_Start": spirit_affection_id_start,
             "Spirit_Rare_Start": Rare_spirit_id_start,
@@ -289,6 +343,9 @@ class SpiritValley(World):
 
             "randomise_map": self.options.randomise_map.value,
             "randomise_warps": self.options.randomise_warps.value,
+
+            "Main_Missions": self.options.Main_Missions.value,
+            "Side_Missions": self.options.Side_Missions.value,
 
             "Single_Catch": self.options.Single_Catch.value,
 

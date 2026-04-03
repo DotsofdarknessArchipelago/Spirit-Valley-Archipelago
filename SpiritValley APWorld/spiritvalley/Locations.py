@@ -621,9 +621,11 @@ side_quests = {
     "Complete Side Quest: Hunt for the Centiboob part 1.": side_quests_id_start + 16,
     "Complete Side Quest: Hunt for the Centiboob part 2.": side_quests_id_start + 17,
     "Complete Side Quest: Hunt for the Centiboob part 3.": side_quests_id_start + 18,
+    "Complete Side Quest: Simulated Scuffle": side_quests_id_start + 19,
+    "Complete Side Quest: Gold Plated": side_quests_id_start + 20,
 }
 
-battle_locations_id_start = side_quests_id_start + 18
+battle_locations_id_start = side_quests_id_start + 20
 battle_locations = {
     "Oakwood Village: Defeat Robbie": battle_locations_id_start + 1,
     "Evergreen Outpost: Defeat Elise": battle_locations_id_start + 2,
@@ -901,6 +903,13 @@ warp_locations = {
     "Trail 22 WarpStone Activated": warp_locations_id_start+ 14,
 }
 
+arch_locations_id_start = warp_locations_id_start + 14
+arch_locations = {
+    "Catch all Spirits": arch_locations_id_start+1,
+    "Catch all Rare Spirits": arch_locations_id_start+2,
+    "Get All Spirits To Affection Lv5": arch_locations_id_start+3,
+}
+
 location_list = {
     **spirit_locations,
     **spirit_affection_locations,
@@ -910,4 +919,5 @@ location_list = {
     **battle_locations,
     **chest_locations,
     **warp_locations,
+    **arch_locations,
 }

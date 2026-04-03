@@ -1,13 +1,11 @@
 ﻿using HarmonyLib;
 using SpiritValleyArchipelagoClient.Archipelago;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.SceneManagement;
 
 namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
 {
@@ -15,7 +13,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
     public class Dialogs
     {
         public static Dialog[] addedialog;
-        public static string[] dialogids = ["SergeantCassie_Arch_Quest5","Captain_Arch_Quest13","Sassy_Arch_Quest20","Captain_Arch_Quest28","MinerJohnson_Arch_Quest43","PaisleyBones_Arch_Quest46"];
+        public static string[] dialogids = ["SergeantCassie_Arch_Quest5", "Captain_Arch_Quest13", "Sassy_Arch_Quest20", "Captain_Arch_Quest28", "MinerJohnson_Arch_Quest43", "PaisleyBones_Arch_Quest46", "Captain_balloon_ride_unavaliable", "Captain_boat_ride_unavaliable", "Captain_ancient_warp_unavaliable"];
 
         /// <summary>
         /// add checks for the Captain requireing relevant items before continuing the main quest
@@ -35,6 +33,10 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
                     createdialog("Captain_Arch_Quest28", "You need to find the Yellow Harmony Crystal before we can move on"),
                     createdialog("MinerJohnson_Arch_Quest43", "You need to find A Fancy Suit before we can continue"),
                     createdialog("PaisleyBones_Arch_Quest46", "You need to find some Dynamite to blow up this rock"),
+
+                    createdialog("Captain_balloon_ride_unavaliable", "You need a ticket to ride on this Balloon"),
+                    createdialog("Captain_boat_ride_unavaliable", "You need to a boat ticket to travel to the artic isles"),
+                    createdialog("Captain_ancient_warp_unavaliable", "we need a ancient warp core to activate this portal"),
                     ];
 
                 ArchipelagoConsole.LogDebug("FINISHED ADDING NEW DIALOGS");
@@ -42,10 +44,39 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.UI
 
             if (__result == null)
             {
-                foreach (Dialog quest in addedialog)
+                foreach (Dialog d in addedialog)
                 {
-                    if (quest.id == id) { __result = quest; return; }
+                    if (d.id == id) { __result = d; return; }
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(Captain), "ResolveLocation")]
+        [HarmonyPostfix]
+        public static void dialogresolve(ref string __result, Captain __instance)
+        {
+            if (SceneManager.GetActiveScene().name == __result) { return; }
+
+            if (SceneManager.GetActiveScene().name == __instance.evergreenOutpostSceneName &&
+                QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_14_dusty_vale_awaits") &&
+                !ArchipelagoClient.archlist.hasitem(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_key_item_start"]) + 10))
+            {
+                __result = SceneManager.GetActiveScene().name;
+            }
+            if (SceneManager.GetActiveScene().name == __instance.tumbleweedTownSceneName &&
+                QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_30_welcome_to_paradise"))
+            {
+                __result = SceneManager.GetActiveScene().name;
+            }
+            if (SceneManager.GetActiveScene().name == __instance.coconutVillageTeampleSceneName &&
+                QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_37_the_frigid_maiden"))
+            {
+                __result = SceneManager.GetActiveScene().name;
+            }
+            if (SceneManager.GetActiveScene().name == __instance.trail18SceneName &&
+                QuestManager.instance.GetIsActiveMainQuestGreaterOrEqualThan("main_quest_50_sanctuary_shakedown"))
+            {
+                __result = SceneManager.GetActiveScene().name;
             }
         }
 

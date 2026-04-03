@@ -37,12 +37,24 @@ class Char_Outfit(Range):
     default = 0
 
 
+class goal(Choice):
+    """sets what the goal is
+    mission = complete all main missions
+    catch = catch all spirits
+    rare = catch all rare spirits
+    affection = catch and get Lv5 affection with all spirits"""
+    display_name = "map rando option"
+    option_mission = 0
+    option_catch = 1
+    option_rare = 2
+    option_affection = 3
+    default = 0
 
 
 
 
 class Randomise_Spawns(Toggle):
-    """randomise the spawns in the grass/water"""
+    """randomise the spawns in the grass/water NOTE will also randomise what spirit is obtained through the "Simulated Scuffle" and "Gold Plated" side quests"""
     display_name = "Randomise Spawns"
     default = True
 
@@ -177,6 +189,16 @@ class randomise_warps(Toggle):
 
 
 
+class Main_Missions(Toggle):
+    """enable/disable Main Missions"""
+    display_name = "Main Missions"
+    default = True
+
+class Side_Missions(Toggle):
+    """enable/disable Side Missions"""
+    display_name = "Side Missions"
+    default = True
+
 class Single_Catch(Toggle):
     """enable or disable to limit only a single spirit to be caught per map/route
     NOTE: requires "Spirit_Locations" to be set to false"""
@@ -232,6 +254,8 @@ class SpiritValleyOptions(PerGameCommonOptions):
     Char_Haircolor:Char_Haircolor
     Char_Outfit:Char_Outfit
 
+    goal:goal
+
     Randomise_Spawns: Randomise_Spawns
     Grass_slots: Grass_slots
     Water_slots: Water_slots
@@ -260,6 +284,9 @@ class SpiritValleyOptions(PerGameCommonOptions):
     randomise_map:randomise_map
     randomise_map_option:randomise_map_option
     randomise_warps:randomise_warps
+
+    Main_Missions:Main_Missions
+    Side_Missions:Side_Missions
 
     Single_Catch:Single_Catch
 
