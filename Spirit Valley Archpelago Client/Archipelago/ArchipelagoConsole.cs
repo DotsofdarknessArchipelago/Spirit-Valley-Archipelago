@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Archipelago.MultiClient.Net.MessageLog.Messages;
 using BepInEx;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace SpiritValleyArchipelagoClient.Archipelago;
@@ -30,6 +32,99 @@ public static class ArchipelagoConsole
     public static void Awake()
     {
         UpdateWindow();
+    }
+
+    public static void LogArchMessage(LogMessage msg)
+    {
+        if (msg.ToString().IsNullOrWhiteSpace()) return;
+
+        switch (msg)
+        {
+            case HintItemSendLogMessage hintmsg:
+                if (hintmsg.IsRelatedToActivePlayer)
+                {
+
+                    if (hintmsg.Parts.Length == 1)
+                    {
+                        LogMessage(hintmsg.Parts[0].Text);
+                        break;
+                    }
+
+                    var builder = new StringBuilder();
+                    foreach (var part in hintmsg.Parts)
+                    {
+                        if ((int)part.Type == 1)//player part type
+                        {
+                            builder.Append($"<color=#{part.Color.R:x2}{part.Color.G:x2}{part.Color.B:x2}ff>");
+                            builder.Append(part.Text);
+                            builder.Append("</color>");
+                        }
+                        else if ((int)part.Type == 2)//item part type
+                        {
+                            builder.Append($"<color=#{part.Color.R:x2}{part.Color.G:x2}{part.Color.B:x2}ff>");
+                            builder.Append(part.Text);
+                            builder.Append("</color>");
+                        }
+                        else if ((int)part.Type == 3)//location part type
+                        {
+                            builder.Append($"<color=#{part.Color.R:x2}{part.Color.G:x2}{part.Color.B:x2}ff>");
+                            builder.Append(part.Text);
+                            builder.Append("</color>");
+                        }
+                        else
+                        {
+                            builder.Append(part.Text);
+                        }
+                    }
+
+                    LogMessage(builder.ToString());
+                }
+                break;
+
+            case ItemSendLogMessage itemmsg:
+                if (itemmsg.IsRelatedToActivePlayer)
+                {
+
+                    if (itemmsg.Parts.Length == 1)
+                    {
+                        LogMessage(itemmsg.Parts[0].Text);
+                        break;
+                    }
+
+                    var builder = new StringBuilder();
+                    foreach (var part in itemmsg.Parts)
+                    {
+                        if ((int)part.Type == 1)//player part type
+                        {
+                            builder.Append($"<color=#{part.Color.R:x2}{part.Color.G:x2}{part.Color.B:x2}ff>");
+                            builder.Append(part.Text);
+                            builder.Append("</color>");
+                        }
+                        else if ((int)part.Type == 2)//item part type
+                        {
+                            builder.Append($"<color=#{part.Color.R:x2}{part.Color.G:x2}{part.Color.B:x2}ff>");
+                            builder.Append(part.Text);
+                            builder.Append("</color>");
+                        }
+                        else if ((int)part.Type == 3)//location part type
+                        {
+                            builder.Append($"<color=#{part.Color.R:x2}{part.Color.G:x2}{part.Color.B:x2}ff>");
+                            builder.Append(part.Text);
+                            builder.Append("</color>");
+                        }
+                        else
+                        {
+                            builder.Append(part.Text);
+                        }
+                    }
+
+                    LogMessage(builder.ToString());
+                }
+                break;
+
+
+        }
+
     }
 
     public static void LogMessage(string message)
@@ -140,6 +235,7 @@ public static class ArchipelagoConsole
         textStyle.alignment = TextAnchor.LowerLeft;
         textStyle.fontSize = Hidden ? (int)(Screen.height * 0.0165f) : (int)(Screen.height * 0.0185f);
         textStyle.normal.textColor = Color.white;
+        textStyle.richText = true;
         textStyle.wordWrap = !Hidden;
 
         var xPadding = (int)(Screen.width * 0.01f);

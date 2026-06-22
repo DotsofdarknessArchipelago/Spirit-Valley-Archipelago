@@ -230,6 +230,25 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         public static void questrewards(GameState __instance, string nextQuestID, ref ItemBundle[] __result)
         {
             __result = HelperItems.centbundle();
+
+            QuestState q = HelperItems.save.GetActiveMainQuestState();
+            if (q.id == "main_quest_19_total_domination")
+            {
+                if (ArchipelagoData.getquestspirit("main_quest_19_total_domination") != "Domina" && q.Quest.requiredMonsters[0].name == "Domina")
+                {
+                    MonsterBaseStats nmon = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("main_quest_19_total_domination"));
+
+                    HelperItems.save.GetActiveMainQuestState().Quest.requiredMonsters = [nmon];
+                    LocalizedStringDatabase db = LocalizationSettings.Instance.GetStringDatabase();
+
+                    LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Domina").monsterName;
+                    if (q.Quest.description.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+                    {
+                        db.GetTable(q.Quest.description.TableReference).AddEntryFromReference(q.Quest.description.TableEntryReference, q.Quest.description.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), nmon.monsterName.GetLocalizedString()));
+                    }
+                }
+            }
+
         }
 
 
@@ -413,7 +432,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         {
 
             LocalizedString newspirit = null;
-            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Domina").monsterName; ;
+            LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Domina").monsterName;
 
             switch (id)
             {
@@ -743,8 +762,9 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
         public static void collectionmainquest(OldMaster __instance)
         {
             LocalizedString oldspirit = MonsterManager.instance.GetBaseStatsByName("Domina").monsterName;
-            LocalizedString newspirit = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("main_quest_19_total_domination")).monsterName;
-            //ArchipelagoConsole.LogDebug($"old: {oldspirit.GetLocalizedString()}, NEW: {newspirit.GetLocalizedString()}");
+            MonsterBaseStats nmon = MonsterManager.instance.GetBaseStatsByName(ArchipelagoData.getquestspirit("main_quest_19_total_domination"));
+            LocalizedString newspirit = nmon.monsterName;
+            ArchipelagoConsole.LogDebug($"old: {oldspirit.GetLocalizedString()}, NEW: {newspirit.GetLocalizedString()}");
 
             if (oldspirit == null) { return; }
             if (oldspirit.GetLocalizedString() == newspirit.GetLocalizedString()) { return; }
@@ -762,6 +782,21 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Gameplay
                     }
                 }
             }
+
+            QuestState q = HelperItems.save.GetActiveMainQuestState();
+            if (q.id == "main_quest_19_total_domination")
+            {
+                if (ArchipelagoData.getquestspirit("main_quest_19_total_domination") != "Domina" && q.Quest.requiredMonsters[0].name == "Domina")
+                {
+                    HelperItems.save.GetActiveMainQuestState().Quest.requiredMonsters = [nmon];
+
+                    if (q.Quest.description.GetLocalizedString().Contains(oldspirit.GetLocalizedString()))
+                    {
+                        db.GetTable(q.Quest.description.TableReference).AddEntryFromReference(q.Quest.description.TableEntryReference, q.Quest.description.GetLocalizedString().Replace(oldspirit.GetLocalizedString(), newspirit.GetLocalizedString()));
+                    }
+                }
+            }
+
         }
 
 

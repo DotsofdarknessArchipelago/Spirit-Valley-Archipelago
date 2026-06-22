@@ -37,7 +37,7 @@ public class ArchipelagoClient
 
     public static int servermajor = 2;
     public static int serverminor = 0;
-    public static int serverbuild = 0;
+    public static int serverbuild = 1;
 
 
     public static ArchipelageItemList archlist = new ArchipelageItemList();
@@ -72,7 +72,7 @@ public class ArchipelagoClient
     /// </summary>
     private void SetupSession()
     {
-        session.MessageLog.OnMessageReceived += message => ArchipelagoConsole.LogMessage(message.ToString());
+        session.MessageLog.OnMessageReceived += message => ArchipelagoConsole.LogArchMessage(message);
         session.Items.ItemReceived += OnItemReceived;
         session.Socket.ErrorReceived += OnSessionErrorReceived;
         session.Socket.SocketClosed += OnSessionSocketClosed;
@@ -208,8 +208,8 @@ public class ArchipelagoClient
 
             if (servermajor != Convert.ToInt32(ServerData.slotData["world_version_major"]) || serverminor != Convert.ToInt32(ServerData.slotData["world_version_minor"]) || serverbuild != Convert.ToInt32(ServerData.slotData["world_version_build"]))
             {
-                ArchipelagoConsole.LogMessage("WARNING EXPECTED APWORLD VERSION MISSMATCH");
-                ArchipelagoConsole.LogError($"EXPECTED V{servermajor}.{serverminor}.{serverbuild} GOT V{ServerData.slotData["world_version_major"]}.{ServerData.slotData["world_version_minor"]}.{ServerData.slotData["world_version_build"]}");
+                ArchipelagoConsole.LogMessage("<color=yellow>WARNING EXPECTED APWORLD VERSION MISSMATCH</color>");
+                ArchipelagoConsole.LogError($"<color=yellow>EXPECTED V{servermajor}.{serverminor}.{serverbuild} GOT V{ServerData.slotData["world_version_major"]}.{ServerData.slotData["world_version_minor"]}.{ServerData.slotData["world_version_build"]}</color>");
             }
 
         }

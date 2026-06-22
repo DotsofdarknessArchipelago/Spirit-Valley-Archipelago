@@ -11,12 +11,12 @@ class Map_Region:
     #water_slots: [str]  # TODO FIX PROPERLY
     #water_lv_range: [int]
 
-    chest_locations: [str]
-    trainer_locations: [str]
-    quest_locations: [str]
+    chest_locations: list[str]
+    trainer_locations: list[str]
+    quest_locations: list[str]
 
     #entry: [str]
-    exits: {str,int} #0=multi exit to multi exit | 1 = multi exit to dead end | 2 = dead end to multi exit
+    exits: dict[str,int] #0=multi exit to multi exit | 1 = multi exit to dead end | 2 = dead end to multi exit
 
     def __init__(self, map_id, warpable, grass, water, chest_locations, trainer_locations, quest_locations, exits):
         self.map_id = map_id

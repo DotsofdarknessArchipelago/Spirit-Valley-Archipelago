@@ -24,8 +24,8 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
     public const string PluginName = "Spirit Valley Archipelago Client";
     public const int PluginVersionMajor = 2;
     public const int PluginVersionMinor = 0;
-    public const int PluginVersionBuild = 0;
-    public const string PluginVersion = "2.0.0";//TODO MAKE SURE THESE MATCH
+    public const int PluginVersionBuild = 1;
+    public const string PluginVersion = "2.0.1";//TODO MAKE SURE THESE MATCH
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -62,7 +62,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
 
         new Harmony(PluginGUID).PatchAll();
 
-        ArchipelagoConsole.LogMessage($"{ModDisplayInfo} loaded! Press F8 to toggle the console");
+        ArchipelagoConsole.LogMessage($"{ModDisplayInfo} loaded! <color=yellow>Press </color><color=cyan>F8</color> <color=yellow>to toggle the console</color>");
     }
 
 
@@ -75,7 +75,7 @@ public class SpiritValleyArchipelago : BaseUnityPlugin
         }
         if (Input.GetKeyDown(KeyCode.F7))
         {
-            Cheats.wallhaks();
+            //Cheats.wallhaks();
         }
         if (Input.GetKeyDown(KeyCode.F9))
         {

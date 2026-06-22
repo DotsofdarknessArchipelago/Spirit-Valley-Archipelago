@@ -211,6 +211,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     SpiritValleyArchipelago.ArchipelagoClient.SendMessage($"Activated quest dev cheat to advance main quest");
                     string quest = QuestManager.instance.mainQuest[QuestManager.instance.GetIndexForMainQuestByID(HelperItems.save.GetActiveMainQuestState().id) + 1].id;
                     HelperItems.save.AdvanceMainQuest(quest);
+                    ArchipelagoConsole.LogMessage($"main quest is now: {HelperItems.save.GetActiveMainQuestState().id}");
                     break;
                 case "$cheat.crystals":
                     ArchipelagoConsole.LogMessage("Adding 10 Spirit Crystal+2 to Inventory");
