@@ -4,16 +4,16 @@ from typing import Mapping, Any
 from BaseClasses import ItemClassification, Item, LocationProgressType
 from Utils import visualize_regions
 from entrance_rando import randomize_entrances
+from rule_builder.rules import Has
 from worlds.AutoWorld import World
-from worlds.generic.Rules import set_rule
 from worlds.spiritvalley.Data_Regions import regions, mapid_to_text
 from worlds.spiritvalley.Data_Spirits import spirit_list, types, attacking_moves, all_moves, rand_grass_spawn, rand_water_spawn, rand_spirit_list, rand_type_chart, default_type_effective, default_grass_loc, default_water_loc, rand_move_data, move_data, obtainable_spirit_list
 from worlds.spiritvalley.Data_Trainers import Trainer, rand_trainer, Default_Trainers
 from worlds.spiritvalley.Items import items_list, spiritItem, items_key_item, useful_items_list, items_potion, items_consumable, items_crystal, items_equipment, items_coins, items_consumable_id_start, items_crystal_id_start, items_equipment_id_start, items_key_item_id_start, items_potion_id_start, items_coins_id_start, items_archipelago, items_warp, items_archipelago_id_start, items_warp_id_start, filler_item
-from worlds.spiritvalley.Locations import SpiritValleyLocation, location_list, Rare_spirit_locations, spirit_id_start, spirit_affection_id_start, Rare_spirit_id_start, main_quests_id_start, side_quests_id_start, battle_locations_id_start, chest_locations_id_start, spirit_locations, spirit_affection_locations, main_quests, side_quests, battle_locations, chest_locations, warp_locations, warp_locations_id_start
+from worlds.spiritvalley.Locations import SpiritValleyLocation, location_list, Rare_spirit_locations, spirit_id_start, spirit_affection_id_start, Rare_spirit_id_start, main_quests_id_start, side_quests_id_start, battle_locations_id_start, chest_locations_id_start, spirit_locations, spirit_affection_locations, main_quests, side_quests, battle_locations, chest_locations, warp_locations, warp_locations_id_start, arch_locations_id_start
 from worlds.spiritvalley.Options import SpiritValleyOptions
 from worlds.spiritvalley.Regions import Generate_Map
-from worlds.spiritvalley.Rules import rules_normal, rules_map_rando, base_rules, rules_missions, rules_access
+from worlds.spiritvalley.Rules import SetRules
 
 
 class SpiritValley(World):
@@ -127,23 +127,27 @@ class SpiritValley(World):
         if self.options.Spirit_Locations.value:
             self.numlocations += len(spirit_locations)
             if not self.options.Randomise_Spawns.value:
-                self.numlocations -=1
+                self.numlocations -=1 #remove EV-3 location
         if self.options.Spirit_Affection.value:
             self.numlocations += len(spirit_affection_locations)
             if not self.options.Randomise_Spawns.value:
-                self.numlocations -=5
+                self.numlocations -=5 #remove EV-3 locations
         if self.options.Rare_Locations.value and self.options.Spirit_Locations.value:
             self.numlocations += len(Rare_spirit_locations)
             if not self.options.Randomise_Spawns.value:
-                self.numlocations -=1
+                self.numlocations -=1 #remove EV-3 location
         if self.options.Main_Missions.value:
             self.numlocations += len(main_quests)
         if self.options.Side_Missions.value:
             self.numlocations += len(side_quests)
-            if self.options.goal == 0:
+            if self.options.goal.value == 0:
                 self.numlocations -= 2 #remove the HQ side quests since we complete the game before we can access them might change later
         if True:
             self.numlocations += len(battle_locations)
+            if not self.options.Main_Missions.value:
+                self.numlocations -=6 #remove the mission battles that are not accessible
+            if not self.options.Side_Missions.value:
+                self.numlocations -=1 #remove the mission battles that are not accessible
         if True:
             self.numlocations += len(chest_locations)
         if True:
@@ -155,8 +159,8 @@ class SpiritValley(World):
         self.numitems = self.numlocations
 
     def create_regions(self):
-        #create reagions and fill with their locations
-        Generate_Map(self.multiworld, self.player, self.options, self.location_name_to_id, self.data)
+        #create regions and fill with their locations
+        Generate_Map(self)
 
     def connect_entrances(self):
         #something for universial tracker
@@ -201,7 +205,7 @@ class SpiritValley(World):
             self.multiworld.get_location("Get All Spirits To Affection Lv5", self.player).place_locked_item(self.create_item("Goal"))
 
 
-        self.multiworld.completion_condition[self.player] = lambda state: state.has("Goal", self.player)
+        self.set_completion_rule(Has("Goal"))
 
         #calculate how many filler items we need to have in the item pool
         filleritems = self.numlocations - len(items_key_item) - (len(items_archipelago)-3) - 1
@@ -232,21 +236,13 @@ class SpiritValley(World):
         return self.random.choice(filler_item)
 
     def set_rules(self):
-        base_rules(self.multiworld, self.player, self.options, self.data)
-
-        if self.options.Main_Missions.value:
-            rules_missions(self.multiworld, self.player, self.options, self.data)
-
-        rules_access(self.multiworld, self.player, self.options, self.data)
+        SetRules(self)
 
         if self.options.goal.value != 0 and self.options.Side_Missions.value:
             self.multiworld.get_location("Complete Side Quest: Simulated Scuffle", self.player).progress_type = LocationProgressType.EXCLUDED
             self.multiworld.get_location("Complete Side Quest: Gold Plated", self.player).progress_type = LocationProgressType.EXCLUDED
 
-        #if self.options.randomise_map.value:
-        #    rules_map_rando(self.multiworld, self.player, self.options, self.data)
-        #else:
-        #    rules_normal(self.multiworld, self.player, self.options, self.data)
+
 
     #Method for making Universal Tracker work properly
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
@@ -285,14 +281,14 @@ class SpiritValley(World):
                         wmap.add_locations({f"{mapid_to_text[r.map_id]} {s} Grass": None}, SpiritValleyLocation)
                         self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, self.player))
                         if r.map_id == "Trail16_Cave":
-                            set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player), lambda state: state.has("Fishy Scent", self.player))
+                            self.set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player), Has("Fishy Scent"))
                         if r.map_id == "Trail22_Cave":
-                            set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player), lambda state: state.has("Scent Mixture", self.player))
+                            self.set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Grass", self.player), Has("Scent Mixture"))
 
             if r.water:
                 for s in self.data["Water_spawn"][r.map_id]:
                     wmap.add_locations({f"{mapid_to_text[r.map_id]} {s} Water": None}, SpiritValleyLocation)
-                    set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Water", self.player), lambda state: state.has("Fishing Rod", self.player))
+                    self.set_rule(self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Water", self.player), Has("Fishing Rod"))
                     self.multiworld.get_location(f"{mapid_to_text[r.map_id]} {s} Water", self.player).place_locked_item(spiritItem(f"{s} Obtainable", ItemClassification.progression, None, self.player))
 
         self.set_rules()
@@ -322,6 +318,7 @@ class SpiritValley(World):
             "Battle_Start": battle_locations_id_start,
             "Chest_Start": chest_locations_id_start,
             "warp_locations": warp_locations_id_start,
+            "arch_locations_id_start": arch_locations_id_start,
 
             "items_consumable_start": items_consumable_id_start,
             "items_crystal_start": items_crystal_id_start,

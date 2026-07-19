@@ -1,408 +1,439 @@
-from BaseClasses import CollectionState, LocationProgressType
-from worlds.generic.Rules import set_rule
+import dataclasses
+from typing import Any, override, Iterable
+
+from BaseClasses import LocationProgressType, CollectionState
+from NetUtils import JSONMessagePart
+from rule_builder.options import OptionFilter
+from rule_builder.rules import Rule, Has, HasAny, True_, CanReachLocation, CanReachRegion, HasAll
 from worlds.spiritvalley.Data_Spirits import obtainable_spirit_list
 from worlds.spiritvalley.Items import affection_shop_items, spirit_crystal_shop_items
+from worlds.spiritvalley.Options import randomise_map, Main_Missions
 
 
-def rules_missions(multiworld, player, options, data):
-    if not options.randomise_map.value:
-        #NOT MAP RANDO RULES
-        set_rule(multiworld.get_location("Complete Main Quest: Super Secret Orders", player),           lambda state:                                        state.has_all(["Super Secret Orders"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: First Mission: Success!", player),       lambda state:                                        state.has_all(["Super Secret Orders"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Onward to Greensvale", player),          lambda state:                                        state.has_all(["Super Secret Orders"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Temple Investigation", player),          lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Harmonious Disturbance", player),        lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Consulting Dolly", player),              lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Becky can fix it", player),              lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Hunt for the chunk", player),            lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Bridge crossing", player),               lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Dusty Vale awaits", player),             lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: An audience with the King", player),     lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", player),   lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: License to battle", player),             lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Box pusher", player),                    lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Total domination", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: A challenge awaits", player),            lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: A new challenger", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Stiff competition", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Final Fight", player),                   lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Return of the champion", player),        lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Breeding season", player),               lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Mission success", player),               lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Quest for the crystal", player),         lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: How the Dominoes fall", player),         lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Big balloon adventure", player),         lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Welcome to Paradise", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Coconut Conundrum", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Lusty Cultists", player),                lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Savior of Coconut Village", player),     lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Slippery When Wet", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Glimmering Prize", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Adventure", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Frigid Maiden", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Isles", player),                  lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Paisley Bones", player),                 lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Demand for Dynamite", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", player),      lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Lewd Exorcist", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Suit In Hand", player),                  lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Fishing For Treasure", player),          lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Proposal", player),                  lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Harmony", player),                lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Crimson Chase", player),                 lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Through the Portal", player),            lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Hostage Situation", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Desperate Dash", player),                lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", player),      lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-    else:
-        set_rule(multiworld.get_location("Complete Main Quest: Captain Maria", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Doctor’s Appointment", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: First Orders", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Captain Maria", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Crimson Agent", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Orders", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Super Secret Orders", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Crimson Agent", player)) and state.has("Super Secret Orders", player))
-        set_rule(multiworld.get_location("Complete Main Quest: First Mission: Success!", player),       lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Super Secret Orders", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Onward to Greensvale", player),          lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Mission: Success!", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Temple Investigation", player),          lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Onward to Greensvale", player)) and state.has("Ancient Temple Key", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Harmonious Disturbance", player),        lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Temple Investigation", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Consulting Dolly", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Harmonious Disturbance", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Becky can fix it", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Consulting Dolly", player)) and state.has("Cracked Power Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Hunt for the chunk", player),            lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Becky can fix it", player)) and state.has("Raw Crystal Chunk", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Bridge crossing", player),               lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Hunt for the chunk", player)) and state.has("Power Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Dusty Vale awaits", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Bridge crossing", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: An audience with the King", player),     lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Dusty Vale awaits", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", player),   lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: An audience with the King", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: License to battle", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Box pusher", player),                    lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: License to battle", player)) and state.has("Video Cassette", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Total domination", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.can_reach(multiworld.get_location("Complete Main Quest: Box pusher", player)) and state.has(f"{s} Obtainable", player))
-        set_rule(multiworld.get_location("Complete Main Quest: A challenge awaits", player),            lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Total domination", player)) and state.has("Spirit Handler License", player))
-        set_rule(multiworld.get_location("Complete Main Quest: A new challenger", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: A challenge awaits", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Stiff competition", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: A new challenger", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Final Fight", player),                   lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Stiff competition", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Return of the champion", player),        lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Final Fight", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Breeding season", player),               lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Return of the champion", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Mission success", player),               lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breeding season", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Quest for the crystal", player),         lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Mission success", player)) and state.has("Stone Key", player))
-        set_rule(multiworld.get_location("Complete Main Quest: How the Dominoes fall", player),         lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Quest for the crystal", player)) and state.has("Yellow Harmony Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Big balloon adventure", player),         lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: How the Dominoes fall", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Welcome to Paradise", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Big balloon adventure", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Coconut Conundrum", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Welcome to Paradise", player)) and state.has("Fishing Rod", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Lusty Cultists", player),                lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Coconut Conundrum", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Savior of Coconut Village", player),     lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Lusty Cultists", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Slippery When Wet", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Savior of Coconut Village", player)) and state.has("Cock Shaped Key", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Glimmering Prize", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Slippery When Wet", player)) and state.has("Red Harmony Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Adventure", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Glimmering Prize", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: The Frigid Maiden", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Adventure", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Isles", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Frigid Maiden", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Paisley Bones", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Isles", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Demand for Dynamite", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Paisley Bones", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", player),      lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Demand for Dynamite", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: The Lewd Exorcist", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Suit In Hand", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Lewd Exorcist", player)) and state.has("Fancy Suit", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Fishing For Treasure", player),          lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Suit In Hand", player)) and state.has("Wedding Ring", player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Proposal", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Fishing For Treasure", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Proposal", player)) and state.has("Dynamite", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Harmony", player),                lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Crimson Chase", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Harmony", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Through the Portal", player),            lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Crimson Chase", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Through the Portal", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Hostage Situation", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Hostage Situation", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Desperate Dash", player),                lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", player),      lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Desperate Dash", player)))
+def SpiritObtain(spirit: str) -> Rule[Any]:
+    return Has(f"{spirit} Obtainable") & HasAny(*spirit_crystal_shop_items) & Has("Shop Accessible")
 
-def rules_access(multiworld, player, options, data):
-    if not options.randomise_map.value:
-        if options.Main_Missions.value:
-            set_rule(multiworld.get_entrance("Trail2->Greensvale", player),                             lambda state: state.has_all(["Super Secret Orders"], player))
-            set_rule(multiworld.get_entrance("Trail4->AncientTemple1", player),                         lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-            set_rule(multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", player),        lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-            set_rule(multiworld.get_entrance("Trail9->DesertTemple1", player),                          lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key"], player))
-            set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player),                      lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-            set_rule(multiworld.get_entrance("Trail11->Trail13", player),                               lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-            set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player),              lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-            set_rule(multiworld.get_entrance("Frostville1->Trail17", player),                           lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-            set_rule(multiworld.get_entrance("Trail20->Trail20_Right", player),                         lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
+def SpiritRareObtain(spirit: str) -> Rule[Any]:
+    return SpiritObtain(spirit) & Has("Elusive Scent Available in Shop")
 
-            set_rule(multiworld.get_entrance("OakwoodVillage->OakwoodVillage_Hq", player),              lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
+def SpiritAffection(spirit: str) -> Rule[Any]:
+    return SpiritObtain(spirit) & HasAny(*affection_shop_items)
+
+
+def SpiritObtainAll() -> Rule[Any]:
+    r = None
+    for spirit in obtainable_spirit_list:
+        if r is None:
+            r = SpiritObtain(spirit)
         else:
-            #set_rule(multiworld.get_entrance("Trail2->Greensvale", player), lambda state: state.has_all(["Super Secret Orders"], player))
-            set_rule(multiworld.get_entrance("Trail4->AncientTemple1", player), lambda state: state.has("Ancient Temple Key", player))
-            set_rule(multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", player), lambda state: state.has("Power Crystal", player))
-            set_rule(multiworld.get_entrance("Trail9->DesertTemple1", player), lambda state: state.has("Stone Key", player))
-            #set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-            set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.has("Balloon Ride Ticket", player))
-            set_rule(multiworld.get_entrance("Trail11->Trail13", player), lambda state: state.has("Fishing Rod", player))
-            #set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.has(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-            set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.has("Boat Ride Ticket", player))
-            set_rule(multiworld.get_entrance("Frostville1->Trail17", player), lambda state: state.has("Dynamite", player))
-            set_rule(multiworld.get_entrance("Trail18->Trail19", player), lambda state: state.has("Ancient Warp Core", player))
-            #set_rule(multiworld.get_entrance("Trail20->Trail20_Right", player), lambda state: state.has(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-    else:
-        if options.Main_Missions.value:
-            set_rule(multiworld.get_entrance("Trail2 Left", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Mission: Success!", player)))
-            set_rule(multiworld.get_entrance("Trail4 Temple", player), lambda state: state.has("Ancient Temple Key", player))  # state.can_reach(multiworld.get_location("Complete Main Quest: Temple Investigation", player)) and state.has("Ancient Temple Key", player))
-            set_rule(multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Bridge crossing", player)) and state.has("Power Crystal", player))
-            set_rule(multiworld.get_entrance("Trail9 Temple", player), lambda state: state.has("Stone Key", player))
-            set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Big balloon adventure", player)))
-            set_rule(multiworld.get_entrance("Trail11 pier", player), lambda state: state.has("Fishing Rod", player))
-            set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Adventure", player)))
-            set_rule(multiworld.get_entrance("Frostville1 Top", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player)) and state.has("Dynamite", player))
-            set_rule(multiworld.get_entrance("Trail20->Trail20_Right", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player)))
+            r = r & SpiritObtain(spirit)
+    return r
 
-            set_rule(multiworld.get_entrance("OakwoodVillage->OakwoodVillage_Hq", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", player)))
+def SpiritRareObtainAll() -> Rule[Any]:
+    r = None
+    for spirit in obtainable_spirit_list:
+        if r is None:
+            r = SpiritRareObtain(spirit)
         else:
-            #set_rule(multiworld.get_entrance("Trail2 Left", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Mission: Success!", player)))
-            set_rule(multiworld.get_entrance("Trail4 Temple", player), lambda state: state.has("Ancient Temple Key", player))  # state.can_reach(multiworld.get_location("Complete Main Quest: Temple Investigation", player)) and state.has("Ancient Temple Key", player))
-            set_rule(multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", player), lambda state: state.has("Power Crystal", player))
-            set_rule(multiworld.get_entrance("Trail9 Temple", player), lambda state: state.has("Stone Key", player))
-            #set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Big balloon adventure", player)))
-            set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.has("Balloon Ride Ticket", player))
-            set_rule(multiworld.get_entrance("Trail11 pier", player), lambda state: state.has("Fishing Rod", player))
-            #set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Adventure", player)))
-            set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.has("Boat Ride Ticket", player))
-            set_rule(multiworld.get_entrance("Frostville1 Top", player), lambda state: state.has("Dynamite", player))
-            set_rule(multiworld.get_entrance("Trail18->Trail19", player), lambda state: state.has("Ancient Warp Core", player))
-            #set_rule(multiworld.get_entrance("Trail20->Trail20_Right", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player)))
+            r = r & SpiritRareObtain(spirit)
+    return r
+
+def SpiritAffectionAll() -> Rule[Any]:
+    r = None
+    for spirit in obtainable_spirit_list:
+        if r is None:
+            r = SpiritAffection(spirit)
+        else:
+            r = r & SpiritAffection(spirit)
+    return r
 
 
-def rules_normal(multiworld, player, options, data):
-    base_rules(multiworld, player, options, data)
+def SetRules(world):
 
-    # MAIN QUEST RULES
-    if options.Main_Missions.value:
-        set_rule(multiworld.get_location("Complete Main Quest: Super Secret Orders", player),           lambda state:                                        state.has_all(["Super Secret Orders"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: First Mission: Success!", player),       lambda state:                                        state.has_all(["Super Secret Orders"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Onward to Greensvale", player),          lambda state:                                        state.has_all(["Super Secret Orders"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Temple Investigation", player),          lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Harmonious Disturbance", player),        lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Consulting Dolly", player),              lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Becky can fix it", player),              lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Hunt for the chunk", player),            lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Bridge crossing", player),               lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Dusty Vale awaits", player),             lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: An audience with the King", player),     lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", player),   lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: License to battle", player),             lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Box pusher", player),                    lambda state:                                        state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Total domination", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: A challenge awaits", player),            lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: A new challenger", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Stiff competition", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Final Fight", player),                   lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Return of the champion", player),        lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Breeding season", player),               lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Mission success", player),               lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Quest for the crystal", player),         lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: How the Dominoes fall", player),         lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Big balloon adventure", player),         lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Welcome to Paradise", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Coconut Conundrum", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Lusty Cultists", player),                lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Savior of Coconut Village", player),     lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Slippery When Wet", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Glimmering Prize", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Adventure", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Frigid Maiden", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Isles", player),                  lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Paisley Bones", player),                 lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Demand for Dynamite", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", player),      lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Lewd Exorcist", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Suit In Hand", player),                  lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Fishing For Treasure", player),          lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Proposal", player),                  lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Harmony", player),                lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Crimson Chase", player),                 lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Through the Portal", player),            lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", player),           lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Hostage Situation", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player),             lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Desperate Dash", player),                lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-        set_rule(multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", player),      lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", f"{s} Obtainable", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
+    #MAIN MISSION RULES
+    if world.options.Main_Missions.value:
+        #                                             RULE LOCATION                                                                 PREVIOUS MISSION LOCATION                                               ITEM REQUIRED
+        #world.set_rule(world.multiworld.get_location("Complete Main Quest: Doctor’s Appointment", world.player),                   True_                                                                   & True_())
+        #world.set_rule(world.multiworld.get_location("Complete Main Quest: Captain Maria", world.player),                          CanReachLocation("Complete Main Quest: Doctor’s Appointment")           & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: First Orders", world.player),                            CanReachLocation("Complete Main Quest: Captain Maria")                  & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Crimson Agent", world.player),                           CanReachLocation("Complete Main Quest: First Orders")                   & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Super Secret Orders", world.player),                     CanReachLocation("Complete Main Quest: Crimson Agent")                  & Has("Super Secret Orders"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: First Mission: Success!", world.player),                 CanReachLocation("Complete Main Quest: Super Secret Orders")            & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Onward to Greensvale", world.player),                    CanReachLocation("Complete Main Quest: First Mission: Success!")        & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Temple Investigation", world.player),                    CanReachLocation("Complete Main Quest: Onward to Greensvale")           & Has("Ancient Temple Key"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Harmonious Disturbance", world.player),                  CanReachLocation("Complete Main Quest: Temple Investigation")           & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Consulting Dolly", world.player),                        CanReachLocation("Complete Main Quest: Harmonious Disturbance")         & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Becky can fix it", world.player),                        CanReachLocation("Complete Main Quest: Consulting Dolly")               & Has("Cracked Power Crystal"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Hunt for the chunk", world.player),                      CanReachLocation("Complete Main Quest: Becky can fix it")               & Has("Raw Crystal Chunk"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Bridge crossing", world.player),                         CanReachLocation("Complete Main Quest: Hunt for the chunk")             & Has("Power Crystal"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Dusty Vale awaits", world.player),                       CanReachLocation("Complete Main Quest: Bridge crossing")                & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: An audience with the King", world.player),               CanReachLocation("Complete Main Quest: Dusty Vale awaits")              & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", world.player),             CanReachLocation("Complete Main Quest: An audience with the King")      & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: License to battle", world.player),                       CanReachLocation("Complete Main Quest: The Grand Cuckold Challenge")    & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Box pusher", world.player),                              CanReachLocation("Complete Main Quest: License to battle")              & Has("Video Cassette"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Total domination", world.player),                        CanReachLocation("Complete Main Quest: Box pusher")                     & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"]))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: A challenge awaits", world.player),                      CanReachLocation("Complete Main Quest: Total domination")               & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: A new challenger", world.player),                        CanReachLocation("Complete Main Quest: A challenge awaits")             & Has("Spirit Handler License"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Stiff competition", world.player),                       CanReachLocation("Complete Main Quest: A new challenger")               & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Final Fight", world.player),                             CanReachLocation("Complete Main Quest: Stiff competition")              & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Return of the champion", world.player),                  CanReachLocation("Complete Main Quest: Final Fight")                    & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Breeding season", world.player),                         CanReachLocation("Complete Main Quest: Return of the champion")         & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Mission success", world.player),                         CanReachLocation("Complete Main Quest: Breeding season")                & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Quest for the crystal", world.player),                   CanReachLocation("Complete Main Quest: Mission success")                & Has("Stone Key"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: How the Dominoes fall", world.player),                   CanReachLocation("Complete Main Quest: Quest for the crystal")          & Has("Yellow Harmony Crystal"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Big balloon adventure", world.player),                   CanReachLocation("Complete Main Quest: How the Dominoes fall")          & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Welcome to Paradise", world.player),                     CanReachLocation("Complete Main Quest: Big balloon adventure")          & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Coconut Conundrum", world.player),                       CanReachLocation("Complete Main Quest: Welcome to Paradise")            & Has("Fishing Rod"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Lusty Cultists", world.player),                          CanReachLocation("Complete Main Quest: Coconut Conundrum")              & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Savior of Coconut Village", world.player),               CanReachLocation("Complete Main Quest: Lusty Cultists")                 & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Slippery When Wet", world.player),                       CanReachLocation("Complete Main Quest: Savior of Coconut Village")      & Has("Cock Shaped Key"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Glimmering Prize", world.player),                        CanReachLocation("Complete Main Quest: Slippery When Wet")              & Has("Red Harmony Crystal"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Arctic Adventure", world.player),                        CanReachLocation("Complete Main Quest: Glimmering Prize")               & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: The Frigid Maiden", world.player),                       CanReachLocation("Complete Main Quest: Arctic Adventure")               & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Arctic Isles", world.player),                            CanReachLocation("Complete Main Quest: The Frigid Maiden")              & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Paisley Bones", world.player),                           CanReachLocation("Complete Main Quest: Arctic Isles")                   & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Demand for Dynamite", world.player),                     CanReachLocation("Complete Main Quest: Paisley Bones")                  & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", world.player),                CanReachLocation("Complete Main Quest: Demand for Dynamite")            & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: The Lewd Exorcist", world.player),                       CanReachLocation("Complete Main Quest: Stealing From a Dead Man")       & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Suit In Hand", world.player),                            CanReachLocation("Complete Main Quest: The Lewd Exorcist")              & Has("Fancy Suit"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Fishing For Treasure", world.player),                    CanReachLocation("Complete Main Quest: Suit In Hand")                   & Has("Wedding Ring"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: The Proposal", world.player),                            CanReachLocation("Complete Main Quest: Fishing For Treasure")           & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Here Comes the Boom", world.player),                     CanReachLocation("Complete Main Quest: The Proposal")                   & Has("Dynamite"))
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Arctic Harmony", world.player),                          CanReachLocation("Complete Main Quest: Here Comes the Boom")            & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Crimson Chase", world.player),                           CanReachLocation("Complete Main Quest: Arctic Harmony")                 & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Through the Portal", world.player),                      CanReachLocation("Complete Main Quest: Crimson Chase")                  & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", world.player),                     CanReachLocation("Complete Main Quest: Through the Portal")             & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Hostage Situation", world.player),                       CanReachLocation("Complete Main Quest: Sanctuary Shakedown")            & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Breezie Runs Free", world.player),                       CanReachLocation("Complete Main Quest: Hostage Situation")              & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Desperate Dash", world.player),                          CanReachLocation("Complete Main Quest: Breezie Runs Free")              & True_())
+        world.set_rule(world.multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", world.player),                CanReachLocation("Complete Main Quest: Desperate Dash")                 & True_())
 
-    # ACCESS RULES
-    set_rule(multiworld.get_entrance("Trail2->Greensvale", player), lambda state: state.has_all(["Super Secret Orders"], player))
-    set_rule(multiworld.get_entrance("Trail4->AncientTemple1", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key"], player))
-    set_rule(multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal"], player))
-    set_rule(multiworld.get_entrance("Trail9->DesertTemple1", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key"], player))
-    set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal"], player))
-    set_rule(multiworld.get_entrance("Trail11->Trail13", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod"], player))
-    set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal"], player))
-    set_rule(multiworld.get_entrance("Frostville1->Trail17", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
-    set_rule(multiworld.get_entrance("Trail20->Trail20_Right", player), lambda state: state.has_all(["Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite"], player))
+    #SIDE MISSION RULES
+    if world.options.Side_Missions.value:
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: Larry’s Treasure", world.player),                Has("Ass Lover Extreme issue 12"))
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: The Art of Fishing", world.player),              Has("Goldfish Available in Shop"))
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: Legend of the Valkyrie part 1.", world.player),  Has("Cum Rag"))
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: Legend of the Valkyrie part 2.", world.player),  Has("Northern Blowfish Available in Shop"))
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: Slithering Menace", world.player),               Has(f"{world.data["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"]} Obtainable"))
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: Deadly Waters", world.player),                   HasAll(f"{world.data["SIDE_QUEST_DEADLY_WATERS_SPIRIT"]} Obtainable", "Fishing Rod"))
+        world.set_rule(world.multiworld.get_location("Complete Side Quest: Arctic Menace", world.player),                   Has(f"{world.data["SIDE_QUEST_ARCTIC_MENACE_SPIRIT"]} Obtainable"))
 
+        if not world.options.Single_Catch.value:
+            world.set_rule(world.multiworld.get_location("Complete Side Quest: Perky Petunia", world.player),                   SpiritObtain(world.data["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"]))
+            world.set_rule(world.multiworld.get_location("Complete Side Quest: Starry Eyed Surprise", world.player),            SpiritObtain(world.data["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"]))
+            world.set_rule(world.multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 1.", world.player),  SpiritObtain(world.data["SIDE_QUEST_CENTIBOOB_1_SPIRIT"]))
+            world.set_rule(world.multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 2.", world.player),  SpiritObtain(world.data["SIDE_QUEST_CENTIBOOB_2_SPIRIT"]))
+            world.set_rule(world.multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 3.", world.player),  SpiritObtain(world.data["SIDE_QUEST_CENTIBOOB_3_SPIRIT"]))
 
-
-
-
-def rules_map_rando(multiworld, player, options, data):
-    base_rules(multiworld, player, options, data)
-
-    if options.Main_Missions.value:
-        set_rule(multiworld.get_location("Complete Main Quest: Captain Maria", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Doctor’s Appointment", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: First Orders", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Captain Maria", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Crimson Agent", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Orders", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Super Secret Orders", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Crimson Agent", player)) and state.has("Super Secret Orders", player))
-        set_rule(multiworld.get_location("Complete Main Quest: First Mission: Success!", player),       lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Super Secret Orders", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Onward to Greensvale", player),          lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Mission: Success!", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Temple Investigation", player),          lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Onward to Greensvale", player)) and state.has("Ancient Temple Key", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Harmonious Disturbance", player),        lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Temple Investigation", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Consulting Dolly", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Harmonious Disturbance", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Becky can fix it", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Consulting Dolly", player)) and state.has("Cracked Power Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Hunt for the chunk", player),            lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Becky can fix it", player)) and state.has("Raw Crystal Chunk", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Bridge crossing", player),               lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Hunt for the chunk", player)) and state.has("Power Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Dusty Vale awaits", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Bridge crossing", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: An audience with the King", player),     lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Dusty Vale awaits", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", player),   lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: An audience with the King", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: License to battle", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Grand Cuckold Challenge", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Box pusher", player),                    lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: License to battle", player)) and state.has("Video Cassette", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Total domination", player),              lambda state, s=data["MAIN_QUEST_TOTAL_DOMINATION"]: state.can_reach(multiworld.get_location("Complete Main Quest: Box pusher", player)) and state.has(f"{s} Obtainable", player))
-        set_rule(multiworld.get_location("Complete Main Quest: A challenge awaits", player),            lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Total domination", player)) and state.has("Spirit Handler License", player))
-        set_rule(multiworld.get_location("Complete Main Quest: A new challenger", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: A challenge awaits", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Stiff competition", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: A new challenger", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Final Fight", player),                   lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Stiff competition", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Return of the champion", player),        lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Final Fight", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Breeding season", player),               lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Return of the champion", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Mission success", player),               lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breeding season", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Quest for the crystal", player),         lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Mission success", player)) and state.has("Stone Key", player))
-        set_rule(multiworld.get_location("Complete Main Quest: How the Dominoes fall", player),         lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Quest for the crystal", player)) and state.has("Yellow Harmony Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Big balloon adventure", player),         lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: How the Dominoes fall", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Welcome to Paradise", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Big balloon adventure", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Coconut Conundrum", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Welcome to Paradise", player)) and state.has("Fishing Rod", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Lusty Cultists", player),                lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Coconut Conundrum", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Savior of Coconut Village", player),     lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Lusty Cultists", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Slippery When Wet", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Savior of Coconut Village", player)) and state.has("Cock Shaped Key", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Glimmering Prize", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Slippery When Wet", player)) and state.has("Red Harmony Crystal", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Adventure", player),              lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Glimmering Prize", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: The Frigid Maiden", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Adventure", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Isles", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Frigid Maiden", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Paisley Bones", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Isles", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Demand for Dynamite", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Paisley Bones", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", player),      lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Demand for Dynamite", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: The Lewd Exorcist", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Stealing From a Dead Man", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Suit In Hand", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Lewd Exorcist", player)) and state.has("Fancy Suit", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Fishing For Treasure", player),          lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Suit In Hand", player)) and state.has("Wedding Ring", player))
-        set_rule(multiworld.get_location("Complete Main Quest: The Proposal", player),                  lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Fishing For Treasure", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: The Proposal", player)) and state.has("Dynamite", player))
-        set_rule(multiworld.get_location("Complete Main Quest: Arctic Harmony", player),                lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Crimson Chase", player),                 lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Harmony", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Through the Portal", player),            lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Crimson Chase", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", player),           lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Through the Portal", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Hostage Situation", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Sanctuary Shakedown", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player),             lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Hostage Situation", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Desperate Dash", player),                lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player)))
-        set_rule(multiworld.get_location("Complete Main Quest: Battle for Spirit Valley", player),      lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Desperate Dash", player)))
-
-
-    # ACCESS RULES
-    set_rule(multiworld.get_entrance("Trail2 Left", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: First Mission: Success!", player)))
-    set_rule(multiworld.get_entrance("Trail4 Temple", player), lambda state: state.has("Ancient Temple Key", player))#state.can_reach(multiworld.get_location("Complete Main Quest: Temple Investigation", player)) and state.has("Ancient Temple Key", player))
-    set_rule(multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Bridge crossing", player)) and state.has("Power Crystal", player))
-    set_rule(multiworld.get_entrance("Trail9 Temple", player), lambda state: state.has("Stone Key", player))
-    set_rule(multiworld.get_entrance("TumbleweedTown->CrashSite", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Big balloon adventure", player)))
-    set_rule(multiworld.get_entrance("Trail11 pier", player), lambda state: state.has("Fishing Rod", player))
-    set_rule(multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Arctic Adventure", player)))
-    set_rule(multiworld.get_entrance("Frostville1 Top", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Here Comes the Boom", player)) and state.has("Dynamite", player))
-    set_rule(multiworld.get_entrance("Trail20->Trail20_Right", player), lambda state: state.can_reach(multiworld.get_location("Complete Main Quest: Breezie Runs Free", player)))
-
-def base_rules(multiworld, player, options, data):
-
-    # SIDE QUEST RULES
-    if options.Side_Missions.value:
-        set_rule(multiworld.get_location("Complete Side Quest: Larry’s Treasure", player), lambda state: state.has("Ass Lover Extreme issue 12", player))
-        set_rule(multiworld.get_location("Complete Side Quest: The Art of Fishing", player), lambda state: state.has("Goldfish Available in Shop", player))
-        set_rule(multiworld.get_location("Complete Side Quest: Legend of the Valkyrie part 1.", player), lambda state: state.has("Cum Rag", player))
-        set_rule(multiworld.get_location("Complete Side Quest: Legend of the Valkyrie part 2.", player), lambda state: state.has("Northern Blowfish Available in Shop", player))
-
-        if not options.Single_Catch.value:
-            set_rule(multiworld.get_location("Complete Side Quest: Perky Petunia", player), lambda state, s=data["SIDE_QUEST_PERKY_PETUNIA_SPIRIT"]: spirit_Obtain(state, player, s))
-            set_rule(multiworld.get_location("Complete Side Quest: Starry Eyed Surprise", player), lambda state, s=data["SIDE_QUEST_STARRY_EYED_SURPRISE_SPIRIT"]: spirit_Obtain(state, player, s))
-
-        set_rule(multiworld.get_location("Complete Side Quest: Slithering Menace", player), lambda state, s=data["SIDE_QUEST_SLITHERING_MENACE_SPIRIT"]: state.has(f"{s} Obtainable", player))
-        set_rule(multiworld.get_location("Complete Side Quest: Deadly Waters", player), lambda state, s=data["SIDE_QUEST_DEADLY_WATERS_SPIRIT"]: state.has_all([f"{s} Obtainable", "Fishing Rod"], player))
-        set_rule(multiworld.get_location("Complete Side Quest: Arctic Menace", player), lambda state, s=data["SIDE_QUEST_ARCTIC_MENACE_SPIRIT"]: state.has(f"{s} Obtainable", player))
-        set_rule(multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 1.", player), lambda state, s=data["SIDE_QUEST_CENTIBOOB_1_SPIRIT"]: spirit_Obtain(state, player, s))
-        set_rule(multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 2.", player), lambda state, s=data["SIDE_QUEST_CENTIBOOB_2_SPIRIT"]: spirit_Obtain(state, player, s))
-        set_rule(multiworld.get_location("Complete Side Quest: Hunt for the Centiboob part 3.", player), lambda state, s=data["SIDE_QUEST_CENTIBOOB_3_SPIRIT"]: spirit_Obtain(state, player, s))
 
     # BOLDER CHEST RULES
-    set_rule(multiworld.get_location("Evergreen Outpost: Chest Behind Pushable Bolder", player), lambda state: state.has("Testosterone Pills", player))
-    set_rule(multiworld.get_location("Greensvale: Chest Behind Pushable Bolder In the North", player), lambda state: state.has("Testosterone Pills", player))
-    set_rule(multiworld.get_location("Evergreen Caverns: Chest 1 Behind Rawry", player), lambda state: state.has("Testosterone Pills", player))
-    set_rule(multiworld.get_location("Evergreen Caverns: Chest 2 Behind Rawry", player), lambda state: state.has("Testosterone Pills", player))
-    set_rule(multiworld.get_location("Milly's Farm: Chest Behind Pushable Bolder", player), lambda state: state.has("Testosterone Pills", player))
-    set_rule(multiworld.get_location("Sandy Tunnels: Chest North of Chad", player), lambda state: state.has("Testosterone Pills", player))
-    set_rule(multiworld.get_location("Old Masters Hut: Chest in Basement", player), lambda state: state.has("Testosterone Pills", player))
+    world.set_rule(world.multiworld.get_location("Evergreen Outpost: Chest Behind Pushable Bolder", world.player),        Has("Testosterone Pills"))
+    world.set_rule(world.multiworld.get_location("Greensvale: Chest Behind Pushable Bolder In the North", world.player),  Has("Testosterone Pills"))
+    world.set_rule(world.multiworld.get_location("Evergreen Caverns: Chest 1 Behind Rawry", world.player),                Has("Testosterone Pills"))
+    world.set_rule(world.multiworld.get_location("Evergreen Caverns: Chest 2 Behind Rawry", world.player),                Has("Testosterone Pills"))
+    world.set_rule(world.multiworld.get_location("Milly's Farm: Chest Behind Pushable Bolder", world.player),             Has("Testosterone Pills"))
+    world.set_rule(world.multiworld.get_location("Sandy Tunnels: Chest North of Chad", world.player),                     Has("Testosterone Pills"))
+    world.set_rule(world.multiworld.get_location("Old Masters Hut: Chest in Basement", world.player),                     Has("Testosterone Pills"))
 
-    set_rule(multiworld.get_location("Evergreen Caverns: Defeat Rawry", player), lambda state: state.has("Testosterone Pills", player))
 
-    set_rule(multiworld.get_entrance("Trail16_Top->Trail16", player), lambda state: state.has("Testosterone Pills", player))
+
+    #ACCESS RULES
+    world.set_rule(world.multiworld.get_entrance("Trail16_Top->Trail16", world.player),                     Has("Testosterone Pills"))
+
+    if not world.options.randomise_map.value:
+        world.set_rule(world.multiworld.get_entrance("Trail2->Greensvale", world.player),                           CanReachLocation("Complete Main Quest: First Mission: Success!", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+
+        world.set_rule(world.multiworld.get_entrance("Trail4->AncientTemple1", world.player),                       CanReachLocation("Complete Main Quest: Onward to Greensvale", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True)
+                                                                                                                                 & Has("Ancient Temple Key"))
+
+        #world.set_rule(world.multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", world.player),      CanReachLocation("Complete Main Quest: Bridge crossing", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", world.player),      HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", options=[OptionFilter(Main_Missions, 1)])
+                                                                                                                                 | Has("Power Crystal", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Trail9->DesertTemple1", world.player),                        CanReachLocation("Complete Main Quest: Mission success", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True)
+                                                                                                                                 & Has("Stone Key"))
+
+        #world.set_rule(world.multiworld.get_entrance("TumbleweedTown->CrashSite", world.player),                    CanReachLocation("Complete Main Quest: Big balloon adventure", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("TumbleweedTown->CrashSite", world.player),                    (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", options=[OptionFilter(Main_Missions, 1)]) & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"]))
+                                                                                                                                 | Has("Balloon Ride Ticket", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Trail11->Trail13", world.player),                             Has("Fishing Rod"))
+
+        #world.set_rule(world.multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", world.player),            CanReachLocation("Complete Main Quest: Arctic Adventure", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", world.player),            (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", options=[OptionFilter(Main_Missions, 1)]) & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"]))
+                                                                                                                                 | Has("Boat Ride Ticket", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Frostville1->Trail17", world.player),                         CanReachLocation("Complete Main Quest: Here Comes the Boom", options=[OptionFilter(Main_Missions, 1)])
+                                                                                                                                 | Has("Dynamite", options=[OptionFilter(Main_Missions, 0)]))
+
+        #world.set_rule(world.multiworld.get_entrance("Trail18->Trail19", world.player),                             CanReachLocation("Complete Main Quest: Through the Portal", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("Trail18->Trail19", world.player),                             (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite", options=[OptionFilter(Main_Missions, 1)]) & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"]))
+                                                                                                                                 | Has("Ancient Warp Core", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Trail20->Trail20_Right", world.player),                       CanReachLocation("Complete Main Quest: Hostage Situation", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+
+        world.set_rule(world.multiworld.get_entrance("OakwoodVillage->OakwoodVillage_Hq", world.player),            CanReachLocation("Complete Main Quest: Battle for Spirit Valley", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+
+
+    else:
+        world.set_rule(world.multiworld.get_entrance("Trail2 Left", world.player),                                  CanReachLocation("Complete Main Quest: First Mission: Success!", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+
+        world.set_rule(world.multiworld.get_entrance("Trail4 Temple", world.player),                                CanReachLocation("Complete Main Quest: Onward to Greensvale", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True)
+                                                                                                                                 & Has("Ancient Temple Key"))
+
+        #world.set_rule(world.multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", world.player),      CanReachLocation("Complete Main Quest: Bridge crossing", parent_region_name="EvergreenOutpost", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", world.player),      (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", options=[OptionFilter(Main_Missions, 1)])
+                                                                                                                                 & CanReachRegion("EvergreenOutpost") & CanReachRegion("Trail2") & CanReachRegion("Greensvale") & CanReachRegion("Greensvale_SexShop") & CanReachRegion("AncientTemple3"))
+                                                                                                                                 | Has("Power Crystal", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Trail9 Temple", world.player),                                CanReachLocation("Complete Main Quest: Mission success", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True)
+                                                                                                                                 & Has("Stone Key"))
+
+        #world.set_rule(world.multiworld.get_entrance("TumbleweedTown->CrashSite", world.player),                    CanReachLocation("Complete Main Quest: Big balloon adventure", parent_region_name="TumbleweedTown", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("TumbleweedTown->CrashSite", world.player),                    (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", options=[OptionFilter(Main_Missions, 1)]) & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"])
+                                                                                                                                 & CanReachRegion("EvergreenOutpost") & CanReachRegion("Trail2") & CanReachRegion("Greensvale") & CanReachRegion("Greensvale_SexShop") & CanReachRegion("AncientTemple3") & CanReachRegion("TumbleweedTown") & CanReachRegion("TumbleweedTown_KingsSaloon1") & CanReachRegion("OldMastersHut_Upstairs") & CanReachRegion("DesertTemple2"))
+                                                                                                                                 | Has("Balloon Ride Ticket", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Trail11 pier", world.player),                                 Has("Fishing Rod"))
+        #world.set_rule(world.multiworld.get_entrance("Trail11 pier", world.player),                                 Has("Fishing Rod"))
+
+        #world.set_rule(world.multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", world.player),            CanReachLocation("Complete Main Quest: Glimmering Prize", parent_region_name="CoconutVillage_Temple", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("CoconutVillage_Temple->ColdHarbor", world.player),            (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", options=[OptionFilter(Main_Missions, 1)]) & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"])
+                                                                                                                                 & CanReachRegion("EvergreenOutpost") & CanReachRegion("Trail2") & CanReachRegion("Greensvale") & CanReachRegion("Greensvale_SexShop") & CanReachRegion("AncientTemple3") & CanReachRegion("TumbleweedTown") & CanReachRegion("TumbleweedTown_KingsSaloon1") & CanReachRegion("OldMastersHut_Upstairs") & CanReachRegion("DesertTemple2") & CanReachRegion("CoconutVillage_Temple") & CanReachRegion("Trail13") & CanReachRegion("IslandCave2"))
+                                                                                                                                 | Has("Boat Ride Ticket", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Frostville1 Top", world.player),                              CanReachLocation("Complete Main Quest: Here Comes the Boom", options=[OptionFilter(Main_Missions, 1)])
+                                                                                                                                 | Has("Dynamite ", options=[OptionFilter(Main_Missions, 0)]))
+
+        #world.set_rule(world.multiworld.get_entrance("Trail18->Trail19", world.player),                             CanReachLocation("Complete Main Quest: Through the Portal", parent_region_name="Trail18", options=[OptionFilter(Main_Missions, 1)])
+        world.set_rule(world.multiworld.get_entrance("Trail18->Trail19", world.player),                             (HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", "Video Cassette", "Spirit Handler License", "Stone Key", "Yellow Harmony Crystal", "Fishing Rod", "Cock Shaped Key", "Red Harmony Crystal", "Fancy Suit", "Wedding Ring", "Dynamite", options=[OptionFilter(Main_Missions, 1)]) & SpiritObtain(world.data["MAIN_QUEST_TOTAL_DOMINATION"])
+                                                                                                                                 & CanReachRegion("EvergreenOutpost") & CanReachRegion("Trail2") & CanReachRegion("Greensvale") & CanReachRegion("Greensvale_SexShop") & CanReachRegion("AncientTemple3") & CanReachRegion("TumbleweedTown") & CanReachRegion("TumbleweedTown_KingsSaloon1") & CanReachRegion("OldMastersHut_Upstairs") & CanReachRegion("DesertTemple2") & CanReachRegion("CoconutVillage_Temple") & CanReachRegion("Trail13") & CanReachRegion("IslandCave2") & CanReachRegion("ColdHarbor") & CanReachRegion("Frostville1") & CanReachRegion("Frostville1_Church") & CanReachRegion("Frostville1_House1") & CanReachRegion("AbandonedMine_House1") & CanReachRegion("Trail18") & CanReachRegion("ArcticTemple2"))
+                                                                                                                                 | Has("Ancient Warp Core", options=[OptionFilter(Main_Missions, 0)]))
+
+        world.set_rule(world.multiworld.get_entrance("Trail20->Trail20_Right", world.player),                       CanReachLocation("Complete Main Quest: Hostage Situation", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+
+        world.set_rule(world.multiworld.get_entrance("OakwoodVillage->OakwoodVillage_Hq", world.player),            CanReachLocation("Complete Main Quest: Battle for Spirit Valley", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+
+
+
+    # battle access rules
+    world.set_rule(world.multiworld.get_location("Evergreen Caverns: Defeat Rawry", world.player),        Has("Testosterone Pills"))
+
+    if world.options.Main_Missions.value:
+        world.set_rule(world.multiworld.get_location("Trail 02: Defeat Crimson Agent", world.player),               CanReachLocation("Complete Main Quest: Crimson Agent"))
+        world.set_rule(world.multiworld.get_location("Tumbleweed Town: Defeat Willy Wanker", world.player),         CanReachLocation("Complete Main Quest: A new challenger"))
+        world.set_rule(world.multiworld.get_location("Tumbleweed Town: Defeat Dick Cummings", world.player),        CanReachLocation("Complete Main Quest: A new challenger"))
+        world.set_rule(world.multiworld.get_location("Tumbleweed Town: Defeat Dick Louie", world.player),           CanReachLocation("Complete Main Quest: A new challenger"))
+        world.set_rule(world.multiworld.get_location("Frostville: Defeat Mother Evilyn", world.player),             CanReachLocation("Complete Main Quest: The Lewd Exorcist"))
+        world.set_rule(world.multiworld.get_location("Trail 21: Defeat Kinley", world.player),                      CanReachLocation("Complete Main Quest: Hostage Situation"))
+
+    world.set_rule(world.multiworld.get_location("Ancient Temple 3: Defeat Valkrie", world.player),             CanReachLocation("Complete Main Quest: Temple Investigation", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+    world.set_rule(world.multiworld.get_location("Stone Temple 2: Defeat Domino", world.player),                CanReachLocation("Complete Main Quest: Quest for the crystal", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+    world.set_rule(world.multiworld.get_location("Island Cave 2: Defeat Centiboob", world.player),              CanReachLocation("Complete Main Quest: Lusty Cultists", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+    world.set_rule(world.multiworld.get_location("Artic Temple 2: Defeat Crimson Countess", world.player),      CanReachLocation("Complete Main Quest: Arctic Harmony", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
+    world.set_rule(world.multiworld.get_location("Inner Grove: Defeat Spirit Mother", world.player),            CanReachLocation("Complete Main Quest: Battle for Spirit Valley", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True))
 
 
     # SPIRIT OBTAIN RULES
-    for spirit in obtainable_spirit_list:
-        if options.Spirit_Locations.value:
-            if not options.Randomise_Spawns.value and spirit == "EV-3":
+    if world.options.Spirit_Locations.value:
+        for spirit in obtainable_spirit_list:
+            if not world.options.Randomise_Spawns.value and spirit == "EV-3":
                 continue
-            set_rule(multiworld.get_location(f"Obtain a {spirit} Spirit", player), lambda state, s=spirit, p=player: spirit_Obtain(state, p, s))
-            if options.Spirit_Obtain_progression.value:
-                multiworld.get_location(f"Obtain a {spirit} Spirit", player).progress_type = LocationProgressType.EXCLUDED
-            if options.Spirit_Affection.value:
-                set_rule(multiworld.get_location(f"Get {spirit} to Affection LV1", player), lambda state, s=spirit, p=player: spirit_Affection(state, p, s))
-                set_rule(multiworld.get_location(f"Get {spirit} to Affection LV2", player), lambda state, s=spirit, p=player: spirit_Affection(state, p, s))
-                set_rule(multiworld.get_location(f"Get {spirit} to Affection LV3", player), lambda state, s=spirit, p=player: spirit_Affection(state, p, s))
-                set_rule(multiworld.get_location(f"Get {spirit} to Affection LV4", player), lambda state, s=spirit, p=player: spirit_Affection(state, p, s))
-                set_rule(multiworld.get_location(f"Get {spirit} to Affection LV5", player), lambda state, s=spirit, p=player: spirit_Affection(state, p, s))
-                if options.Spirit_Affection_progression.value:
-                    multiworld.get_location(f"Get {spirit} to Affection LV1", player).progress_type = LocationProgressType.EXCLUDED
-                    multiworld.get_location(f"Get {spirit} to Affection LV2", player).progress_type = LocationProgressType.EXCLUDED
-                    multiworld.get_location(f"Get {spirit} to Affection LV3", player).progress_type = LocationProgressType.EXCLUDED
-                    multiworld.get_location(f"Get {spirit} to Affection LV4", player).progress_type = LocationProgressType.EXCLUDED
-                    multiworld.get_location(f"Get {spirit} to Affection LV5", player).progress_type = LocationProgressType.EXCLUDED
 
-            if options.Rare_Locations.value:
-                set_rule(multiworld.get_location(f"Obtain a Rare {spirit} Spirit", player), lambda state, s=spirit, p=player: spirit_rare_Obtain(state, p, s))
-                if options.Rare_Spirit_Obtain_progression.value:
-                    multiworld.get_location(f"Obtain a Rare {spirit} Spirit", player).progress_type = LocationProgressType.EXCLUDED
+            #set_rule(multiworld.get_location(f"Obtain a {spirit} Spirit", player), lambda state, s=spirit, p=player: spirit_Obtain(state, p, s))
+            world.set_rule(world.multiworld.get_location(f"Obtain a {spirit} Spirit", world.player), SpiritObtain(spirit))
+
+            if world.options.Spirit_Obtain_progression.value:
+                world.multiworld.get_location(f"Obtain a {spirit} Spirit", world.player).progress_type = LocationProgressType.EXCLUDED
+
+            if world.options.Spirit_Affection.value:
+                world.set_rule(world.multiworld.get_location(f"Get {spirit} to Affection LV1", world.player), SpiritAffection(spirit))
+                world.set_rule(world.multiworld.get_location(f"Get {spirit} to Affection LV2", world.player), SpiritAffection(spirit))
+                world.set_rule(world.multiworld.get_location(f"Get {spirit} to Affection LV3", world.player), SpiritAffection(spirit))
+                world.set_rule(world.multiworld.get_location(f"Get {spirit} to Affection LV4", world.player), SpiritAffection(spirit))
+                world.set_rule(world.multiworld.get_location(f"Get {spirit} to Affection LV5", world.player), SpiritAffection(spirit))
+
+                if world.options.Spirit_Affection_progression.value:
+                    world.multiworld.get_location(f"Get {spirit} to Affection LV1", world.player).progress_type = LocationProgressType.EXCLUDED
+                    world.multiworld.get_location(f"Get {spirit} to Affection LV2", world.player).progress_type = LocationProgressType.EXCLUDED
+                    world.multiworld.get_location(f"Get {spirit} to Affection LV3", world.player).progress_type = LocationProgressType.EXCLUDED
+                    world.multiworld.get_location(f"Get {spirit} to Affection LV4", world.player).progress_type = LocationProgressType.EXCLUDED
+                    world.multiworld.get_location(f"Get {spirit} to Affection LV5", world.player).progress_type = LocationProgressType.EXCLUDED
+
+            if world.options.Rare_Locations.value:
+                world.set_rule(world.multiworld.get_location(f"Obtain a Rare {spirit} Spirit", world.player), SpiritRareObtain(spirit))
+
+                if world.options.Rare_Spirit_Obtain_progression.value:
+                    world.multiworld.get_location(f"Obtain a Rare {spirit} Spirit", world.player).progress_type = LocationProgressType.EXCLUDED
 
     #GOAL RULES
-    if options.goal.value == 1:
-        set_rule(multiworld.get_location(f"Catch all Spirits", player), lambda state, p=player: spirit_Obtain_all(state, p))
-    elif options.goal.value == 2:
-        set_rule(multiworld.get_location(f"Catch all Rare Spirits", player), lambda state, p=player: spirit_Rare_Obtain_all(state, p))
-    elif options.goal.value == 3:
-        set_rule(multiworld.get_location(f"Get All Spirits To Affection Lv5", player), lambda state, p=player: spirit_Affection_all(state, p))
+    if world.options.goal.value == 1:
+        world.set_rule(world.multiworld.get_location(f"Catch all Spirits", world.player), SpiritObtainAll())
+    elif world.options.goal.value == 2:
+        world.set_rule(world.multiworld.get_location(f"Catch all Rare Spirits", world.player), SpiritRareObtainAll())
+    elif world.options.goal.value == 3:
+        world.set_rule(world.multiworld.get_location(f"Get All Spirits To Affection Lv5", world.player), SpiritAffectionAll())
 
 
+#testing making a custom Rule
+@dataclasses.dataclass()
+class ObtainSpirit(Rule["SpiritValley"], game="Spirit Valley"):
 
-def spirit_Obtain(state: CollectionState, player: int, spirit: str) -> bool:
-    return state.has(f"{spirit} Obtainable", player) and state.has_any(spirit_crystal_shop_items, player) and state.has("Shop Accessible", player)
+    spirit: str
+    grassroutes: list[str]
+    waterroutes: list[str]
 
-def spirit_rare_Obtain(state: CollectionState, player: int, spirit: str) -> bool:
-    return spirit_Obtain(state, player, spirit) and state.has("Elusive Scent Available in Shop", player)
+    def __init__(
+        self,
+        spirit: str,
+        data: dict,
+        options: Iterable[OptionFilter] = (),
+        filtered_resolution: bool = False,
+    ) -> None:
+        super().__init__(options=options, filtered_resolution=filtered_resolution)
+        self.spirit = spirit
+        self.grassroutes = []
+        self.waterroutes = []
+        for grass in data["Grass_spawn"]:
+            if spirit in data["Grass_spawn"][grass]:
+                self.grassroutes.append(grass)
+        for water in data["Water_spawn"]:
+            if spirit in data["Water_spawn"][water]:
+                self.waterroutes.append(water)
 
-def spirit_Affection(state: CollectionState, player: int, spirit: str) -> bool:
-    return spirit_Obtain(state, player, spirit) and state.has_any(affection_shop_items, player) and state.has("Shop Accessible", player)
+    @override
+    def _instantiate(self, world: "SpiritValley") -> Rule.Resolved:
+        return self.Resolved(
+            spirit=self.spirit,
+            grass=tuple(self.grassroutes),
+            water=tuple(self.waterroutes),
+            player=world.player,
+            caching_enabled=getattr(world, "rule_caching_enabled", False),
+        )
 
+    class Resolved(Rule.Resolved):
 
-def spirit_Obtain_all(state: CollectionState, player: int) -> bool:
-    for spirit in obtainable_spirit_list:
-        if not spirit_Obtain(state, player, spirit): return False
-    return True
-    return state.has(f"{spirit} Obtainable", player) and state.has_any(spirit_crystal_shop_items, player) and state.has("Shop Accessible", player)
+        spirit: str
+        grass: tuple
+        water: tuple
 
-def spirit_Rare_Obtain_all(state: CollectionState, player: int) -> bool:
-    for spirit in obtainable_spirit_list:
-        if not spirit_rare_Obtain(state, player, spirit): return False
-    return True
-    return state.has(f"{spirit} Obtainable", player) and state.has_any(spirit_crystal_shop_items, player) and state.has("Shop Accessible", player)
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            return state.has(f"{self.spirit} Obtainable", self.player) and state.has_any(["Spirit Crystal Available in Shop", "Spirit Crystal +1 Available in Shop", "Spirit Crystal +2 Available in Shop"], self.player) and state.has("Shop Accessible", self.player)
 
-def spirit_Affection_all(state: CollectionState, player: int) -> bool:
-    for spirit in obtainable_spirit_list:
-        if not spirit_Affection(state, player, spirit): return False
-    return True
-    return state.has(f"{spirit} Obtainable", player) and state.has_any(spirit_crystal_shop_items, player) and state.has("Shop Accessible", player)
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            # this function is only required if you have caching enabled
+            return {f"{self.spirit} Obtainable": {id(self)},
+                    "Spirit Crystal Available in Shop": {id(self)},
+                    "Spirit Crystal +1 Available in Shop": {id(self)},
+                    "Spirit Crystal +2 Available in Shop": {id(self)},
+                    "Fishing Rod": {id(self)},
+                    "Fishy Scent": {id(self)},
+                    "Scent Mixture": {id(self)},
+                    "Shop Accessible": {id(self)}}
+
+        @override
+        def region_dependencies(self) -> dict[str, set[int]]:
+            g = {f"{item}": {id(self)} for item in self.grass}
+            if "Trail16" in self.grass: g["Trail16_Top"] = {id(self)}
+            if "Trail20" in self.grass: g["Trail20_Right"] = {id(self)}
+            w = {f"{item}": {id(self)} for item in self.water}
+            return {**g, **w}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            # this method can be overridden to display custom explanations
+            if state is None:
+                return self.explain_json_none()
+
+            o = []
+            o.append({"type": "text", "text": f"{self.spirit} can be found "})
+            if len(self.grass)!=0:
+                for g in self.grass:
+                    if g == "Trail16_Cave":
+                        if state.has("Fishy Scent", self.player): o.append({"type": "color", "color": "green" if state.can_reach_region(g, self.player) else "salmon", "text": f"{g} Grass, "})
+                        else: o.append({"type": "color", "color": "salmon", "text": f"{g} Grass(MISSING Fishy Scent), "})
+                    elif g == "Trail22_Cave":
+                        if state.has("Scent Mixture", self.player): o.append({"type": "color", "color": "green" if state.can_reach_region(g, self.player) else "salmon", "text": f"{g} Grass, "})
+                        else: o.append({"type": "color", "color": "salmon", "text": f"{g} Grass(MISSING Scent Mixture), "})
+                    else:
+                        o.append({"type": "color", "color": "green" if state.can_reach_region(g, self.player) else "salmon", "text": f"{g} Grass, "})
+
+            if len(self.water)!=0:
+                if state.has("Fishing Rod", self.player):
+                    for g in self.water:
+                        o.append({"type": "color", "color": "green" if state.can_reach_region(g, self.player) else "salmon", "text": f"{g} Water, "})
+                else:
+                    for g in self.water:
+                        o.append({"type": "color", "color": "green" if state.can_reach_region(g, self.player) else "salmon", "text": f"{g} Water(MISSING Fishing Rod), "})
+
+            if state.has("Shop Accessible", self.player):
+                o.append({"type": "color", "color": "green", "text": f"Player CAN Access a Shop, "})
+            else:
+                o.append({"type": "color", "color": "salmon", "text": f"Player CAN NOT Access a Shop, "})
+
+            if state.has_any(["Spirit Crystal Available in Shop","Spirit Crystal +1 Available in Shop","Spirit Crystal +2 Available in Shop"], self.player):
+                o.append({"type": "color", "color": "green", "text": f"Player HAS Crystals Available in the Shop "})
+            else:
+                o.append({"type": "color", "color": "salmon", "text": f"Player DOES NOT have Crystals Available in the Shop "})
+            return o
+
+        def explain_json_none(self) -> list[JSONMessagePart]:
+            # this method can be overridden to display custom explanations
+
+            o = []
+            o.append({"type": "text", "text": f"{self.spirit} can be found "})
+            if len(self.grass)!=0:
+                for g in self.grass:
+                    o.append({"type": "text", "text": f"{g} Grass, "})
+            if len(self.water)!=0:
+                for g in self.water:
+                    o.append({"type": "text", "text": f"{g} Water, "})
+
+            o.append({"type": "text", "text": f"Player Needs Access to a Shop, "})
+            o.append({"type": "text", "text": f"Player needs to have Crystals Available in the Shop "})
+
+            return o
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            # this method can be overridden to display custom explanations
+            if state is None:
+                return self.explain_str_none()
+
+            o = ""
+            o = o + f"{self.spirit} can be found "
+
+            for g in self.grass:
+                o = o + f"{g} Grass, "
+            for g in self.water:
+                o = o + f"{g} Water, "
+
+            if state.has("Shop Accessible", self.player):
+                o = o + f"Player CAN Access a Shop, "
+            else:
+                o = o + f"Player CAN NOT Access a Shop, "
+
+            if state.has_any(["Spirit Crystal Available in Shop","Spirit Crystal +1 Available in Shop","Spirit Crystal +2 Available in Shop"], self.player):
+                o = o + f"Player HAS Crystals Available in the Shop "
+            else:
+                o = o + f"Player DOES NOT have Crystals Available in the Shop "
+            return o
+
+        @override
+        def explain_str_none(self) -> str:
+            # this method can be overridden to display custom explanations
+            o = ""
+            o = o + f"{self.spirit} can be found "
+
+            for g in self.grass:
+                o = o + f"{g} Grass, "
+            for g in self.water:
+                o = o + f"{g} Water, "
+
+            o = o + f"Player Needs Access to a Shop, "
+            o = o + f"Player needs to have Crystals Available in the Shop "
+
+            return o
 

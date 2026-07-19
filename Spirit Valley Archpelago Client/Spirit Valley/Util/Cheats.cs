@@ -7,7 +7,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
     [HarmonyPatch]
     public class Cheats
     {
-        public static bool disable = false;
+        public static bool disable = true;
 
         public static void wallhaks()
         {

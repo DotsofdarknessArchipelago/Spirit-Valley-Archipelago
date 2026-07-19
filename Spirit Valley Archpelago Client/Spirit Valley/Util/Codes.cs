@@ -328,7 +328,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "greensvale":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Greensvale))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Greensvale) | !Cheats.disable)
                     {
                         HelperItems.save.transitionSceneName = "Greensvale";
                         HelperItems.save.transitionAreaID = "waystone";
@@ -343,7 +343,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "tumbleweedtown":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.TumbleweedTown))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.TumbleweedTown) | !Cheats.disable)
                     {
                         HelperItems.save.transitionSceneName = "TumbleweedTown";
                         HelperItems.save.transitionAreaID = "waystone";
@@ -358,7 +358,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "coconutvillage":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.CoconutVillage))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.CoconutVillage) | !Cheats.disable)
                     {
                         HelperItems.save.transitionSceneName = "CoconutVillage";
                         HelperItems.save.transitionAreaID = "waystone";
@@ -373,7 +373,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "frostville":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Frostville))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Frostville) | !Cheats.disable)
                     {
                         HelperItems.save.transitionSceneName = "Frostville1";
                         HelperItems.save.transitionAreaID = "waystone";
@@ -390,7 +390,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
 
 
                 case "evergreenoutpost":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.EvergreenOutpost))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.EvergreenOutpost) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -434,7 +434,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "evergreencaverns":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.EvergreenCaverns))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.EvergreenCaverns) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -474,7 +474,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "sandytunnels":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.SandyTunnels))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.SandyTunnels) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -514,7 +514,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "dairyfarm":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.DairyFarm))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.DairyFarm) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -558,7 +558,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "dustygrotto":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.DustyGrotto))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.DustyGrotto) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -598,7 +598,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "oldmastershut":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.OldMastersHut))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.OldMastersHut) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -642,7 +642,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "coldharbor":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.ColdHarbor))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.ColdHarbor) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -686,7 +686,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "abandonedmine":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.AbandonedMine))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.AbandonedMine) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -730,7 +730,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "spiritpassage":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.SpiritPassage))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.SpiritPassage) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -770,7 +770,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "crashsite":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.CrashSite))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.CrashSite) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -815,7 +815,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     break;
 
                 case "trail1":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail1))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail1) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -855,7 +855,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail2":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail2))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail2) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -895,7 +895,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail3":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail3))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail3) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -935,7 +935,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail4":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail4))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail4) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -979,7 +979,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail5":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail5))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail5) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1019,7 +1019,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail6":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail6))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail6) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1059,7 +1059,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail7":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail7))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail7) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1099,7 +1099,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail8":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail8))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail8) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1139,7 +1139,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail9":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail9))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail9) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1179,7 +1179,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail10":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail10))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail10) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1219,7 +1219,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail11":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail11))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail11) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1263,7 +1263,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail12":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail12))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail12) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1303,7 +1303,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail13":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail13))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail13) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1343,7 +1343,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail14":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail14))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail14) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1387,7 +1387,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail15":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail15))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail15) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1431,7 +1431,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail16":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail16))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail16) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1479,7 +1479,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail17":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail17))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail17) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1519,7 +1519,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail18":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail18))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail18) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1563,7 +1563,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail19":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail19))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail19) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1607,7 +1607,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail20":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail20))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail20) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1651,7 +1651,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail21":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail21))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail21) | !Cheats.disable)
                     {
                         if (rando)
                         {
@@ -1687,7 +1687,7 @@ namespace SpiritValleyArchipelagoClient.Spirit_Valley.Util
                     }
                     break;
                 case "trail22":
-                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail22))
+                    if (HelperItems.save.visitedMapLocations.Contains(MapLocationID.Trail22) | !Cheats.disable)
                     {
                         if (rando)
                         {

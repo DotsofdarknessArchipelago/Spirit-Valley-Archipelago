@@ -36,8 +36,8 @@ public class ArchipelagoClient
     public static int totalitem = 0;
 
     public static int servermajor = 2;
-    public static int serverminor = 0;
-    public static int serverbuild = 1;
+    public static int serverminor = 1;
+    public static int serverbuild = 0;
 
 
     public static ArchipelageItemList archlist = new ArchipelageItemList();
@@ -298,6 +298,11 @@ public class ArchipelagoClient
         var statusUpdatePacket = new StatusUpdatePacket();
         statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
         session.Socket.SendPacket(statusUpdatePacket);
+
+        int goalloc = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["arch_locations_id_start"]);
+        if (Convert.ToInt32(ServerData.slotData["goal"]) == 1 && GameManager.instance.GetActiveGameState().data.database.GetCountCaptured() == 75) sendloc(goalloc + 1);
+        else if (Convert.ToInt32(ServerData.slotData["goal"]) == 2 && GameManager.instance.GetActiveGameState().data.database.GetCountRaresCaptured() == 75) sendloc(goalloc + 2);
+        else if (Convert.ToInt32(ServerData.slotData["goal"]) == 2 && GameManager.instance.GetActiveGameState().data.database.GetCountRaresCaptured() == 75) sendloc(goalloc + 3);
     }
 
     public static void resetlist()
