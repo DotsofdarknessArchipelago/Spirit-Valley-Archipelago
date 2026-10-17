@@ -1,7 +1,7 @@
 import dataclasses
 from typing import Any, override, Iterable
 
-from BaseClasses import LocationProgressType, CollectionState
+from BaseClasses import LocationProgressType, CollectionState, MultiWorld
 from NetUtils import JSONMessagePart
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Rule, Has, HasAny, True_, CanReachLocation, CanReachRegion, HasAll
@@ -145,6 +145,7 @@ def SetRules(world):
 
         world.set_rule(world.multiworld.get_entrance("Trail4->AncientTemple1", world.player),                       CanReachLocation("Complete Main Quest: Onward to Greensvale", options=[OptionFilter(Main_Missions, 1)], filtered_resolution=True)
                                                                                                                                  & Has("Ancient Temple Key"))
+
 
         #world.set_rule(world.multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", world.player),      CanReachLocation("Complete Main Quest: Bridge crossing", options=[OptionFilter(Main_Missions, 1)])
         world.set_rule(world.multiworld.get_entrance("EvergreenOutpost->EvergreenOutpost_East", world.player),      HasAll("Super Secret Orders", "Ancient Temple Key", "Cracked Power Crystal", "Raw Crystal Chunk", "Power Crystal", options=[OptionFilter(Main_Missions, 1)])

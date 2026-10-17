@@ -168,7 +168,9 @@ class Spirit_Affection_progression(Toggle):
 
 
 class randomise_map(Toggle):
-    """randomise map"""
+    """randomise map
+    NOTE: due to game logic and how the generic map randomizer works enabling this option will likely cause generation to fail
+    ONLY set to TRUE if host doesn't mind having to try generating a bunch of times"""
     display_name = "map rando"
     default = False
 
